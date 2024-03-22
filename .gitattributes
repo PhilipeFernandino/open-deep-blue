@@ -5,4 +5,7 @@
 *.json filter=lfs diff=lfs merge=lfs -text
 *.asset filter=lfs diff=lfs merge=lfs -text
 *.txt filter=lfs diff=lfs merge=lfs -text
+*.xml filter=lfs diff=lfs merge=lfs -text
+*.asmdef filter=lfs diff=lfs merge=lfs -text
+*.cs filter=lfs diff=lfs merge=lfs -text
 Assets/_Project/Scenes/Map/NoisePassVisualization.unity filter=lfs diff=lfs merge=lfs -text
