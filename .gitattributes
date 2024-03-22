@@ -8,4 +8,11 @@
 *.xml filter=lfs diff=lfs merge=lfs -text
 *.asmdef filter=lfs diff=lfs merge=lfs -text
 *.cs filter=lfs diff=lfs merge=lfs -text
+*.pdf filter=lfs diff=lfs merge=lfs -text
+*.ttf filter=lfs diff=lfs merge=lfs -text
+*.mat filter=lfs diff=lfs merge=lfs -text
+*.shader filter=lfs diff=lfs merge=lfs -text
+*.cginc filter=lfs diff=lfs merge=lfs -text
+*.png filter=lfs diff=lfs merge=lfs -text
+*.prefab filter=lfs diff=lfs merge=lfs -text
 Assets/_Project/Scenes/Map/NoisePassVisualization.unity filter=lfs diff=lfs merge=lfs -text
