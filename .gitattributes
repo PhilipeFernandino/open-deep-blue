@@ -15,4 +15,5 @@
 *.cginc filter=lfs diff=lfs merge=lfs -text
 *.png filter=lfs diff=lfs merge=lfs -text
 *.prefab filter=lfs diff=lfs merge=lfs -text
+*.psd filter=lfs diff=lfs merge=lfs -text
 Assets/_Project/Scenes/Map/NoisePassVisualization.unity filter=lfs diff=lfs merge=lfs -text
