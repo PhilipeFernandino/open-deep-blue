@@ -1,3 +1,55 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:f81feacd29323100db7b69308ac935b677e9d688cfbd6f0ac014eae6b91c6ae8
-size 1621
+﻿using System.Collections;
+using UnityEngine;
+using static Systems.GridSystem.TileData;
+
+namespace Systems.GridSystem
+{
+    public class GridTileData : MonoBehaviour
+    {
+        //public TileData TileData { get; private set; }
+        //public TileInfo Info { get; private set; }
+        //public TileOccupation Occupation { get; private set; }
+
+        //public bool TryToOccupy(TileOccupation tileOccupation, bool isRoot)
+        //{
+        //    if (Info.HasFlag(TileInfo.IsOccupied))
+        //    {
+        //        return false;
+        //    }
+        //    else
+        //    {
+        //        if (tileOccupation == TileOccupation.Plant && TileData.Properties.HasFlag(TilePropeties.Plantable))
+        //        {
+        //            Occupation = TileOccupation.Plant;
+        //        }
+        //        else if (tileOccupation == TileOccupation.Construction && TileData.Properties.HasFlag(TilePropeties.Constructable))
+        //        {
+        //            Occupation = TileOccupation.Construction;
+        //        }
+        //        else
+        //        {
+        //            return false;
+        //        }
+        //    }
+
+        //    Info |= TileInfo.IsOccupied;
+        //    return true;
+        //}
+
+
+        //[System.Flags]
+        //public enum TileInfo
+        //{
+        //    None = 0,
+        //    IsOccupied = 1,
+        //    IsDestructible = 2,
+        //    IsOccupationRoot = 4,
+        //}
+
+        //public enum TileOccupation
+        //{
+        //    Plant,
+        //    Construction,
+        //}
+    }
+}

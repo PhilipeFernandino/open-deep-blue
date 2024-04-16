@@ -1,3 +1,18 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:78a90caed114e15b56f5db57a8a3f4d17b6ca45ca1b3c0e51eaac69ca511f272
-size 436
+{
+    "name": "Core.ProcGen",
+    "rootNamespace": "Core.ProcGen",
+    "references": [
+        "Coimbra",
+        "Core.Util",
+        "NaughtyAttributes.Core"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

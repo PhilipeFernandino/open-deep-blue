@@ -1,3 +1,30 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:08f8a2ad64f005822c4a7377d241cc07aa76fa31abd7fea172bdadbadb2d609d
-size 813
+﻿using UnityEngine;
+
+[CreateAssetMenu(fileName = "ValueBlendPass", menuName = "Pass/Value Blend Pass")]
+public class ValueBlendPass : PassDataBase
+{
+    [Range(-1f, 1f)]
+    [SerializeField]
+    private float _value;
+
+    [SerializeField]
+    private BlendMode _blendMode;
+
+    public override float[,] MakePass(int dimensions, float[,] map = null)
+    {
+        return StaticMakePass(dimensions, _value, _blendMode, map);
+    }
+
+    public static float[,] StaticMakePass(int dimensions, float value, BlendMode blendMode, float[,] map = null)
+    {
+        for (int i = 0; i < dimensions; i++)
+        {
+            for (int j = 0; j < dimensions; j++)
+            {
+                map[i, j] = map[i, j].Blend(value, blendMode);
+            }
+        }
+
+        return map;
+    }
+}

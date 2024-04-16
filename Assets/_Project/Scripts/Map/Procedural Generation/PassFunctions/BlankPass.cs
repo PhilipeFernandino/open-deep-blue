@@ -1,3 +1,18 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:822c28cb560589985008fbf1c3885aa2574c916b6eb1c96062a02cac7a7e7e74
-size 477
+﻿using UnityEngine;
+
+[CreateAssetMenu(menuName = "Pass/Blank Pass")]
+public class BlankPass : PassDataBase
+{
+    [SerializeField, Range(-1f, 1f)] private float _value;
+
+    public override float[,] MakePass(int dimensions, float[,] map = null)
+    {
+        map = new float[dimensions, dimensions];
+
+        for (int i = 0; i < dimensions; i++)
+            for (int j = 0; j < dimensions; j++)
+                map[i, j] = _value;
+
+        return map;
+    }
+}

@@ -1,3 +1,20 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:8b5dbbaed03a3ed5cd73089fe257147e55930d4e645c524b7858008c4614c950
-size 499
+{
+    "name": "Core.InventorySystem",
+    "rootNamespace": "Core.InventorySystem",
+    "references": [
+        "Coimbra",
+        "Core.UI",
+        "Core.Util",
+        "NaughtyAttributes.Core",
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

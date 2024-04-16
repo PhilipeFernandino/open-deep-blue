@@ -1,3 +1,19 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:d4b500353a234041a74b0c6af3b29023337fe4def866591b5e314d395564c42f
-size 626
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7af2e2048abe5944e80a1b85a3aacd52, type: 3}
+  m_Name: Worm Noise Single Composer
+  m_EditorClassIdentifier: 
+  _passes:
+  - _makePass: 1
+    _passData: {fileID: 11400000, guid: 3eacf33950c76f544b8ce8dffaca34ba, type: 2}
+  - _makePass: 1
+    _passData: {fileID: 11400000, guid: 11640701515e52541884043f6e3e3210, type: 2}

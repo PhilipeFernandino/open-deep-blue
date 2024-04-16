@@ -1,3 +1,17 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:46a44077e3725b1d6fdab398c8cd7c1c3e23433547479a2fd0152e405627c2e6
-size 531
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdab91fe446d8ae48b828e2769db6ea0, type: 3}
+  m_Name: HotbarItemFactory
+  m_EditorClassIdentifier: 
+  _preload: 1
+  _type: 2
+  _hotbarItemPrefab: {fileID: 2815144739990082683, guid: ac04a7c83f25211458d6b64a469ec1d8, type: 3}

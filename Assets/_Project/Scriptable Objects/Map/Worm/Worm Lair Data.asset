@@ -1,3 +1,34 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:8ede062498f25aaec87a8c93a666675e6d3462ee564fee15875b728d387f5a47
-size 891
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37b63181e60920f4fb068472d403eefa, type: 3}
+  m_Name: Worm Lair Data
+  m_EditorClassIdentifier: 
+  _noiseType: 1
+  _frequency: 0.03
+  _seed: 0
+  _cellularDistanceFunction: 0
+  _cellularReturnType: 0
+  _cellularJitter: 1
+  _fractalType: 0
+  _fractalOctaves: 2
+  _fractalWeightedStrength: 1
+  _fractalLacunarity: 2
+  _fractalGain: 0.5
+  _fractalPingPongStrength: 2
+  _applyDomainWarp: 0
+  _domainWarpType: 0
+  _domainWarpAmplitude: 30
+  _domainWarpFrequency: 0.02
+  _domainWarpFractalType: 0
+  _domainWarpFractalOctaves: 2
+  _domainWarpFractalLacunarity: 2
+  _domainWarpFractalGain: 0.5

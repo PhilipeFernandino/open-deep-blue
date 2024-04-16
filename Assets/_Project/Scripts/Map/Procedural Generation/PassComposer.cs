@@ -1,3 +1,45 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:c0288c5e64b9c5a62ebe65f7f14c918aa53dc345154f22b4459fa2320cf8df40
-size 1162
+using NaughtyAttributes;
+using System.Diagnostics;
+using UnityEngine;
+using Debug = UnityEngine.Debug;
+
+public class PassComposer : MonoBehaviour
+{
+    [Header("Basic")]
+    [SerializeField] private int _dimensions;
+
+    [Expandable]
+    [SerializeField]
+    private PassComposerData _passComposerData;
+
+    public int Dimensions => _dimensions;
+
+    public float[,] CombinePasses()
+    {
+        Stopwatch sw = Stopwatch.StartNew();
+        float[,] passValues = new float[_dimensions, _dimensions];
+
+        bool isFirstPass = true;
+
+        foreach (var pass in _passComposerData.Passes)
+        {
+            if (pass.Active)
+            {
+                if (isFirstPass)
+                {
+                    passValues = pass.MakePass(_dimensions);
+                    isFirstPass = false;
+                }
+                else
+                {
+                    passValues = pass.MakePass(_dimensions, passValues);
+                }
+            }
+        }
+
+        sw.Stop();
+        Debug.Log($"{sw.ElapsedMilliseconds} elapsed miliseconds to compose noise passes");
+
+        return passValues;
+    }
+}

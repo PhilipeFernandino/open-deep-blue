@@ -1,3 +1,68 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:c373aca5a4c089a18705a844ca81cb281e0ed845081ae04756da2f0813510465
-size 1963
+﻿using NaughtyAttributes;
+using UnityEngine;
+
+[CreateAssetMenu(fileName = "NoiseMap")]
+public class NoiseMapData : ScriptableObject
+{
+    [Header("General")]
+
+    [SerializeField, Expandable] private NoiseData _noise;
+    [SerializeField] private bool _invert;
+
+    [Header("Colorization")]
+
+    [SerializeField] private Colorization _colorization = Colorization.FlatColor;
+
+    [SerializeField, Range(-1f, 1f), HideIf(nameof(GradientColorization))]
+    private float _stepValue = 0f;
+
+    [ShowIf(nameof(GradientColorization)), SerializeField] private Gradient _colorGradient = new Gradient();
+
+    public float[,] GetNoiseMap(int dimensions)
+    {
+        _noise.Setup();
+
+        int width = dimensions;
+        int height = dimensions;
+
+        float[,] map = new float[dimensions, dimensions];
+
+        // Create noise map
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                float noiseValue = _noise.GetNoise(x, y);
+
+                if (_invert)
+                {
+                    noiseValue = -noiseValue;
+                }
+
+                if (_colorization == Colorization.FlatColor)
+                {
+                    map[x, y] = noiseValue < _stepValue ? 0 : 1;
+                }
+                else if (_colorization == Colorization.Gradient)
+                {
+                    map[x, y] = Helper.TransformRange(
+                        _colorGradient.Evaluate(Helper.NoiseTo01Bound(noiseValue)).r,
+                        0,
+                        1,
+                        -1,
+                        1);
+                }
+                else
+                {
+                    map[x, y] = noiseValue;
+                }
+            }
+        }
+
+        Debug.Log(map[128, 128]);
+
+        return map;
+    }
+
+    private bool GradientColorization() => _colorization == Colorization.Gradient;
+}

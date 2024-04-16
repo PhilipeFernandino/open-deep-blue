@@ -1,3 +1,17 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:14215a65389a159951174ae282a23c4a62997520e05a6eb4ff81da88b575a8a9
-size 403
+{
+    "name": "Core.Util",
+    "rootNamespace": "Core.Util",
+    "references": [
+        "Coimbra",
+        "Coimbra.Services"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,3 +1,22 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:ec9693dc44eb18489e0e8fc2d9b99f222c56860c912e028391780e078037aee3
-size 737
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d07fa02e85f517b479c60ee2a3f6c125, type: 3}
+  m_Name: Test Item Data
+  m_EditorClassIdentifier: 
+  <Name>k__BackingField: Shovel
+  <Description>k__BackingField: A shovel
+  <Rarity>k__BackingField: 1
+  <Sprite>k__BackingField: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+  <MaxStack>k__BackingField: 5
+  <CanSell>k__BackingField: 1
+  <SellPrice>k__BackingField: 150
+  <HoldableItem>k__BackingField: {fileID: 0}

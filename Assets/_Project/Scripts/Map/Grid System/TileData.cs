@@ -1,3 +1,22 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:36366d06aac1a20ae9c7d0e1fb985c22f003db2eb83e64efe610a48b524f6fb1
-size 422
+﻿namespace Systems.GridSystem
+{
+    public struct TileData
+    {
+        public GroundTile GroundTile { get; set; }
+        public IPlaceable Placeable { get; set; } // will be boxed
+
+        public static TileData None => new() { GroundTile = GroundTile.None };
+    }
+
+    public enum GroundTile
+    {
+        None,
+        Dirt,
+        Stone,
+    }
+
+    public interface IPlaceable
+    {
+
+    }
+}

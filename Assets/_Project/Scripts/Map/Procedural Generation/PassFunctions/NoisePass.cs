@@ -1,3 +1,27 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:e11a28e0b42044d57aaf35e0a7f5dcc9acbb655e611d6a2dab6468f0e85a96f2
-size 609
+﻿using NaughtyAttributes;
+using UnityEngine;
+
+[CreateAssetMenu(menuName = "Pass/Noise Pass")]
+public class NoisePass : PassDataBase
+{
+    [SerializeField]
+    private BlendMode _blendMode;
+
+    [Expandable]
+    [SerializeField]
+    private NoiseMapData _noiseMap;
+
+    public override float[,] MakePass(int dimensions, float[,] map = null)
+    {
+        float[,] noiseValues = _noiseMap.GetNoiseMap(dimensions);
+
+        if (map != null)
+        {
+            map.Blend(noiseValues, dimensions, _blendMode);
+        }
+
+        Debug.Log(map[128, 128]);
+
+        return map;
+    }
+}

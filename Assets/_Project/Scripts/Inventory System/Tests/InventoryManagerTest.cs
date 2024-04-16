@@ -1,3 +1,21 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:f91eeefe4482a0fb7a940e7bbc43872632bed86a21e9cc337d63e8602c97bb3b
-size 586
+﻿using NaughtyAttributes;
+using UnityEngine;
+
+namespace Core.InventorySystem.Tests
+{
+    public class InventoryManagerTest : MonoBehaviour
+    {
+        [SerializeField] private ItemData _itemData;
+        [SerializeField] private int _stackToAdd;
+
+        [Button]
+        private void AddItems()
+        {
+            if (Application.isPlaying)
+            {
+                var inventoryManager = FindObjectOfType<InventoryManager>();
+                inventoryManager.AddItemsToPlayerInventory(_itemData, _stackToAdd, out int _);
+            }
+        }
+    }
+}

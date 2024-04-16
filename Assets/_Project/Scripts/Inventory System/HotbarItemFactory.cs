@@ -1,3 +1,18 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:dc117cfa2cfe90014fc92487cdfbd8470d6ad75d2d8a86dda072e6b0fb22d71a
-size 452
+﻿using Coimbra;
+using UnityEngine;
+
+namespace Core.InventorySystem
+{
+    [ProjectSettings("Game Settings")]
+    public class HotbarItemFactory : ScriptableSettings
+    {
+        [SerializeField] private HotbarItem _hotbarItemPrefab;
+
+        public HotbarItem Create(Item item)
+        {
+            var hotbarItem = Instantiate(_hotbarItemPrefab);
+            hotbarItem.Setup(item);
+            return hotbarItem;
+        }
+    }
+}

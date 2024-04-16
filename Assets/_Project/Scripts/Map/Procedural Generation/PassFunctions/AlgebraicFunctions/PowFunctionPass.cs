@@ -1,3 +1,22 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:359561f3a72c673e2488ec9851b7aba853081e0129ff7e3d48c6eee3a37dabaf
-size 609
+﻿using UnityEngine;
+
+[CreateAssetMenu(fileName = "PowFunctionPass", menuName = "Pass/Algebraic/Pow Function")]
+public class PowFunctionPass : PassDataBase
+{
+    [SerializeField] private float expoent;
+
+    public override float[,] MakePass(int dimensions, float[,] map = null)
+    {
+        if (map != null)
+        {
+            for (int i = 0; i < dimensions; i++)
+            {
+                for (int j = 0; j < dimensions; j++)
+                {
+                    map[i, j] = Mathf.Pow(map[i, j], expoent);
+                }
+            }
+        }
+        return map;
+    }
+}

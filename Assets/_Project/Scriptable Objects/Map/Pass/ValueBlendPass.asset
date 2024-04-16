@@ -1,3 +1,16 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:73de06d5a11f7b216964a19c0e4548e6418368410c41cf46aadd1d2c501d4acc
-size 431
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be9ce152cb4c4f141a60e9f3b6724def, type: 3}
+  m_Name: ValueBlendPass
+  m_EditorClassIdentifier: 
+  _value: 1
+  _blendMode: 0

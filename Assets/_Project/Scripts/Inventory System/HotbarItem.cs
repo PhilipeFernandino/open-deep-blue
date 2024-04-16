@@ -1,3 +1,23 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:5710c7ff3b0fa9fa8e95af03e3720cbb99c4da4f0ab5dcec5291bbce076f31c2
-size 553
+﻿using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace Core.InventorySystem
+{
+    public class HotbarItem : MonoBehaviour
+    {
+        [SerializeField] private Image _iconImage;
+        [SerializeField] private TextMeshProUGUI _stackTMP;
+
+        private Item _item;
+
+        public void Setup(Item item)
+        {
+            _item = item;
+            _iconImage.sprite = item.ItemData.Sprite;
+            _stackTMP.text = item.Stack.ToString();
+        }
+
+        public void HoldItem() => _item.HoldItem();
+    }
+}

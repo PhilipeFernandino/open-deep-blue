@@ -1,3 +1,16 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:da597cc5eb16af798a6fce6e1fb8fce2411c1696ab5ebc6cf7900866e6a97a95
-size 371
+{
+    "name": "Core.UI",
+    "rootNamespace": "Core.UI",
+    "references": [
+        "Coimbra"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

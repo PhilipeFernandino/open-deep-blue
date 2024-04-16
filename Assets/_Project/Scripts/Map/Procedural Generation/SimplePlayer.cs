@@ -1,3 +1,33 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:f393fde49e7e675c8b565eb86cefc9c91faf988516480cb1af88cf86111d14db
-size 656
+using UnityEngine;
+
+public class SimplePlayer : MonoBehaviour
+{
+    [SerializeField] private float _moveSpeed;
+
+    private Vector2 _movement;
+
+    private void Update()
+    {
+        GetInput();
+    }
+
+    private void FixedUpdate()
+    {
+        Walk();
+    }
+
+    private void GetInput()
+    {
+        _movement.x = Input.GetAxisRaw("Horizontal");
+        _movement.y = Input.GetAxisRaw("Vertical");
+    }
+
+    private void Walk()
+    {
+        gameObject.transform.Translate(
+            _movement.x * _moveSpeed * Time.deltaTime,
+            _movement.y * _moveSpeed * Time.deltaTime,
+            0
+        );
+    }
+}

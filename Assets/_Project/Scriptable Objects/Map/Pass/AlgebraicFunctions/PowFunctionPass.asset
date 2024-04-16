@@ -1,3 +1,15 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:2495418ea7ea55986c4e9da2b3fbee376e90c27d9b6566a7ddcb74f6243c16d6
-size 417
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e0ba4acb90f9db43b6ff2ce2c6ceaed, type: 3}
+  m_Name: PowFunctionPass
+  m_EditorClassIdentifier: 
+  expoent: 2

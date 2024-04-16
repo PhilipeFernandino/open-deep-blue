@@ -1,3 +1,20 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:aacc09597bbfc868705c82b085e7238a2dce4482c77d31a9f6a4eb0c454e044e
-size 479
+{
+    "name": "Core.Map",
+    "rootNamespace": "Core.Map",
+    "references": [
+        "Coimbra",
+        "Core.GridSystem",
+        "Core.ProcGen",
+        "Core.Util",
+        "NaughtyAttributes.Core"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

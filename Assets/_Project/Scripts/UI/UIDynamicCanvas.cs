@@ -1,3 +1,45 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:1e1c2a0ab255f36f132b841907e1f7f3b1419a4ca0b1cd7a11bc553839d8645a
-size 955
+﻿using UnityEngine;
+
+namespace Core.UI
+{
+    [RequireComponent(typeof(Canvas))]
+    public class UIDynamicCanvas : MonoBehaviour
+    {
+        [SerializeField] private bool _hideSelfOnAwake = true;
+
+        private Canvas _canvas;
+
+        public Canvas Canvas => _canvas;
+        public bool IsEnabled => _canvas.enabled;
+
+        public virtual void ShowSelf()
+        {
+            _canvas.enabled = true;
+        }
+
+        public virtual void HideSelf()
+        {
+            _canvas.enabled = false;
+        }
+
+        public virtual void ToggleSelf()
+        {
+            _canvas.enabled = !_canvas.enabled;
+        }
+
+        public virtual void SetActiveState(bool state)
+        {
+            _canvas.enabled = state;
+        }
+
+        protected virtual void Awake()
+        {
+            _canvas = GetComponent<Canvas>();
+
+            if (_hideSelfOnAwake)
+            {
+                HideSelf();
+            }
+        }
+    }
+}
