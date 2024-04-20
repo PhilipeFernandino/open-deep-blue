@@ -1,0 +1,20 @@
+{
+    "name": "Core.Units",
+    "rootNamespace": "Core.Units",
+    "references": [
+        "",
+        "Coimbra",
+        "Core.Util",
+        "NaughtyAttributes.Core",
+        "UniTask"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

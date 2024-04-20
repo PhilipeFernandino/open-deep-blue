@@ -28,6 +28,13 @@
       "dependencies": {},
       "url": "https://package.openupm.com"
     },
+    "com.ruccho.fang-auto-tile": {
+      "version": "https://github.com/ruccho/FangAutoTile.git?path=/Packages/com.ruccho.fang-auto-tile",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "1d322cbb191b4613d251a37ad0ee3f5a6ddc2c07"
+    },
     "com.unity.2d.animation": {
       "version": "9.1.0",
       "depth": 1,
