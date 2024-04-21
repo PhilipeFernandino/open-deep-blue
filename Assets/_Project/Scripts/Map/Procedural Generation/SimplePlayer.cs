@@ -24,6 +24,8 @@ public class SimplePlayer : MonoBehaviour
 
     private void Walk()
     {
+        _movement.Normalize();
+
         gameObject.transform.Translate(
             _movement.x * _moveSpeed * Time.deltaTime,
             _movement.y * _moveSpeed * Time.deltaTime,
