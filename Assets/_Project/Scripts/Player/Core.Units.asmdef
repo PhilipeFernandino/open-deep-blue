@@ -6,6 +6,8 @@
         "Coimbra",
         "Core.Util",
         "NaughtyAttributes.Core",
+        "spine-csharp",
+        "spine-unity",
         "UniTask"
     ],
     "includePlatforms": [],
