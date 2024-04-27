@@ -5,8 +5,7 @@ namespace Core.Units
 {
     public class PlayerAnimator : MonoBehaviour
     {
-        [SerializeField] private SkeletonAnimation _sideSkeletonAnimation;
-        [SerializeField] private SkeletonAnimation _frontSkeletonAnimation;
+        [SerializeField] private SkeletonAnimation _skeletonAnimation;
 
         private Vector2 _input;
 
@@ -15,33 +14,44 @@ namespace Core.Units
         private void Update()
         {
             GetInput();
-            if (_input.x != 0)
-            {
-                if (!_isSide)
-                {
-                    _isSide = true;
-                    _sideSkeletonAnimation.gameObject.SetActive(true);
-                    _frontSkeletonAnimation.gameObject.SetActive(false);
-                    _sideSkeletonAnimation.AnimationState.SetAnimation(0, "walk", true);
-                }
-
-                if (_input.x > 0)
-                {
-                    _sideSkeletonAnimation.skeleton.ScaleX = 1;
-                }
-                else
-                {
-                    _sideSkeletonAnimation.skeleton.ScaleX = -1;
-                }
-            }
-            else if (_input.y != 0)
+            if (_input.y != 0)
             {
                 if (_isSide)
                 {
                     _isSide = false;
-                    _sideSkeletonAnimation.gameObject.SetActive(false);
-                    _frontSkeletonAnimation.gameObject.SetActive(true);
-                    _frontSkeletonAnimation.AnimationState.SetAnimation(0, "walk", true);
+                    _skeletonAnimation.AnimationState.SetAnimation(0, "walk", true);
+                }
+
+                if (_input.y > 0)
+                {
+                    _skeletonAnimation.Skeleton.SetSkin("back");
+                    _skeletonAnimation.Skeleton.SetSlotsToSetupPose();
+                }
+                else
+                {
+                    _skeletonAnimation.Skeleton.SetSkin("front");
+                    _skeletonAnimation.Skeleton.SetSlotsToSetupPose();
+                }
+            }
+            else if (_input.x != 0)
+            {
+                // Set anim if not already set
+                if (!_isSide)
+                {
+                    _isSide = true;
+                    _skeletonAnimation.AnimationState.SetAnimation(0, "walk", true);
+                    _skeletonAnimation.Skeleton.SetSkin("side");
+                    _skeletonAnimation.Skeleton.SetSlotsToSetupPose();
+                }
+
+                // Flip accordingly
+                if (_input.x > 0)
+                {
+                    _skeletonAnimation.skeleton.ScaleX = 1;
+                }
+                else
+                {
+                    _skeletonAnimation.skeleton.ScaleX = -1;
                 }
             }
 
