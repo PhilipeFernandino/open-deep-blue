@@ -4,11 +4,13 @@
     "references": [
         "",
         "Coimbra",
+        "Core.Extensions",
         "Core.Util",
         "NaughtyAttributes.Core",
         "spine-csharp",
         "spine-unity",
-        "UniTask"
+        "UniTask",
+        "Unity.InputSystem"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
