@@ -38,6 +38,18 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 3990249425
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Equipment
+    uniqueID: 906048743
+    locked: 0
+  - name: Unit
+    uniqueID: 2689193507
+    locked: 0
+  - name: Top
+    uniqueID: 2706677195
     locked: 0

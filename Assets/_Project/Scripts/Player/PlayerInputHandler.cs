@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,6 +7,7 @@ namespace Player
     public class PlayerInputHandler : MonoBehaviour
     {
         private Player _player;
+        private Camera _mainCamera;
 
         public void MoveInput(InputAction.CallbackContext context)
         {
@@ -18,8 +18,8 @@ namespace Player
         {
             if (context.performed)
             {
-                _player.TryToUseCurrentItem(Input.mousePosition);
-            } 
+                _player.TryToUseCurrentItem(To2DWorldPosition(Input.mousePosition));
+            }
         }
 
         public void InteractInput(InputAction.CallbackContext context)
@@ -30,9 +30,18 @@ namespace Player
             }
         }
 
+        private Vector2 To2DWorldPosition(Vector2 mousePosition)
+        {
+            var worldPosition = Input.mousePosition;
+            worldPosition.z = 10f;
+            worldPosition = _mainCamera.ScreenToWorldPoint(worldPosition);
+            return worldPosition.XY();
+        }
+
         private void Awake()
         {
             _player = GetComponent<Player>();
+            _mainCamera = Camera.main;
         }
     }
 }

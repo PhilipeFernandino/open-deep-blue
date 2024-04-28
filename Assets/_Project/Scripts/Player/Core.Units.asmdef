@@ -3,10 +3,12 @@
     "rootNamespace": "Core.Units",
     "references": [
         "",
+        "Asset.AutoGetComponent",
         "Coimbra",
         "Core.Extensions",
         "Core.Util",
         "NaughtyAttributes.Core",
+        "PrimeTween.Runtime",
         "spine-csharp",
         "spine-unity",
         "UniTask",

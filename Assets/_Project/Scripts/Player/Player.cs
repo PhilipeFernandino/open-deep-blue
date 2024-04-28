@@ -1,4 +1,5 @@
 ﻿using Coimbra;
+using Core.Units;
 using UnityEngine;
 
 namespace Player
@@ -6,6 +7,7 @@ namespace Player
     public class Player : Actor
     {
         [SerializeField] private PlayerMovement2D _playerMovement;
+        [SerializeField] private PlayerHold _playerHold;
 
         public void TryToMove(Vector2 direction)
         {
@@ -16,8 +18,9 @@ namespace Player
         {
         }
 
-        public void TryToUseCurrentItem(Vector2 position)
+        public void TryToUseCurrentItem(Vector2 worldPosition)
         {
+            _playerHold.TryUseEquipment(worldPosition);
         }
     }
 }

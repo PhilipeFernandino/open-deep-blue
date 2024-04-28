@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class BaseBehaviour : MonoBehaviour
 {
-    protected virtual void OnEnable()
+    protected virtual void Awake()
     {
         InjectGetComponent();
     }
