@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using UnityEngine.EventSystems;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-namespace Utils.UI
+namespace Core.Utils
 {
     public static class UIRaycastUtilities
     {
@@ -71,7 +71,7 @@ namespace Utils.UI
             component = null;
             return false;
         }
-            
+
         static PointerEventData ScreenPosToPointerData(Vector2 screenPos)
            => new(EventSystem.current) { position = screenPos };
     }

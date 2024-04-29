@@ -1,6 +1,8 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using Core.HealthSystem;
+using Cysharp.Threading.Tasks;
 using PrimeTween;
 using System;
+using System.Threading;
 using UnityEngine;
 
 namespace Core.Units
@@ -11,6 +13,7 @@ namespace Core.Units
         [Tooltip("How many times the equipment can be used per second")]
         [SerializeField] private float _usesPerSecond;
         [SerializeField] private float _angleOffset;
+        [SerializeField] private float _disableSRDelaySeconds = 0.1f;
 
         [SerializeField] private TweenSettings<Vector3> _rotTweenSettings;
 
@@ -19,6 +22,9 @@ namespace Core.Units
 
         private bool _upSwingDirection = true;
         private bool _canUse = true;
+
+        private TimeSpan _disableSRDelay;
+        private CancellationTokenSource _disableSR_Cts;
 
         private TimeSpan UseInterval => TimeSpan.FromSeconds(1f / _usesPerSecond);
 
@@ -39,11 +45,15 @@ namespace Core.Units
             _collider = GetComponent<Collider2D>();
             _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 
+            _disableSRDelay = TimeSpan.FromSeconds(_disableSRDelaySeconds);
             _spriteRenderer.enabled = false;
         }
 
         private async UniTask Use(Vector2 worldPosition)
         {
+            _disableSR_Cts?.Cancel();
+            _disableSR_Cts = new CancellationTokenSource();
+
             _spriteRenderer.enabled = true;
             _collider.enabled = true;
 
@@ -56,6 +66,7 @@ namespace Core.Units
             float startAngle = angle - _angleOffset;
             float targetAngle = angle + _angleOffset;
 
+            // Juice it up 
             if (_upSwingDirection)
             {
                 (startAngle, targetAngle) = (targetAngle, startAngle);
@@ -70,8 +81,35 @@ namespace Core.Units
                 transform.parent,
                 _rotTweenSettings);
 
-            _spriteRenderer.enabled = false;
             _collider.enabled = false;
+
+            DisableSpriteRendererTask().Forget();
+        }
+
+        private async UniTask DisableSpriteRendererTask()
+        {
+            CancellationToken token = _disableSR_Cts.Token;
+            await UniTask.Delay(_disableSRDelay, cancellationToken: token).SuppressCancellationThrow();
+
+            if (!token.IsCancellationRequested)
+            {
+                _spriteRenderer.enabled = false;
+            }
+        }
+
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            Debug.Log($"{collision} - enter");
+
+            if (collision.TryGetComponent(out IHealth health))
+            {
+                health.Hurt(new Attack(50f, AttackType.Damage));
+            }
+        }
+
+        private void OnTriggerExit2D(Collider2D collision)
+        {
+            Debug.Log($"{collision} - exit");
         }
     }
 }

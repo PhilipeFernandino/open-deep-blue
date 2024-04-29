@@ -1,25 +1,22 @@
 {
-    "name": "Core.Units",
-    "rootNamespace": "Core.Units",
+    "name": "Core.HealthSystem.UI",
+    "rootNamespace": "Core.HealthSystem.UI",
     "references": [
-        "Asset.AutoGetComponent",
         "Coimbra",
-        "Core.Extensions",
+        "Coimbra.Services",
         "Core.HealthSystem",
         "Core.Util",
-        "NaughtyAttributes.Core",
-        "PrimeTween.Runtime",
-        "spine-csharp",
-        "spine-unity",
         "UniTask",
-        "Unity.InputSystem"
+        "UniTask.DOTween",
+        "Unity.TextMeshPro",
+        "UnityEngine.UI"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
     "precompiledReferences": [],
-    "autoReferenced": false,
+    "autoReferenced": true,
     "defineConstraints": [],
     "versionDefines": [],
     "noEngineReferences": false

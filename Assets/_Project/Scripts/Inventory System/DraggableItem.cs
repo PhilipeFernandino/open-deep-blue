@@ -1,11 +1,11 @@
 
 using Coimbra;
+using Core.Utils;
 using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using Utils.UI;
 
 namespace Core.InventorySystem
 {
