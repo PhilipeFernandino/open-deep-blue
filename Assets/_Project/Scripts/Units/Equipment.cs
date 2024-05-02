@@ -5,7 +5,7 @@ using System;
 using System.Threading;
 using UnityEngine;
 
-namespace Core.Units
+namespace Core
 {
     [RequireComponent(typeof(Collider2D))]
     public class Equipment : MonoBehaviour
@@ -14,6 +14,7 @@ namespace Core.Units
         [SerializeField] private float _usesPerSecond;
         [SerializeField] private float _angleOffset;
         [SerializeField] private float _disableSRDelaySeconds = 0.1f;
+        [SerializeField] private EquipmentUseEffect _useEffect;
 
         [SerializeField] private TweenSettings<Vector3> _rotTweenSettings;
 
@@ -28,16 +29,24 @@ namespace Core.Units
 
         private TimeSpan UseInterval => TimeSpan.FromSeconds(1f / _usesPerSecond);
 
-        public async void TryUse(Vector2 worldPosition)
+        public (bool success, EquipmentUseEffect effect) TryUse(Vector2 worldPosition)
         {
             if (_canUse)
             {
                 Use(worldPosition).Forget();
+                AvailableTask().Forget();
 
-                _canUse = false;
-                await UniTask.Delay(UseInterval);
-                _canUse = true;
+                return (true, _useEffect);
             }
+
+            return (false, _useEffect);
+        }
+
+        private async UniTaskVoid AvailableTask()
+        {
+            _canUse = false;
+            await UniTask.Delay(UseInterval);
+            _canUse = true;
         }
 
         private void Awake()
@@ -111,5 +120,10 @@ namespace Core.Units
         {
             Debug.Log($"{collision} - exit");
         }
+    }
+
+    public struct EquipmentUseEffect
+    {
+        public float LockDuration;
     }
 }

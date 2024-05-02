@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Player
+namespace Core.Player
 {
     [RequireComponent(typeof(Player))]
     public class PlayerInputHandler : MonoBehaviour
@@ -11,14 +11,14 @@ namespace Player
 
         public void MoveInput(InputAction.CallbackContext context)
         {
-            _player.TryToMove(context.ReadValue<Vector2>());
+            _player.MoveInput(context.ReadValue<Vector2>());
         }
 
         public void UseCurrentItemInput(InputAction.CallbackContext context)
         {
             if (context.performed)
             {
-                _player.TryToUseCurrentItem(To2DWorldPosition(Input.mousePosition));
+                _player.UseEquipmentInput(To2DWorldPosition(Input.mousePosition));
             }
         }
 
@@ -26,7 +26,7 @@ namespace Player
         {
             if (context.performed)
             {
-                _player.TryToInteract();
+                _player.InteractInput();
             }
         }
 

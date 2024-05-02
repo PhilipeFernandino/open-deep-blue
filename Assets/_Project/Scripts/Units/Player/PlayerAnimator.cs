@@ -1,7 +1,7 @@
 ﻿using Spine.Unity;
 using UnityEngine;
 
-namespace Core.Units
+namespace Core.Player
 {
     public class PlayerAnimator : MonoBehaviour
     {

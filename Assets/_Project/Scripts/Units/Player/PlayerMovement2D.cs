@@ -1,13 +1,19 @@
 using UnityEngine;
 
-namespace Player
+namespace Core.Player
 {
     public class PlayerMovement2D : MonoBehaviour
     {
         [SerializeField] private Rigidbody2D _rb2D;
-        [SerializeField] private float _speed;
+
+        private float _speed;
 
         private Vector2 _movementInput;
+
+        public void Setup(float speed)
+        {
+            _speed = speed;
+        }
 
         public void TryToMove(Vector2 direction)
         {
