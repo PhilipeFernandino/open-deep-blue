@@ -39,5 +39,10 @@ namespace Core.FSM
         {
             State.Update();
         }
+
+        public void FixedUpdate()
+        {
+            State.FixedUpdate();
+        }
     }
 }

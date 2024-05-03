@@ -11,6 +11,7 @@ namespace Core.Player
         public override void Enter(IEnterStateData enterStateData)
         {
             _enterStateData = (UsingEquipmentEnterStateData)enterStateData;
+            _fsmAgent.PlayerMovement.Dash(_enterStateData.UseEffect.AddedVelocity, _enterStateData.UseEffect.AddedImpulseDuration);
             ExitStateTask().Forget();
         }
         private async UniTask ExitStateTask()

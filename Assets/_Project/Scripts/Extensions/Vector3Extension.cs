@@ -31,4 +31,6 @@ public static class Vector3Extension
     {
         return origin + new Vector3(input.x, 0, input.y) * range;
     }
+
+    public static Vector3 NormalizeExcess(this Vector3 vector) => vector.sqrMagnitude > 1 ? vector.normalized : vector;
 }

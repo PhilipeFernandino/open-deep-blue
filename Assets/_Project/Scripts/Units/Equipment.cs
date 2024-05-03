@@ -36,7 +36,8 @@ namespace Core
                 Use(worldPosition).Forget();
                 AvailableTask().Forget();
 
-                return (true, _useEffect);
+                Vector2 addedVelocity = _useEffect.AddedImpulseSpeed * (worldPosition - transform.parent.position.XY()).NormalizeExcess();
+                return (true, _useEffect.Create(addedVelocity));
             }
 
             return (false, _useEffect);
@@ -125,6 +126,25 @@ namespace Core
     [Serializable]
     public struct EquipmentUseEffect
     {
-        public float LockDuration;
+        [field: SerializeField] public float LockDuration { get; private set; }
+
+        [field: SerializeField] public float AddedImpulseSpeed { get; private set; }
+        [field: SerializeField] public float AddedImpulseDuration { get; private set; }
+
+
+        public readonly Vector2 AddedVelocity;
+
+        public EquipmentUseEffect(float lockDuration, float addedImpulseSpeed, float addedImpulseDuration, Vector2 addedVelocity)
+        {
+            LockDuration = lockDuration;
+            AddedVelocity = addedVelocity;
+            AddedImpulseSpeed = addedImpulseSpeed;
+            AddedImpulseDuration = addedImpulseDuration;
+        }
+
+        public readonly EquipmentUseEffect Create(Vector2 addedVelocity)
+        {
+            return new EquipmentUseEffect(LockDuration, AddedImpulseSpeed, AddedImpulseDuration, addedVelocity);
+        }
     }
 }

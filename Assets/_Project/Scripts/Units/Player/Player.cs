@@ -10,6 +10,7 @@ namespace Core.Player
     [RequireComponent(typeof(PlayerHold))]
     [RequireComponent(typeof(PlayerAnimator))]
     [RequireComponent(typeof(PlayerMovement2D))]
+    [RequireComponent(typeof(BoxCollider2D))]
 
     public class Player : Actor, IFSMAgent<PlayerState>
     {
@@ -18,8 +19,9 @@ namespace Core.Player
         private PlayerHold _playerHold;
         private PlayerAnimator _playerAnimator;
         private PlayerMovement2D _playerMovement;
-        private PlayerStateResolver _playerStateResolver;
+        private BoxCollider2D _boxCollider;
 
+        private PlayerStateResolver _playerStateResolver;
 
         private FSM<PlayerState> _fsm;
 
@@ -27,6 +29,7 @@ namespace Core.Player
         internal PlayerMovement2D PlayerMovement => _playerMovement;
         internal PlayerHold PlayerHold => _playerHold;
         internal PlayerStateResolver StateResolver => _playerStateResolver;
+        internal BoxCollider2D BoxCollider => _boxCollider;
 
         Dictionary<PlayerState, PlayerFSMState> IFSMAgent<PlayerState>.States => throw new System.NotImplementedException();
 
@@ -45,12 +48,18 @@ namespace Core.Player
             _fsm.Update();
         }
 
+        private void FixedUpdate()
+        {
+            _fsm.FixedUpdate();
+        }
+
         protected override void OnInitialize()
         {
             base.OnSpawn();
             _playerAnimator = GetComponent<PlayerAnimator>();
             _playerHold = GetComponent<PlayerHold>();
             _playerMovement = GetComponent<PlayerMovement2D>();
+            _boxCollider = GetComponent<BoxCollider2D>();
 
             _playerStateResolver = new();
         }

@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks;
+using System;
 using UnityEngine;
 
 namespace Core.Player
@@ -7,6 +9,12 @@ namespace Core.Player
         [SerializeField] private Rigidbody2D _rb2D;
 
         private float _speed;
+
+        // Let's keep this here so the rigidbody doesn't get touched by multiple components at the same time 
+        // or to not need to control who is controlling the rb at any given moment
+        private bool _isDashing = false;
+        private float _dashDuration;
+        private Vector2 _dashVelocity;
 
         private Vector2 _movementInput;
 
@@ -20,6 +28,22 @@ namespace Core.Player
             _movementInput = direction;
         }
 
+        public void Dash(Vector2 velocity, float duration)
+        {
+            Debug.Log($"{GetType()} - Start dash V: {velocity}, D: {duration}");
+            _isDashing = true;
+            _dashVelocity = velocity;
+            _dashDuration = duration;
+
+            EndDashTask();
+        }
+
+        private async void EndDashTask()
+        {
+            await UniTask.Delay(TimeSpan.FromSeconds(_dashDuration));
+            _isDashing = false;
+        }
+
         public void ResetMovement()
         {
             _movementInput = Vector2.zero;
@@ -27,14 +51,22 @@ namespace Core.Player
 
         private void FixedUpdate()
         {
-            if (_movementInput.magnitude > 1)
+            if (_isDashing)
             {
-                _movementInput.Normalize();
+                var motion = (_dashVelocity.y * transform.up + _dashVelocity.x * transform.right) * Time.fixedDeltaTime;
+                _rb2D.MovePosition(_rb2D.position + motion.XY());
             }
+            else
+            {
+                if (_movementInput.magnitude > 1)
+                {
+                    _movementInput.Normalize();
+                }
 
-            var fs = _speed * Time.deltaTime;
-            var motion = (_movementInput.y * transform.up + _movementInput.x * transform.right) * fs;
-            _rb2D.MovePosition(_rb2D.position + motion.XY());
+                var movement = _speed * Time.fixedDeltaTime;
+                var motion = (_movementInput.y * transform.up + _movementInput.x * transform.right) * movement;
+                _rb2D.MovePosition(_rb2D.position + motion.XY());
+            }
         }
     }
 }
