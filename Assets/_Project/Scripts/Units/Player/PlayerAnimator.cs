@@ -7,61 +7,61 @@ namespace Core.Player
     {
         [SerializeField] private SkeletonAnimation _skeletonAnimation;
 
-        private Vector2 _input;
-
         private bool _isSide = true;
 
-        private void Update()
+        public void WalkingDirectionInput(Vector2 input)
         {
-            GetInput();
-            if (_input.y != 0)
+            if (input.x != 0)
             {
-                if (_isSide)
-                {
-                    _isSide = false;
-                    _skeletonAnimation.AnimationState.SetAnimation(0, "walk", true);
-                }
-
-                if (_input.y > 0)
-                {
-                    _skeletonAnimation.Skeleton.SetSkin("back");
-                    _skeletonAnimation.Skeleton.SetSlotsToSetupPose();
-                }
-                else
-                {
-                    _skeletonAnimation.Skeleton.SetSkin("front");
-                    _skeletonAnimation.Skeleton.SetSlotsToSetupPose();
-                }
+                SetSkin(input.x > 0 ? SkinDirection.Right : SkinDirection.Left);
             }
-            else if (_input.x != 0)
+            else if (input.y != 0)
             {
-                // Set anim if not already set
-                if (!_isSide)
-                {
-                    _isSide = true;
-                    _skeletonAnimation.AnimationState.SetAnimation(0, "walk", true);
-                    _skeletonAnimation.Skeleton.SetSkin("side");
-                    _skeletonAnimation.Skeleton.SetSlotsToSetupPose();
-                }
-
-                // Flip accordingly
-                if (_input.x > 0)
-                {
-                    _skeletonAnimation.skeleton.ScaleX = 1;
-                }
-                else
-                {
-                    _skeletonAnimation.skeleton.ScaleX = -1;
-                }
+                SetSkin(input.y > 0 ? SkinDirection.Back : SkinDirection.Front);
             }
-
         }
 
-        private void GetInput()
+        public void StartWalking()
         {
-            _input.x = Input.GetAxisRaw("Horizontal");
-            _input.y = Input.GetAxisRaw("Vertical");
+            _skeletonAnimation.AnimationState.SetAnimation(0, "walk", true);
+            _skeletonAnimation.timeScale = 2f;
         }
 
+        public void StopWalking()
+        {
+            _skeletonAnimation.timeScale = 0f;
+        }
+
+        private void SetSkin(SkinDirection skinDirection)
+        {
+            _skeletonAnimation.Skeleton.SetSkin(GetSkinName(skinDirection));
+            _skeletonAnimation.Skeleton.SetSlotsToSetupPose();
+
+            if (skinDirection == SkinDirection.Left)
+            {
+                _skeletonAnimation.Skeleton.ScaleX = -1;
+            }
+            else if (skinDirection == SkinDirection.Right)
+            {
+                _skeletonAnimation.Skeleton.ScaleX = 1;
+            }
+        }
+
+        private string GetSkinName(SkinDirection skinDirection) =>
+            skinDirection switch
+            {
+                SkinDirection.Back => "back",
+                SkinDirection.Front => "front",
+                SkinDirection.Left or SkinDirection.Right => "side",
+            };
+
+
+        public enum SkinDirection
+        {
+            Back,
+            Front,
+            Left,
+            Right,
+        }
     }
 }

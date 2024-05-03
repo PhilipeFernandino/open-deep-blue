@@ -32,7 +32,7 @@ namespace Core.Player
 
         private Vector2 To2DWorldPosition(Vector2 mousePosition)
         {
-            var worldPosition = Input.mousePosition;
+            var worldPosition = (Vector3)mousePosition;
             worldPosition.z = 10f;
             worldPosition = _mainCamera.ScreenToWorldPoint(worldPosition);
             return worldPosition.XY();

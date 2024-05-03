@@ -204,6 +204,8 @@ MonoBehaviour:
   _usesPerSecond: 4
   _angleOffset: 60
   _disableSRDelaySeconds: 0.3
+  _useEffect:
+    LockDuration: 0.25
   _rotTweenSettings:
     startFromCurrent: 0
     startValue: {x: 0, y: 0, z: 0}
@@ -320,6 +322,7 @@ GameObject:
   - component: {fileID: 729723205}
   - component: {fileID: 729723204}
   - component: {fileID: 729723208}
+  - component: {fileID: 729723209}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -565,6 +568,7 @@ MonoBehaviour:
   _playerMovement: {fileID: 729723204}
   _playerHold: {fileID: 729723205}
   _playerAnimator: {fileID: 729723206}
+  _playerStateResolver: {fileID: 729723209}
   _movementSpeed: 2
 --- !u!114 &729723208
 MonoBehaviour:
@@ -576,6 +580,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9601d09d7b439224aa6bbbf0854f75f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &729723209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 729723190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d583d7b257c5e214db734940b16a5841, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &823372899

@@ -20,6 +20,11 @@ namespace Core.Player
             _movementInput = direction;
         }
 
+        public void ResetMovement()
+        {
+            _movementInput = Vector2.zero;
+        }
+
         private void FixedUpdate()
         {
             if (_movementInput.magnitude > 1)

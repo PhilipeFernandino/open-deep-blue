@@ -17,10 +17,7 @@ namespace Core.Player
         {
         }
 
-        public override void MoveInput(Vector2 input)
-        {
-            Debug.Log($"{GetType()} - {input}");
-            _fsmAgent.TransferState(PlayerState.Moving, null, this);
-        }
+        public override void UseEquipmentInput(Vector2 input) => _fsmAgent.StateResolver.MoveInput(input, this);
+        public override void MoveInput(Vector2 input) => _fsmAgent.StateResolver.MoveInput(input, this);
     }
 }

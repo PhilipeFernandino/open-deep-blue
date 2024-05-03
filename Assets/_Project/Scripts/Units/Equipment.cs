@@ -122,6 +122,7 @@ namespace Core
         }
     }
 
+    [Serializable]
     public struct EquipmentUseEffect
     {
         public float LockDuration;
