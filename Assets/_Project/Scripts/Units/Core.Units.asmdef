@@ -4,6 +4,7 @@
     "references": [
         "Asset.AutoGetComponent",
         "Coimbra",
+        "Core.Equipment",
         "Core.Extensions",
         "Core.HealthSystem",
         "Core.Util",

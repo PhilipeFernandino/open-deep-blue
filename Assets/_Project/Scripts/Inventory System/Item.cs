@@ -54,7 +54,8 @@ namespace Core.InventorySystem
 
         public void HoldItem()
         {
-
+            // spawn equipment
+            // warn player hold? // event
         }
     }
 }
