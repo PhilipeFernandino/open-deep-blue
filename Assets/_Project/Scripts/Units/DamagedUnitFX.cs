@@ -8,10 +8,11 @@ namespace Core.Units
 {
     public class DamagedUnitFX : MonoBehaviour
     {
+        [SerializeField] private SpriteRenderer _spriteRenderer;
+
         [SerializeField] private Material _damagedMaterial;
         [SerializeField] private float _damagedFXDuration = 0.3f;
 
-        private SpriteRenderer _spriteRenderer;
         private Material _originalMaterial;
         private IHealth _health;
         private CancellationTokenSource _damagedFX_Cts;
@@ -19,7 +20,6 @@ namespace Core.Units
         private void Awake()
         {
             _health = GetComponent<IHealth>();
-            _spriteRenderer = GetComponent<SpriteRenderer>();
         }
 
         private void Start()

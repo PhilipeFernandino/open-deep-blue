@@ -11,9 +11,9 @@ TagManager:
   - 
   - Water
   - UI
-  - Hitable
+  - Hittable
   - Equipment
-  - 
+  - Hitter
   - 
   - 
   - 
@@ -52,4 +52,7 @@ TagManager:
     locked: 0
   - name: Top
     uniqueID: 2706677195
+    locked: 0
+  - name: UI
+    uniqueID: 4178525561
     locked: 0
