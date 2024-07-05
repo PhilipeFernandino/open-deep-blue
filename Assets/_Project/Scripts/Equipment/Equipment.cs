@@ -113,8 +113,16 @@ namespace Core
 
             if (collision.TryGetComponent(out IHealth health))
             {
+                BlinkTime();
                 health.Hurt(new Attack(50f, AttackType.Damage));
             }
+        }
+
+        private async void BlinkTime()
+        {
+            Time.timeScale = 0;
+            await UniTask.Delay(TimeSpan.FromSeconds(.1f), true);
+            Time.timeScale = 1;
         }
 
         private void OnTriggerExit2D(Collider2D collision)

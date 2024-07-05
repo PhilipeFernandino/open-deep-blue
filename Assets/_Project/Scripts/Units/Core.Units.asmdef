@@ -3,6 +3,7 @@
     "rootNamespace": "Core.Units",
     "references": [
         "Asset.AutoGetComponent",
+        "Cinemachine",
         "Coimbra",
         "Core.Equipment",
         "Core.Extensions",
