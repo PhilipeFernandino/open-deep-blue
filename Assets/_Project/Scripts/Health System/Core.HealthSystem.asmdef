@@ -4,7 +4,8 @@
     "references": [
         "Coimbra",
         "Coimbra.Services",
-        "Core.Util"
+        "Core.Util",
+        "UniTask"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

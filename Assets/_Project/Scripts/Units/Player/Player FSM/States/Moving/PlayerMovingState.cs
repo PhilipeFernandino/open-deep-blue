@@ -27,5 +27,7 @@ namespace Core.Player
             _fsmAgent.PlayerMovement.TryToMove(input);
             _fsmAgent.PlayerAnimator.WalkingDirectionInput(input);
         }
+
+        public override void DashInput() => _fsmAgent.StateResolver.DashInput(this);
     }
 }

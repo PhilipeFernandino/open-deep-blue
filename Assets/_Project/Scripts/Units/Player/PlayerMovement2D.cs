@@ -18,6 +18,8 @@ namespace Core.Player
 
         private Vector2 _movementInput;
 
+        public Vector2 LastMovementInput { get; private set; }
+
         public void Setup(float speed)
         {
             _speed = speed;
@@ -26,22 +28,24 @@ namespace Core.Player
         public void TryToMove(Vector2 direction)
         {
             _movementInput = direction;
+            LastMovementInput = _movementInput.NormalizeExcess();
         }
 
-        public void Dash(Vector2 velocity, float duration)
+        public void Dash(Vector2 velocity, float duration, Action callback = null)
         {
             Debug.Log($"{GetType()} - Start dash V: {velocity}, D: {duration}");
             _isDashing = true;
             _dashVelocity = velocity;
             _dashDuration = duration;
 
-            EndDashTask();
+            EndDashTask(callback);
         }
 
-        private async void EndDashTask()
+        private async void EndDashTask(Action callback)
         {
             await UniTask.Delay(TimeSpan.FromSeconds(_dashDuration));
             _isDashing = false;
+            callback?.Invoke();
         }
 
         public void ResetMovement()
@@ -58,10 +62,7 @@ namespace Core.Player
             }
             else
             {
-                if (_movementInput.magnitude > 1)
-                {
-                    _movementInput.Normalize();
-                }
+                _movementInput = _movementInput.NormalizeExcess();
 
                 var movement = _speed * Time.fixedDeltaTime;
                 var motion = (_movementInput.y * transform.up + _movementInput.x * transform.right) * movement;

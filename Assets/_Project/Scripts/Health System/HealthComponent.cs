@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
+using System;
+using System.Threading;
 using UnityEngine;
 
 namespace Core.HealthSystem
@@ -8,10 +10,13 @@ namespace Core.HealthSystem
         private HealthData _healthData;
 
         private float _health;
+        private bool _isTakingDamage = true;
 
         public event Action<AttackedData> Attacked;
         public event Action<HealthChangedData> HealthChanged;
         public event Action HealthZeroed;
+
+        private CancellationTokenSource _iframeCTS;
 
         public bool IsAlive { get; private set; } = true;
 
@@ -20,7 +25,7 @@ namespace Core.HealthSystem
         public float Health
         {
             get => _health;
-            set
+            private set
             {
                 float healthNewValue = Mathf.Clamp(value, 0, MaxHealth);
 
@@ -40,20 +45,49 @@ namespace Core.HealthSystem
             }
         }
 
-        public void Hurt(Attack attackData)
+        public bool TryHurt(Attack attackData)
         {
-            Debug.Log($"{gameObject.name}.{GetType()} - Hurt with Attack Data = {attackData}");
+            Debug.Log($"[{gameObject.name} {GetType()}] - Attack Data = {attackData}, taking damage: {_isTakingDamage}");
+
+            if (!_isTakingDamage)
+            {
+                return false;
+            }
 
             float currentHealth = Health;
 
             Health -= attackData.Damage;
             Attacked?.Invoke(new AttackedData(Health - currentHealth, AttackType.Damage, transform.position));
+            return true;
         }
 
         public void Setup(HealthData healthData)
         {
             _healthData = healthData;
             _health = _healthData.BaseHealth;
+        }
+
+        public async UniTask AddIFrames(float duration)
+        {
+            _isTakingDamage = false;
+
+            // Cancel any pending cts, get a new one and give the value token to the UniTask delay
+            _iframeCTS?.Cancel();
+            _iframeCTS = new CancellationTokenSource();
+
+            var ct = _iframeCTS.Token;
+            await UniTask.Delay(TimeSpan.FromSeconds(duration), cancellationToken: ct).SuppressCancellationThrow();
+
+            if (!ct.IsCancellationRequested)
+            {
+                _isTakingDamage = true;
+            }
+        }
+
+        public void SetIsTakingDamage(bool value)
+        {
+            _iframeCTS?.Cancel();
+            _isTakingDamage = value;
         }
     }
 }

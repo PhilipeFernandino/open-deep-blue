@@ -15,6 +15,7 @@ namespace Core.Player
         public virtual void MoveInput(Vector2 input) { }
         public virtual void UseEquipmentInput(Vector2 input) { }
         public virtual void InteractInput() { }
+        public virtual void DashInput() { }
 
         public virtual void Initialize(IFSMAgent<PlayerState> fsmAgent)
         {

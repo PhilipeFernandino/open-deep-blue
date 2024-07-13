@@ -7,6 +7,7 @@ namespace Core.Player
     {
         public void MoveInput(Vector2 input) { }
         public void UseEquipmentInput(Vector2 input) { }
+        public void DashInput() { }
         public void InteractInput() { }
     }
 }

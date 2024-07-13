@@ -7,7 +7,7 @@ namespace Core.HealthSystem
         public float Health { get; }
         public float MaxHealth { get; }
 
-        public void Hurt(Attack attackData);
+        public bool TryHurt(Attack attackData);
 
         public event Action<HealthChangedData> HealthChanged;
         public event Action<AttackedData> Attacked;

@@ -113,21 +113,23 @@ namespace Core
 
             if (collision.TryGetComponent(out IHealth health))
             {
-                BlinkTime();
-                health.Hurt(new Attack(50f, AttackType.Damage));
+                if (health.TryHurt(new Attack(50f, AttackType.Damage)))
+                {
+                    BlinkTime();
+                }
             }
         }
 
         private async void BlinkTime()
         {
-            Time.timeScale = 0;
+            Time.timeScale = .5f;
             await UniTask.Delay(TimeSpan.FromSeconds(.1f), true);
             Time.timeScale = 1;
         }
 
         private void OnTriggerExit2D(Collider2D collision)
         {
-            Debug.Log($"{collision} - exit");
+            Debug.Log($"{GetType()} - {collision} - exit");
         }
     }
 

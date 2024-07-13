@@ -30,6 +30,14 @@ namespace Core.Player
             }
         }
 
+        public void DashInput(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+            {
+                _player.DashInput();
+            }
+        }
+
         private Vector2 To2DWorldPosition(Vector2 mousePosition)
         {
             var worldPosition = (Vector3)mousePosition;

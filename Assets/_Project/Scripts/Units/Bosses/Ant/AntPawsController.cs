@@ -37,7 +37,7 @@ namespace Core.Units.Bosses.Ant
 
         private void Start()
         {
-            DraggedPawsAttackFlow().Forget();
+            JumpingPawsAttackFlow().Forget();
         }
 
         private async UniTask JumpingPawsAttackFlow()
@@ -98,14 +98,14 @@ namespace Core.Units.Bosses.Ant
         {
             _raisePawScaleTws.startValue = paw.transform.lossyScale;
             await Tween.Scale(paw.transform, _raisePawScaleTws);
-            paw.ColliderEnabled = false;
+            paw.SetIsRaised(true);
         }
 
         private async UniTask LowerPaw(AntPaw paw)
         {
             _lowerPawScaleTws.startValue = paw.transform.lossyScale;
             await Tween.Scale(paw.transform, _lowerPawScaleTws);
-            paw.ColliderEnabled = true;
+            paw.SetIsRaised(false);
 
             var target = FindObjectOfType<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>();
 

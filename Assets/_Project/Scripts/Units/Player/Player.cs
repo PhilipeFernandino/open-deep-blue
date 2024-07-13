@@ -1,5 +1,6 @@
 ﻿using Coimbra;
 using Core.FSM;
+using Core.HealthSystem;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,7 +15,11 @@ namespace Core.Player
 
     public class Player : Actor, IFSMAgent<PlayerState>
     {
+        [SerializeField] private HealthComponent _healthComponent;
+
         [SerializeField] private float _movementSpeed;
+        [SerializeField] private float _dashSpeed;
+        [SerializeField] private float _dashDuration;
 
         private PlayerHold _playerHold;
         private PlayerAnimator _playerAnimator;
@@ -31,16 +36,39 @@ namespace Core.Player
         internal PlayerStateResolver StateResolver => _playerStateResolver;
         internal BoxCollider2D BoxCollider => _boxCollider;
 
+        internal float DashSpeed => _dashSpeed;
+        internal float DashDuration => _dashDuration;
+
+        #region FSM Delegation
         Dictionary<PlayerState, PlayerFSMState> IFSMAgent<PlayerState>.States => throw new System.NotImplementedException();
 
+        public Vector2 PlayerMovementDirection => PlayerMovement.LastMovementInput;
+
         public IPlayerFSMState State => ((IPlayerFSMState)_fsm.State);
+        #endregion
+
+        #region Health Delegation
+        public float Health => _healthComponent.Health;
+
+        public void Hurt(Attack attackData)
+        {
+            _healthComponent.TryHurt(attackData);
+        }
+        public void AddIFrames(float duration)
+        {
+            _healthComponent.AddIFrames(duration);
+        }
+        #endregion
 
         #region Input Handling Delegation
         public void MoveInput(Vector2 direction) => State.MoveInput(direction);
 
         public void InteractInput() => State.InteractInput();
 
+        public void DashInput() => State.DashInput();
+
         public void UseEquipmentInput(Vector2 worldPosition) => State.UseEquipmentInput(worldPosition);
+
         #endregion
 
         private void Update()
@@ -74,7 +102,8 @@ namespace Core.Player
             {
                 { PlayerState.Idle, new PlayerIdleState() },
                 { PlayerState.Moving, new PlayerMovingState() },
-                { PlayerState.UsingEquipment, new PlayerUsingEquipmentState() }
+                { PlayerState.UsingEquipment, new PlayerUsingEquipmentState() },
+                { PlayerState.Dashing, new PlayerDashingState() },
             }, this);
 
             TransferState(PlayerState.Idle, null, null);

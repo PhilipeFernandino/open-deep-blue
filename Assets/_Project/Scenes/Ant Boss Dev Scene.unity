@@ -41804,6 +41804,17 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &254423099 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 667742789751347689, guid: 6304011ff3d34f143a9c8e17a775cf26, type: 3}
+  m_PrefabInstance: {fileID: 109441048}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78cb5291fe7a1d84f98730ab6d08efe6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &354409092
 GameObject:
   m_ObjectHideFlags: 0
@@ -42066,6 +42077,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ea7a819a1c86494b9d203f5b2519ca9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _health: {fileID: 1673495896}
+  _hitterCollider: {fileID: 393866728}
 --- !u!61 &393866728
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -42747,6 +42760,22 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: ca8003bf-8fd6-42a1-a00e-7d31060308ac
     m_ActionName: Editor/Move Camera[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1812666738}
+        m_TargetAssemblyTypeName: Core.Player.PlayerInputHandler, Core.Units
+        m_MethodName: DashInput
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: db51b46e-a2e3-44ae-a699-36e4aeb5c53c
+    m_ActionName: Gameplay/Dash[/Keyboard/space]
   m_NeverAutoSwitchControlSchemes: 1
   m_DefaultControlScheme: Keyboard&Mouse
   m_DefaultActionMap: Gameplay
@@ -45038,6 +45067,17 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1633477452 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 667742789751347689, guid: 6304011ff3d34f143a9c8e17a775cf26, type: 3}
+  m_PrefabInstance: {fileID: 395790400}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78cb5291fe7a1d84f98730ab6d08efe6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1673495891
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -45136,6 +45176,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 189815021029349222, guid: 6304011ff3d34f143a9c8e17a775cf26, type: 3}
   m_PrefabInstance: {fileID: 1673495891}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1673495896 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 667742789751347689, guid: 6304011ff3d34f143a9c8e17a775cf26, type: 3}
+  m_PrefabInstance: {fileID: 1673495891}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78cb5291fe7a1d84f98730ab6d08efe6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1695489221
 GameObject:
   m_ObjectHideFlags: 0
@@ -45268,7 +45319,7 @@ GameObject:
   - component: {fileID: 1787665692}
   - component: {fileID: 1787665694}
   - component: {fileID: 1787665693}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Equipment
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45284,8 +45335,8 @@ Transform:
   m_GameObject: {fileID: 1787665691}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.01, y: 2, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalPosition: {x: 0.01, y: 3.65, z: 0}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2004442630}
@@ -45438,7 +45489,7 @@ GameObject:
   - component: {fileID: 1812666740}
   - component: {fileID: 1812666739}
   - component: {fileID: 1812666738}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: '- Player'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45661,7 +45712,7 @@ Rigidbody2D:
   m_GameObject: {fileID: 1812666736}
   m_BodyType: 0
   m_Simulated: 1
-  m_UseFullKinematicContacts: 0
+  m_UseFullKinematicContacts: 1
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
@@ -45693,7 +45744,10 @@ MonoBehaviour:
   _assertAwake: 0
   _activateOnSpawn: 0
   _deactivateOnDispose: 0
+  _healthComponent: {fileID: 1633477452}
   _movementSpeed: 4
+  _dashSpeed: 8
+  _dashDuration: 0.3
 --- !u!1 &1909094737
 GameObject:
   m_ObjectHideFlags: 0
@@ -45838,6 +45892,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ea7a819a1c86494b9d203f5b2519ca9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _health: {fileID: 254423099}
+  _hitterCollider: {fileID: 1909094740}
 --- !u!1 &2004442629
 GameObject:
   m_ObjectHideFlags: 0
