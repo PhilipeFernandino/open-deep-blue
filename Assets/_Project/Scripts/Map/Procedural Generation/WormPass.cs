@@ -50,6 +50,8 @@ public class WormPass : PassDataBase
 
     public override float[,] MakePass(int dimensions, float[,] map = null)
     {
+        InitNullMap(ref map, dimensions, -1f);
+
         Random.InitState(_seed);
 
         _wormNoiseData.Setup();
@@ -212,7 +214,7 @@ public class WormPass : PassDataBase
                     }
                     else if (map[k, l] < boundedNoiseByDistance && boundedNoiseByDistance > step)
                     {
-                        map[k, l] = 1;
+                        map[k, l] = 1f;
                     }
                 }
             }

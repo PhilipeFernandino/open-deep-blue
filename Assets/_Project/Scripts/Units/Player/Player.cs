@@ -40,7 +40,7 @@ namespace Core.Player
         internal float DashDuration => _dashDuration;
 
         #region FSM Delegation
-        Dictionary<PlayerState, PlayerFSMState> IFSMAgent<PlayerState>.States => throw new System.NotImplementedException();
+        Dictionary<PlayerState, PlayerFSMState> IFSMAgent<PlayerState>.States => _fsm.States;
 
         public Vector2 PlayerMovementDirection => PlayerMovement.LastMovementInput;
 

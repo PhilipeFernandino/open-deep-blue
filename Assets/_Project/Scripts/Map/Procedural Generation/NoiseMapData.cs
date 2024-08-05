@@ -59,8 +59,6 @@ public class NoiseMapData : ScriptableObject
             }
         }
 
-        Debug.Log(map[128, 128]);
-
         return map;
     }
 

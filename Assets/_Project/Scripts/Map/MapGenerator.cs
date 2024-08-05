@@ -10,7 +10,10 @@ namespace Core.Map
     public class MapGenerator : MonoBehaviour
     {
         [SerializeField] private Tilemap _tilemap;
+
         [SerializeField] private WormPass _wormPass;
+        [SerializeField] private NoisePass _orePass;
+
         [SerializeField] private CustomGrid _grid;
         [SerializeField] private int _dimensions;
 
@@ -51,7 +54,7 @@ namespace Core.Map
 
                     float noiseValue = Helper.NoiseTo01Bound(map[i, j]);
 
-                    tileData[i, j] = noiseValue < 0.5f ? _tileDataDic[GroundTile.Stone] : null;
+                    //tileData[i, j] = noiseValue < 0.5f ? _tileDataDic[GroundTile.Stone] : null;
                 }
             }
 

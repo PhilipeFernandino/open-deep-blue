@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
@@ -59,5 +60,51 @@ public static class Helper
         byte[] bytes = BitConverter.GetBytes(value);
         int x = BitConverter.ToInt32(bytes, 0);
         return Hash(x);
+    }
+
+    // It uses ref so we can reassign the variable 
+    public static void InitMap<T>(ref T[,] map, int dimensions, T value = default) where T : IConvertible
+    {
+        map = new T[dimensions, dimensions];
+
+        for (int i = 0; i < dimensions; i++)
+        {
+            for (int j = 0; j < dimensions; j++)
+            {
+                map[i, j] = value;
+            }
+        }
+    }
+
+    public static void InitNullMap<T>(ref T[,] map, int dimensions, T value = default) where T : IConvertible
+    {
+        if (map == null)
+        {
+            InitMap<T>(ref map, dimensions, value);
+        }
+    }
+
+    // Slow. Use only to debug.
+    public static Dictionary<float, int> CountValues(float[,] map, int dimensions)
+    {
+        Dictionary<float, int> values = new();
+
+        for (int i = 0; i < dimensions; i++)
+        {
+            for (int j = 0; j < dimensions; j++)
+            {
+                float v = map[i, j];
+                if (values.ContainsKey(v))
+                {
+                    values[v]++;
+                }
+                else
+                {
+                    values.Add(v, 1);
+                }
+            }
+        }
+
+        return values;
     }
 }

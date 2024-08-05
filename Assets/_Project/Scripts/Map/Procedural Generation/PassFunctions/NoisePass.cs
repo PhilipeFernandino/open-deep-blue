@@ -20,8 +20,6 @@ public class NoisePass : PassDataBase
             map.Blend(noiseValues, dimensions, _blendMode);
         }
 
-        Debug.Log(map[128, 128]);
-
         return map;
     }
 }

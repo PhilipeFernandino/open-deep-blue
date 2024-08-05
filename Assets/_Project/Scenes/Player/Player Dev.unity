@@ -2713,7 +2713,10 @@ MonoBehaviour:
   _assertAwake: 0
   _activateOnSpawn: 0
   _deactivateOnDispose: 0
+  _healthComponent: {fileID: 0}
   _movementSpeed: 2
+  _dashSpeed: 0
+  _dashDuration: 0
 --- !u!114 &729723208
 MonoBehaviour:
   m_ObjectHideFlags: 0
