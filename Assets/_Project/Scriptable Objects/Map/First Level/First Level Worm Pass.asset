@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _randomizeSeed: 1
   _rawResult: 0
-  _seed: -279386638
-  _worms: 4
+  _seed: 1212555978
+  _worms: 16
   _childs: 2
   _childIterationMultiplier: 0.5
   _speed: 2

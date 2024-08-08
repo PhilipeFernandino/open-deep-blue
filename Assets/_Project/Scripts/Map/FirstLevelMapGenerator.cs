@@ -1,4 +1,5 @@
 using Coimbra;
+using Core.Utils;
 using NaughtyAttributes;
 using System;
 using System.Collections.Generic;
@@ -33,8 +34,6 @@ namespace Core.Map
         [SerializeField] private bool _debug;
         #endregion
 
-        private Dictionary<Tile, Color> _colorTileDict;
-
         [Button]
         private void Generate()
         {
@@ -42,22 +41,14 @@ namespace Core.Map
 
             InitMap(ref _map, _dimensions, Tile.BlueStone);
 
-            float[,] map = _basePass.MakePass(_dimensions);
+            float[,] caveMap = _basePass.MakePass(_dimensions);
             var oreMap = _oreNoiseMap.GetNoiseMap(_dimensions);
-            Color[,] colors = new Color[_dimensions, _dimensions];
-
-            _colorTileDict = new(_colorTile.Count);
-
-            foreach (var ctl in _colorTile)
-            {
-                _colorTileDict.Add(ctl.Tile, ctl.Color);
-            }
 
             for (int i = 0; i < _dimensions; i++)
             {
                 for (int j = 0; j < _dimensions; j++)
                 {
-                    if (map[i, j] == 1f)
+                    if (caveMap[i, j] == 1f)
                     {
                         _map[i, j] = Tile.None;
                     }
@@ -65,6 +56,7 @@ namespace Core.Map
                     {
                         float v = oreMap[i, j];
 
+                        // Using the value tiles to convert the ore map to the tilemap 
                         for (int k = 0; k < _valueTile.Length; k++)
                         {
                             Vector2 range = _valueTile[k].Range;
@@ -74,35 +66,145 @@ namespace Core.Map
                             }
                         }
 
-                        colors[i, j] = _colorTileDict[_map[i, j]];
                     }
 
                 }
             }
 
-            VisualizeColored(colors);
-
-            if (_debug)
-            {
-                LogMapValueCount(map, "map");
-                LogMapValueCount(oreMap, "oreMap");
-            }
+            MakeQueenLair(_map);
+            SpawnChests(_map, _basePass);
 
             sw.Stop();
             Debug.Log($"{sw.ElapsedMilliseconds} elapsed miliseconds to complete first map gen");
+
+            VisualizeColored(_map, _dimensions);
+
+            if (_debug)
+            {
+                LogMapValueCount(caveMap, "map");
+                LogMapValueCount(oreMap, "oreMap");
+            }
         }
 
-        private void VisualizeColored(Color[,] colors)
+        private void SpawnChests(Tile[,] map, WormPass cavePass)
         {
-            Texture2D _texture = new(_dimensions, _dimensions);
-            _texture.SetPixels(colors.Cast<Color>().ToArray());
-            _texture.filterMode = FilterMode.Point;
-            _texture.Apply();
+            List<Vector2Int> rooms = cavePass.Rooms;
 
+            float chestSpawnChance = 0.2f;
+
+            for (int i = 0; i < rooms.Count; i++)
+            {
+                if (ChanceUtil.EventSuccess(chestSpawnChance))
+                {
+                    Vector2Int pos = rooms[i];
+                    map[pos.x, pos.y] = Tile.Chest;
+                }
+            }
+        }
+
+        private void MakeQueenLair(Tile[,] map)
+        {
+
+            List<Vector2Int> antQueenPossiblePositions = _basePass.CaveDeadEnds;
+            int randomIndex = UnityEngine.Random.Range(0, antQueenPossiblePositions.Count);
+            Vector2Int antQueenRoomPosition = antQueenPossiblePositions[randomIndex];
+
+            int antQueenRoomSize = 20;
+            int halfRoom = antQueenRoomSize / 2;
+            int areaAround = 3;
+
+            // Clean the area
+            MakeRectangle(
+                map,
+                antQueenRoomPosition,
+                Tile.None,
+                new(-halfRoom - areaAround, halfRoom + areaAround),
+                new(-halfRoom - areaAround, halfRoom + areaAround));
+
+            // Mark the center as the ant queen spawner
+            _map[antQueenRoomPosition.x, antQueenRoomPosition.y] = Tile.AntQueenSpawn;
+
+            // Make walls by using the rectangle fn
+            MakeRectangle(
+                map,
+                antQueenRoomPosition,
+                Tile.AntQueenRoomTile,
+                new(-halfRoom, halfRoom),
+                new(-halfRoom, -halfRoom));
+
+            MakeRectangle(
+                map,
+                antQueenRoomPosition,
+                Tile.AntQueenRoomTile,
+                new(-halfRoom, halfRoom),
+                new(halfRoom, halfRoom));
+
+            MakeRectangle(
+                map,
+                antQueenRoomPosition,
+                Tile.AntQueenRoomTile,
+                new(halfRoom, halfRoom),
+                new(-halfRoom, halfRoom));
+
+            MakeRectangle(
+                map,
+                antQueenRoomPosition,
+                Tile.AntQueenRoomTile,
+                new(-halfRoom, -halfRoom),
+                new(-halfRoom, halfRoom));
+
+            // Make doors
+            int doorSize = 2;
+
+            MakeRectangle(
+                map,
+                antQueenRoomPosition,
+                Tile.None,
+                new(-doorSize / 2, doorSize / 2),
+                new(-halfRoom, -halfRoom));
+        }
+
+        private void MakeRectangle(Tile[,] map, Vector2Int startingPosition, Tile tile, Vector2Int xBounds, Vector2Int yBounds)
+        {
+            for (int i = xBounds.x; i <= xBounds.y; i++)
+            {
+                for (int j = yBounds.x; j <= yBounds.y; j++)
+                {
+                    int x = i + startingPosition.x;
+                    int y = j + startingPosition.y;
+
+                    map[x, y] = tile;
+                }
+            }
+        }
+
+        private void VisualizeColored(Tile[,] map, int dimensions)
+        {
+            Dictionary<Tile, Color> colorTileDict = new(_colorTile.Count);
+
+            foreach (var ctl in _colorTile)
+            {
+                colorTileDict.Add(ctl.Tile, ctl.Color);
+            }
+
+            Color[,] colors = new Color[dimensions, dimensions];
+
+            for (int i = 0; i < dimensions; i++)
+            {
+                for (int j = 0; j < dimensions; j++)
+                {
+                    colors[i, j] = colorTileDict[map[i, j]];
+                }
+            }
+
+            Texture2D texture = new(dimensions, dimensions);
+            texture.SetPixels(colors.Cast<Color>().ToArray());
+            texture.filterMode = FilterMode.Point;
+            texture.Apply();
 
             Material tempMaterial = new(_meshRenderer.sharedMaterial);
             _meshRenderer.sharedMaterial = tempMaterial;
-            _meshRenderer.sharedMaterial.mainTexture = _texture;
+            _meshRenderer.sharedMaterial.mainTexture = texture;
         }
 
         private void Visualize(float[,] map)
@@ -138,19 +240,5 @@ namespace Core.Map
             }
             Debug.Log(sb.ToString());
         }
-    }
-
-    [Serializable]
-    public struct TileToColor
-    {
-        [field: SerializeField] public Tile Tile { get; private set; }
-        [field: SerializeField] public Color Color { get; private set; }
-    }
-
-    [Serializable]
-    public struct ValueToTile
-    {
-        [field: SerializeField, MinMaxSlider(-1f, 1f)] public Vector2 Range { get; private set; }
-        [field: SerializeField] public Tile Tile { get; private set; }
     }
 }

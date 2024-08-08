@@ -1,5 +1,6 @@
 ﻿using Core.Utils;
 using NaughtyAttributes;
+using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
 using static Helper;
@@ -48,8 +49,14 @@ public class WormPass : PassDataBase
 
     private int RoomSize => (int)(_lairSizeBase * Random.Range(_lairSizeMinVariation, _lairSizeMaxVariation));
 
+    public List<Vector2Int> Rooms { get; private set; }
+    public List<Vector2Int> CaveDeadEnds { get; private set; }
+
     public override float[,] MakePass(int dimensions, float[,] map = null)
     {
+        Rooms = new();
+        CaveDeadEnds = new();
+
         InitNullMap(ref map, dimensions, -1f);
 
         Random.InitState(_seed);
@@ -86,6 +93,7 @@ public class WormPass : PassDataBase
             int x = (int)(n1 * (dimensions));
             int y = (int)(n2 * (dimensions));
 
+
             // Expand a room in the starting point
             Expand(map, x, y, RoomSize, dimensions, _lairDistanceReachInfluence, _lairNoiseReachInfluence, _lairStep, lairNoise);
 
@@ -105,13 +113,20 @@ public class WormPass : PassDataBase
                 y,
                 _childs);
 
+            // The starting point of a cave is also a dead end
+            AddCaveDeadEnd(x, y);
 
             // Expand a room in the ending point
-            Expand(map, endX, endY, RoomSize, dimensions, _lairDistanceReachInfluence, _lairNoiseReachInfluence, _lairStep, lairNoise);
-
+            if (ChanceUtil.EventSuccess(0.5f))
+            {
+                Expand(map, endX, endY, RoomSize, dimensions, _lairDistanceReachInfluence, _lairNoiseReachInfluence, _lairStep, lairNoise);
+                AddRoom(endX, endY);
+            }
+            else
+            {
+                AddCaveDeadEnd(endX, endY);
+            }
         }
-
-        map[dimensions - 1, dimensions - 1] = 1f;
 
         sw.Stop();
         Debug.Log($"{sw.ElapsedMilliseconds} elapsed miliseconds to complete perlin worm pass");
@@ -149,7 +164,10 @@ public class WormPass : PassDataBase
                     $"Childs: {(childs / 2) - 1}\n" +
                     $"Remaining Childs: {remainingChilds}");
 
-                WormWalk(
+                // We don't add a dead end on the starting pos here because the worm walk departs from 
+                // a cave position
+
+                (int endX, int endY) = WormWalk(
                     dimensions,
                     map,
                     (int)(_childIterationMultiplier * iterations),
@@ -161,10 +179,15 @@ public class WormPass : PassDataBase
                     y,
                     (childs / 2));
 
+
                 int roomSize = (int)(_lairSizeBase * Random.Range(_lairSizeMinVariation, _lairSizeMaxVariation));
 
-                // Expand making a room
+                AddCaveDeadEnd(endX, endY);
+
+                // Expand by making a room
                 Expand(map, x, y, roomSize, dimensions, _lairDistanceReachInfluence, _lairNoiseReachInfluence, _lairStep, lairNoise);
+
+                AddRoom(x, y);
 
                 remainingChilds--;
             }
@@ -219,5 +242,15 @@ public class WormPass : PassDataBase
                 }
             }
         }
+    }
+
+    private void AddRoom(int x, int y)
+    {
+        Rooms.Add(new(x, y));
+    }
+
+    private void AddCaveDeadEnd(int x, int y)
+    {
+        CaveDeadEnds.Add(new(x, y));
     }
 }
