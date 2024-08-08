@@ -30,6 +30,12 @@ namespace Core.Map
 
         [SerializeField] private ValueToTile[] _valueTile;
 
+        [SerializeField] private int _antQueenRoomSize = 20;
+        [SerializeField] private int _areaAroundQueenRoom = 3;
+        [SerializeField] private int _antQueenRoomDoorSize = 2;
+
+        [SerializeField] private float _roomChestChance = 0.5f;
+
         #region Debug
         [SerializeField] private bool _debug;
         #endregion
@@ -67,7 +73,6 @@ namespace Core.Map
                         }
 
                     }
-
                 }
             }
 
@@ -90,11 +95,9 @@ namespace Core.Map
         {
             List<Vector2Int> rooms = cavePass.Rooms;
 
-            float chestSpawnChance = 0.2f;
-
             for (int i = 0; i < rooms.Count; i++)
             {
-                if (ChanceUtil.EventSuccess(chestSpawnChance))
+                if (ChanceUtil.EventSuccess(_roomChestChance))
                 {
                     Vector2Int pos = rooms[i];
                     map[pos.x, pos.y] = Tile.Chest;
@@ -109,17 +112,16 @@ namespace Core.Map
             int randomIndex = UnityEngine.Random.Range(0, antQueenPossiblePositions.Count);
             Vector2Int antQueenRoomPosition = antQueenPossiblePositions[randomIndex];
 
-            int antQueenRoomSize = 20;
-            int halfRoom = antQueenRoomSize / 2;
-            int areaAround = 3;
+            _antQueenRoomSize = 20;
+            int halfRoom = _antQueenRoomSize / 2;
 
             // Clean the area
             MakeRectangle(
                 map,
                 antQueenRoomPosition,
                 Tile.None,
-                new(-halfRoom - areaAround, halfRoom + areaAround),
-                new(-halfRoom - areaAround, halfRoom + areaAround));
+                new(-halfRoom - _areaAroundQueenRoom, halfRoom + _areaAroundQueenRoom),
+                new(-halfRoom - _areaAroundQueenRoom, halfRoom + _areaAroundQueenRoom));
 
             // Mark the center as the ant queen spawner
             _map[antQueenRoomPosition.x, antQueenRoomPosition.y] = Tile.AntQueenSpawn;
@@ -154,13 +156,12 @@ namespace Core.Map
                 new(-halfRoom, halfRoom));
 
             // Make doors
-            int doorSize = 2;
 
             MakeRectangle(
                 map,
                 antQueenRoomPosition,
                 Tile.None,
-                new(-doorSize / 2, doorSize / 2),
+                new(-_antQueenRoomDoorSize / 2, _antQueenRoomDoorSize / 2),
                 new(-halfRoom, -halfRoom));
         }
 
@@ -205,29 +206,6 @@ namespace Core.Map
             Material tempMaterial = new(_meshRenderer.sharedMaterial);
             _meshRenderer.sharedMaterial = tempMaterial;
             _meshRenderer.sharedMaterial.mainTexture = texture;
-        }
-
-        private void Visualize(float[,] map)
-        {
-            Color[,] colors = new Color[_dimensions, _dimensions];
-
-            for (int i = 0; i < _dimensions; i++)
-            {
-                for (int j = 0; j < _dimensions; j++)
-                {
-                    colors[i, j] = ColorExtension.FromValue(NoiseTo01Bound(map[i, j]));
-                }
-            }
-
-            Texture2D _texture = new(_dimensions, _dimensions);
-            _texture.SetPixels(colors.Cast<Color>().ToArray());
-            _texture.filterMode = FilterMode.Point;
-            _texture.Apply();
-
-
-            Material tempMaterial = new(_meshRenderer.sharedMaterial);
-            _meshRenderer.sharedMaterial = tempMaterial;
-            _meshRenderer.sharedMaterial.mainTexture = _texture;
         }
 
         private void LogMapValueCount(float[,] map, string append)
