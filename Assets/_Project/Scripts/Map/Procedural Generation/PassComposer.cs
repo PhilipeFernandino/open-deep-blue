@@ -1,9 +1,10 @@
+using Core.ProcGen;
 using NaughtyAttributes;
 using System.Diagnostics;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-public class PassComposer : MonoBehaviour
+public class PassComposer : MonoBehaviour, IMapCreator
 {
     [Header("Basic")]
     [SerializeField] private int _dimensions;
@@ -16,8 +17,13 @@ public class PassComposer : MonoBehaviour
 
     public float[,] CombinePasses()
     {
+        return CombinePasses(_dimensions);
+    }
+
+    public float[,] CombinePasses(int dimensions)
+    {
         Stopwatch sw = Stopwatch.StartNew();
-        float[,] passValues = new float[_dimensions, _dimensions];
+        float[,] passValues = new float[dimensions, dimensions];
 
         bool isFirstPass = true;
 
@@ -27,12 +33,12 @@ public class PassComposer : MonoBehaviour
             {
                 if (isFirstPass)
                 {
-                    passValues = pass.MakePass(_dimensions);
+                    passValues = pass.MakePass(dimensions);
                     isFirstPass = false;
                 }
                 else
                 {
-                    passValues = pass.MakePass(_dimensions, passValues);
+                    passValues = pass.MakePass(dimensions, passValues);
                 }
             }
         }
@@ -41,5 +47,10 @@ public class PassComposer : MonoBehaviour
         Debug.Log($"{sw.ElapsedMilliseconds} elapsed miliseconds to compose noise passes");
 
         return passValues;
+    }
+
+    public float[,] CreateMap(int dimensions)
+    {
+        return CombinePasses(dimensions);
     }
 }

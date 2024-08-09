@@ -1,8 +1,9 @@
-﻿using NaughtyAttributes;
+﻿using Core.ProcGen;
+using NaughtyAttributes;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NoiseMap")]
-public class NoiseMapData : ScriptableObject
+public class NoiseMapData : ScriptableObject, IMapCreator
 {
     [Header("General")]
 
@@ -17,6 +18,11 @@ public class NoiseMapData : ScriptableObject
     private float _stepValue = 0f;
 
     [ShowIf(nameof(GradientColorization)), SerializeField] private Gradient _colorGradient = new Gradient();
+
+    public float[,] CreateMap(int dimensions)
+    {
+        return GetNoiseMap(dimensions);
+    }
 
     public float[,] GetNoiseMap(int dimensions)
     {

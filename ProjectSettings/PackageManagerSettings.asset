@@ -34,6 +34,7 @@ MonoBehaviour:
     - com.dbrizov.naughtyattributes
     - com.openupm
     - com.wooshii.hierarchydecorator
+    - net.tnrd.serializableinterface
     m_IsDefault: 0
     m_Capabilities: 0
     m_ConfigSource: 4

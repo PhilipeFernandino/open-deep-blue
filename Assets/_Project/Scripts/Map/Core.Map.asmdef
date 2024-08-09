@@ -6,7 +6,8 @@
         "Core.GridSystem",
         "Core.ProcGen",
         "Core.Util",
-        "NaughtyAttributes.Core"
+        "NaughtyAttributes.Core",
+        "TNRD.SerializableInterface"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

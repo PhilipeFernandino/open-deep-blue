@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: First Level Ore Noise Data
   m_EditorClassIdentifier: 
   _noiseType: 2
-  _frequency: 0.4
+  _frequency: 0.2
   _seed: 0
   _cellularDistanceFunction: 0
   _cellularReturnType: 0
   _cellularJitter: 1
-  _fractalType: 0
+  _fractalType: 1
   _fractalOctaves: 2
   _fractalWeightedStrength: 1
   _fractalLacunarity: 4
