@@ -12,23 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37b63181e60920f4fb068472d403eefa, type: 3}
   m_Name: First Level Biome Noise Data
   m_EditorClassIdentifier: 
-  _noiseType: 2
-  _frequency: 0.005
+  _noiseType: 0
+  _frequency: 0.004
   _seed: 0
   _cellularDistanceFunction: 0
   _cellularReturnType: 0
   _cellularJitter: 1
   _fractalType: 0
   _fractalOctaves: 2
-  _fractalWeightedStrength: 0.575
+  _fractalWeightedStrength: 0.6
   _fractalLacunarity: 4
-  _fractalGain: 0.66
+  _fractalGain: 0.2
   _fractalPingPongStrength: 2
   _applyDomainWarp: 1
   _domainWarpType: 0
-  _domainWarpAmplitude: 72
+  _domainWarpAmplitude: 90
   _domainWarpFrequency: 0.02
   _domainWarpFractalType: 1
   _domainWarpFractalOctaves: 2
-  _domainWarpFractalLacunarity: 4
+  _domainWarpFractalLacunarity: 8
   _domainWarpFractalGain: 0.2
