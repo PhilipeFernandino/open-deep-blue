@@ -5,9 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using UnityEngine;
-
+using UnityEngine.Serialization;
 using static Helper;
 
 using Debug = UnityEngine.Debug;
@@ -20,15 +21,17 @@ namespace Core.Map
 
         [SerializeField] private WormPass _basePass;
         [SerializeField] private NoiseMapData _oreNoiseMap;
+        [SerializeField] private NoiseMapData _biomeNoiseMap;
 
         [SerializeField] private int _dimensions;
         [SerializeField] private MeshRenderer _meshRenderer;
 
         [SerializeField] private List<TileToColor> _colorTile = new();
 
-        // TODO: intervalos de cores para tiles 
+        [SerializeField] private ValueToTile[] _stoneValueTiles;
 
-        [SerializeField] private ValueToTile[] _valueTile;
+        [FormerlySerializedAs("_valueTile")]
+        [SerializeField] private ValueToTile[] _oreValueTiles;
 
         [SerializeField] private int _antQueenRoomSize = 20;
         [SerializeField] private int _areaAroundQueenRoom = 3;
@@ -45,10 +48,11 @@ namespace Core.Map
         {
             Stopwatch sw = Stopwatch.StartNew();
 
-            InitMap(ref _map, _dimensions, Tile.BlueStone);
+            _map = new Tile[_dimensions, _dimensions];
 
             float[,] caveMap = _basePass.MakePass(_dimensions);
-            var oreMap = _oreNoiseMap.GetNoiseMap(_dimensions);
+            float[,] oreMap = _oreNoiseMap.GetNoiseMap(_dimensions);
+            float[,] biomeMap = _biomeNoiseMap.GetNoiseMap(_dimensions);
 
             for (int i = 0; i < _dimensions; i++)
             {
@@ -60,17 +64,11 @@ namespace Core.Map
                     }
                     else
                     {
-                        float v = oreMap[i, j];
+                        // Using the biome value tiles to fill the map with biome stones
+                        ValueTileToTile(_stoneValueTiles, biomeMap[i, j], i, j);
 
                         // Using the value tiles to convert the ore map to the tilemap 
-                        for (int k = 0; k < _valueTile.Length; k++)
-                        {
-                            Vector2 range = _valueTile[k].Range;
-                            if (v >= range.x && v < range.y)
-                            {
-                                _map[i, j] = _valueTile[k].Tile;
-                            }
-                        }
+                        ValueTileToTile(_oreValueTiles, oreMap[i, j], i, j);
 
                     }
                 }
@@ -88,6 +86,18 @@ namespace Core.Map
             {
                 LogMapValueCount(caveMap, "map");
                 LogMapValueCount(oreMap, "oreMap");
+            }
+        }
+
+        private void ValueTileToTile(ValueToTile[] valueTiles, float tileValue, int i, int j)
+        {
+            for (int k = 0; k < valueTiles.Length; k++)
+            {
+                Vector2 range = valueTiles[k].Range;
+                if (tileValue >= range.x && tileValue <= range.y)
+                {
+                    _map[i, j] = valueTiles[k].Tile;
+                }
             }
         }
 

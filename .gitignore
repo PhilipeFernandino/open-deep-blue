@@ -1,3 +1,7 @@
+# Special folders to ignore
+# We will use the folder below to ignore big assets or scenes that can be regenerated
+[Gg]it [Ii]gnore/
+
 # This .gitignore file should be placed at the root of your Unity project directory
 #
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore

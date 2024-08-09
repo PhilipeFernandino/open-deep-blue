@@ -18,13 +18,13 @@ MonoBehaviour:
   _cellularDistanceFunction: 0
   _cellularReturnType: 0
   _cellularJitter: 1
-  _fractalType: 1
+  _fractalType: 0
   _fractalOctaves: 2
-  _fractalWeightedStrength: 1
+  _fractalWeightedStrength: 0.575
   _fractalLacunarity: 4
-  _fractalGain: 0
+  _fractalGain: 0.66
   _fractalPingPongStrength: 2
-  _applyDomainWarp: 0
+  _applyDomainWarp: 1
   _domainWarpType: 0
   _domainWarpAmplitude: 30
   _domainWarpFrequency: 0.02
