@@ -18,7 +18,9 @@ public class WormPass : PassDataBase
     [Header("Worm Parameters")]
     [SerializeField] private int _worms = 1;
     [SerializeField] private int _childs = 1;
+    [SerializeField] private float _childRate = 0.5f;
     [SerializeField] private float _childIterationMultiplier = 0.5f;
+    [SerializeField] private float _roomOnChildChance;
 
     [SerializeField] private float _speed = 3f;
     [SerializeField] private int _maxIterations = 100;
@@ -39,10 +41,13 @@ public class WormPass : PassDataBase
     [SerializeField] private float _angleBias = 1f;
 
     [Header("Reach")]
-    [SerializeField] private int _reach;
+    [SerializeField, MinMaxSlider(3, 50)] private Vector2 _reachRange;
+    [SerializeField, Range(0f, 1f)] private float _expandRate = 0.95f;
+    [SerializeField, Range(0f, 1f)] private float _expandChildRate = 0.9f;
     [SerializeField, Range(0f, 1f)] private float _step = 0.5f;
     [SerializeField, Range(0f, 1f)] private float _distanceReachInfluence = 0.75f;
     [SerializeField, Range(0f, 1f)] private float _noiseReachInfluence = 0.25f;
+
 
     [Header("Reach Noise Parameters")]
     [SerializeField, Expandable] private NoiseData _wormReachData;
@@ -101,6 +106,8 @@ public class WormPass : PassDataBase
                 $"Hashes: ({h1}, {h2}, {h3}, {h4})\n" +
                 $"Noise: ({n1}, {n2})");
 
+            float reach = Random.Range(_reachRange.x, _reachRange.y);
+
             (int endX, int endY) = WormWalk(
                 dimensions,
                 map,
@@ -111,7 +118,11 @@ public class WormPass : PassDataBase
                 lairNoise,
                 x,
                 y,
-                _childs);
+                _childs,
+                _childRate,
+                reach,
+                _expandRate,
+                _expandChildRate);
 
             // The starting point of a cave is also a dead end
             AddCaveDeadEnd(x, y);
@@ -139,8 +150,22 @@ public class WormPass : PassDataBase
         return map;
     }
 
-    private (int x, int y) WormWalk(int dimensions, float[,] map, int iterations, float angleBias,
-        FastNoiseLite wormNoise, FastNoiseLite reachNoise, FastNoiseLite lairNoise, int startX, int startY, int childs)
+    private (int x, int y) WormWalk(
+        int dimensions,
+        float[,] map,
+        int iterations,
+        float angleBias,
+        FastNoiseLite wormNoise,
+        FastNoiseLite reachNoise,
+        FastNoiseLite lairNoise,
+        int startX,
+        int startY,
+        int childs,
+        float childRate,
+        float expandSize,
+        float expandRate,
+        float expandChildRate
+        )
     {
         Debug.Log($"{GetType()} - starting perlin worm");
 
@@ -150,6 +175,8 @@ public class WormPass : PassDataBase
         int y = startY;
         int xOffset = startX;
         int yOffset = startY;
+
+        float iteractiveExpandSize = expandSize;
 
         for (int i = 0; i < iterations; i++)
         {
@@ -177,7 +204,11 @@ public class WormPass : PassDataBase
                     lairNoise,
                     x,
                     y,
-                    (childs / 2));
+                    (int)(childs * childRate),
+                    childRate,
+                    iteractiveExpandSize,
+                    expandRate,
+                    expandChildRate);
 
 
                 int roomSize = (int)(_lairSizeBase * Random.Range(_lairSizeMinVariation, _lairSizeMaxVariation));
@@ -185,16 +216,19 @@ public class WormPass : PassDataBase
                 AddCaveDeadEnd(endX, endY);
 
                 // Expand by making a room
-                Expand(map, x, y, roomSize, dimensions, _lairDistanceReachInfluence, _lairNoiseReachInfluence, _lairStep, lairNoise);
-
-                AddRoom(x, y);
+                if (ChanceUtil.EventSuccess(_roomOnChildChance))
+                {
+                    Expand(map, x, y, roomSize, dimensions, _lairDistanceReachInfluence, _lairNoiseReachInfluence, _lairStep, lairNoise);
+                    AddRoom(x, y);
+                }
 
                 remainingChilds--;
             }
             else
             {
                 // Expand hole slightly
-                Expand(map, x, y, _reach, dimensions, _distanceReachInfluence, _noiseReachInfluence, _step, reachNoise);
+                iteractiveExpandSize *= expandRate;
+                Expand(map, x, y, (int)iteractiveExpandSize, dimensions, _distanceReachInfluence, _noiseReachInfluence, _step, reachNoise);
             }
 
 
