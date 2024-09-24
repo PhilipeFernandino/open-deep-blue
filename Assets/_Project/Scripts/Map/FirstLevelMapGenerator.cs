@@ -1,4 +1,5 @@
 using Coimbra;
+using Core.ProcGen;
 using Core.Utils;
 using NaughtyAttributes;
 using System;
@@ -7,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using TNRD;
 using UnityEngine;
 using UnityEngine.Serialization;
 using static Helper;
@@ -20,8 +22,11 @@ namespace Core.Map
         [SerializeField] private Tile[,] _map;
 
         [SerializeField] private WormPass _basePass;
-        [SerializeField] private NoiseMapData _oreNoiseMap;
-        [SerializeField] private NoiseMapData _biomeNoiseMap;
+        [SerializeField] private SerializableInterface<IMapCreator> _oreNoiseMap;
+        [SerializeField] private SerializableInterface<IMapCreator> _biomeNoiseMap;
+
+        [SerializeField] private bool _generateOres;
+        [SerializeField] private bool _generateBiomes;
 
         [SerializeField] private int _dimensions;
         [SerializeField] private MeshRenderer _meshRenderer;
@@ -48,11 +53,11 @@ namespace Core.Map
         {
             Stopwatch sw = Stopwatch.StartNew();
 
-            _map = new Tile[_dimensions, _dimensions];
+            InitMap(ref _map, _dimensions, Tile.BlueStone);
 
             float[,] caveMap = _basePass.MakePass(_dimensions);
-            float[,] oreMap = _oreNoiseMap.GetNoiseMap(_dimensions);
-            float[,] biomeMap = _biomeNoiseMap.GetNoiseMap(_dimensions);
+            float[,] oreMap = _oreNoiseMap.Value.CreateMap(_dimensions);
+            float[,] biomeMap = _biomeNoiseMap.Value.CreateMap(_dimensions);
 
             for (int i = 0; i < _dimensions; i++)
             {
@@ -64,11 +69,17 @@ namespace Core.Map
                     }
                     else
                     {
-                        // Using the biome value tiles to fill the map with biome stones
-                        ValueTileToTile(_stoneValueTiles, biomeMap[i, j], i, j);
+                        if (_generateBiomes)
+                        {
+                            // Using the biome value tiles to fill the map with biome stones
+                            ValueTileToTile(_stoneValueTiles, biomeMap[i, j], i, j);
+                        }
 
-                        // Using the value tiles to convert the ore map to the tilemap 
-                        ValueTileToTile(_oreValueTiles, oreMap[i, j], i, j);
+                        if (_generateOres)
+                        {
+                            // Using the value tiles to convert the ore map to the tilemap 
+                            ValueTileToTile(_oreValueTiles, oreMap[i, j], i, j);
+                        }
 
                     }
                 }
@@ -110,7 +121,13 @@ namespace Core.Map
                 if (ChanceUtil.EventSuccess(_roomChestChance))
                 {
                     Vector2Int pos = rooms[i];
-                    map[pos.x, pos.y] = Tile.Chest;
+
+                    (int x, int y) = (pos.x, pos.y);
+
+                    if (IsWithingMapCoordinates(x, y))
+                    {
+                        map[x, y] = Tile.Chest;
+                    }
                 }
             }
         }
@@ -184,7 +201,10 @@ namespace Core.Map
                     int x = i + startingPosition.x;
                     int y = j + startingPosition.y;
 
-                    map[x, y] = tile;
+                    if (IsWithingMapCoordinates(x, y))
+                    {
+                        map[x, y] = tile;
+                    }
                 }
             }
         }
@@ -227,6 +247,11 @@ namespace Core.Map
                 sb.AppendLine($"{value} - {count}");
             }
             Debug.Log(sb.ToString());
+        }
+
+        private bool IsWithingMapCoordinates(int x, int y)
+        {
+            return IsWithinCoordinates(x, y, 0, 0, _dimensions - 1, _dimensions - 1);
         }
     }
 }

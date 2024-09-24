@@ -10,28 +10,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d10ebb47b5923d747aabdfa7ae6ef202, type: 3}
-  m_Name: First Level Biome Pass
+  m_Name: temp
   m_EditorClassIdentifier: 
-  _noise: {fileID: 11400000, guid: cdbbb9108c78cad4294a3403f49a2e48, type: 2}
-  _invert: 1
+  _noise: {fileID: 11400000, guid: 48c7ca1524ed0bc4f8c9a7e3830b7e24, type: 2}
+  _invert: 0
   _colorization: 2
-  _stepValue: 0.307
+  _stepValue: 0
   _colorGradient:
     serializedVersion: 2
     key0: {r: 0, g: 0, b: 0, a: 1}
     key1: {r: 1, g: 1, b: 1, a: 1}
-    key2: {r: 1, g: 1, b: 1, a: 0}
-    key3: {r: 0.6226415, g: 0.6226415, b: 0.6226415, a: 0}
-    key4: {r: 1, g: 1, b: 1, a: 0}
-    key5: {r: 1, g: 1, b: 1, a: 0}
+    key2: {r: 0.2529412, g: 0.2529412, b: 0.2529412, a: 0}
+    key3: {r: 0.2529412, g: 0.2529412, b: 0.2529412, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
     key6: {r: 0, g: 0, b: 0, a: 0}
     key7: {r: 0, g: 0, b: 0, a: 0}
-    ctime0: 30647
-    ctime1: 36044
-    ctime2: 27563
-    ctime3: 43754
-    ctime4: 54934
-    ctime5: 65535
+    ctime0: 32382
+    ctime1: 65535
+    ctime2: 55512
+    ctime3: 55512
+    ctime4: 0
+    ctime5: 0
     ctime6: 0
     ctime7: 0
     atime0: 0

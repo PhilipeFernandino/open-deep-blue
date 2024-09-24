@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: ValueBlendPass
   m_EditorClassIdentifier: 
   _value: 1
-  _blendMode: 0
+  _blendMode: 1

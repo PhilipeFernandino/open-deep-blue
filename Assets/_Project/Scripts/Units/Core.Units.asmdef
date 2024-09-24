@@ -13,6 +13,7 @@
         "PrimeTween.Runtime",
         "spine-csharp",
         "spine-unity",
+        "TNRD.SerializableInterface",
         "UniTask",
         "Unity.InputSystem"
     ],

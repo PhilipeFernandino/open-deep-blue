@@ -66,6 +66,9 @@ public class NoiseData : ScriptableObject
 
     [SerializeField, ShowIf(nameof(DomainWarpFractalType))]
     private float _domainWarpFractalGain = 0.5f;
+
+    [SerializeField, ShowIf(nameof(DomainWarpFractalType))]
+    private float _domainWarpFractalWeightedStrength = 1f;
     #endregion
 
     private FastNoiseLite _fastNoiseLite;
@@ -84,6 +87,11 @@ public class NoiseData : ScriptableObject
         }
 
         return _fastNoiseLite.GetNoise(warpedX, warpedY);
+    }
+
+    public void SetSeed(int seed)
+    {
+        _seed = seed;
     }
 
     public void Setup()
@@ -124,6 +132,8 @@ public class NoiseData : ScriptableObject
             if (_domainWarpFractalType != FractalType.None)
             {
                 _domainWarpNoise.SetFractalType(_domainWarpFractalType);
+
+                _domainWarpNoise.SetFractalWeightedStrength(_domainWarpFractalWeightedStrength);
                 _domainWarpNoise.SetFractalOctaves(_domainWarpFractalOctaves);
                 _domainWarpNoise.SetFractalLacunarity(_domainWarpFractalLacunarity);
                 _domainWarpNoise.SetFractalGain(_domainWarpFractalGain);

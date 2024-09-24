@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f812bc5930c83d0498ddbae0499e3d56, type: 3}
   m_Name: Worm Noise Pass
   m_EditorClassIdentifier: 
-  _blendMode: 9
+  _blendMode: 0
   _noiseMap: {fileID: 11400000, guid: 46b72f337bf62ac4b8888dbc8508349f, type: 2}

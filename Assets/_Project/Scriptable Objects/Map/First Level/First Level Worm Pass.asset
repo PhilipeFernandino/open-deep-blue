@@ -14,14 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _randomizeSeed: 1
   _rawResult: 0
-  _seed: 607280671
-  _worms: 16
+  _seed: -651069090
+  _worms: 8
   _childs: 2
   _childRate: 0.5
   _childIterationMultiplier: 0.5
-  _roomOnChildChance: 0
-  _speed: 2
+  _roomOnChildChance: 0.5
+  _angleBias: 1
+  _speed: 3
   _maxIterations: 300
+  _noiseOffset: {x: -0.1, y: -0.7}
+  _wormNoiseData: {fileID: 11400000, guid: 48c7ca1524ed0bc4f8c9a7e3830b7e24, type: 2}
   _lairSizeBase: 15
   _lairSizeMinVariation: 0.5
   _lairSizeMaxVariation: 2
@@ -29,11 +32,9 @@ MonoBehaviour:
   _lairDistanceReachInfluence: 0.8
   _lairStep: 0.5
   _lairNoiseData: {fileID: 11400000, guid: 02ca0fca463d68847a0a1fe6fc1b52e4, type: 2}
-  _wormNoiseData: {fileID: 11400000, guid: 48c7ca1524ed0bc4f8c9a7e3830b7e24, type: 2}
-  _angleBias: 2
-  _reachRange: {x: 5, y: 12}
-  _expandRate: 0.998
-  _expandChildRate: 0.95
+  _reachRange: {x: 5, y: 10}
+  _expandRate: 0.9995
+  _expandChildRate: 0.9995
   _step: 0.35
   _distanceReachInfluence: 0.7
   _noiseReachInfluence: 0.3

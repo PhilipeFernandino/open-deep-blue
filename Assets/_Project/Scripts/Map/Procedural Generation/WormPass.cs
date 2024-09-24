@@ -1,13 +1,15 @@
-﻿using Core.Utils;
+﻿using Core.ProcGen;
+using Core.Utils;
 using NaughtyAttributes;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using UnityEngine;
 using static Helper;
 using Debug = UnityEngine.Debug;
 
 [CreateAssetMenu(fileName = "PerlinWormPass", menuName = "Pass/Perlin Worm")]
-public class WormPass : PassDataBase
+public class WormPass : PassDataBase, IMapCreator
 {
     [Header("General Parameters")]
 
@@ -21,9 +23,14 @@ public class WormPass : PassDataBase
     [SerializeField] private float _childRate = 0.5f;
     [SerializeField] private float _childIterationMultiplier = 0.5f;
     [SerializeField] private float _roomOnChildChance;
+    [SerializeField] private float _angleBias = 1f;
 
     [SerializeField] private float _speed = 3f;
     [SerializeField] private int _maxIterations = 100;
+
+    [Header("Worm Noise Parameters")]
+    [SerializeField] private Vector2 _noiseOffset = Vector2.zero;
+    [SerializeField, Expandable] private NoiseData _wormNoiseData;
 
     [Header("Lair Parameters")]
     [SerializeField] private int _lairSizeBase = 15;
@@ -35,10 +42,6 @@ public class WormPass : PassDataBase
 
     [Header("Lair Noise Parameters")]
     [SerializeField, Expandable] private NoiseData _lairNoiseData;
-
-    [Header("Lair Noise Parameters")]
-    [SerializeField, Expandable] private NoiseData _wormNoiseData;
-    [SerializeField] private float _angleBias = 1f;
 
     [Header("Reach")]
     [SerializeField, MinMaxSlider(3, 50)] private Vector2 _reachRange;
@@ -54,11 +57,32 @@ public class WormPass : PassDataBase
 
     private int RoomSize => (int)(_lairSizeBase * Random.Range(_lairSizeMinVariation, _lairSizeMaxVariation));
 
+    private int _dimensions;
+
+    private List<float> _angleValues;
+    private List<float> _noiseValues;
+    private List<float> _xValues;
+    private List<float> _yValues;
+
+
+
     public List<Vector2Int> Rooms { get; private set; }
     public List<Vector2Int> CaveDeadEnds { get; private set; }
 
+    public float[,] CreateMap(int dimensions)
+    {
+        return MakePass(dimensions, null);
+    }
+
     public override float[,] MakePass(int dimensions, float[,] map = null)
     {
+        _angleValues = new();
+        _noiseValues = new();
+        _xValues = new();
+        _yValues = new();
+
+        _dimensions = dimensions;
+
         Rooms = new();
         CaveDeadEnds = new();
 
@@ -69,6 +93,10 @@ public class WormPass : PassDataBase
         _wormNoiseData.Setup();
         _wormReachData.Setup();
         _lairNoiseData.Setup();
+
+        _wormNoiseData.SetSeed(_seed);
+        _wormReachData.SetSeed(_seed);
+        _lairNoiseData.SetSeed(_seed);
 
         FastNoiseLite wormNoise = _wormNoiseData.Noise;
         FastNoiseLite reachNoise = _wormReachData.Noise;
@@ -141,6 +169,11 @@ public class WormPass : PassDataBase
 
         sw.Stop();
         Debug.Log($"{sw.ElapsedMilliseconds} elapsed miliseconds to complete perlin worm pass");
+        Debug.Log($"Angle mean = {_angleValues.Sum() / _angleValues.Count}");
+        Debug.Log($"Noise mean = {_noiseValues.Sum() / _noiseValues.Count}");
+        Debug.Log($"X mean = {_xValues.Sum() / _xValues.Count}");
+        Debug.Log($"Y mean = {_yValues.Sum() / _yValues.Count}");
+
 
         if (_randomizeSeed)
         {
@@ -173,15 +206,18 @@ public class WormPass : PassDataBase
 
         int x = startX;
         int y = startY;
-        int xOffset = startX;
-        int yOffset = startY;
+
+        startX = Hash(startX);
+        startY = Hash(startY);
 
         float iteractiveExpandSize = expandSize;
 
         for (int i = 0; i < iterations; i++)
         {
-            if (IsWithinCoordinates(x, y, 0, 0, dimensions - 1, dimensions - 1))
+            if (IsWithingMapCoordinates(x, y))
+            {
                 map[x, y] = 1f;
+            }
 
             // Trying to start childs
             if (ChanceUtil.EventSuccess(1f * childs / iterations) && remainingChilds > 0)
@@ -198,7 +234,7 @@ public class WormPass : PassDataBase
                     dimensions,
                     map,
                     (int)(_childIterationMultiplier * iterations),
-                    -angleBias,
+                    angleBias,
                     wormNoise,
                     reachNoise,
                     lairNoise,
@@ -233,12 +269,21 @@ public class WormPass : PassDataBase
 
 
             // Changing direction
-            float noise = wormNoise.GetNoise(x + xOffset, y + yOffset);
+            // We use a x and y offset because this worm could be on the same path as it's parent, without the offset
+            // it would follow the same path.
+            float noise = wormNoise.GetNoise(x + startX, y + startY);
+            _noiseValues.Add(noise);
 
-            float angle = noise * Mathf.PI * 2f * angleBias;
+            float xAngle = (noise) * angleBias * Mathf.PI * 2;
+            float yAngle = (noise) * angleBias * Mathf.PI * 2;
 
-            x += (int)(Mathf.Sin(angle) * _speed);
-            y += (int)(Mathf.Cos(angle) * _speed);
+            int addX = Mathf.RoundToInt((Mathf.Sin(xAngle) + _noiseOffset.x) * _speed);
+            int addY = Mathf.RoundToInt((Mathf.Cos(yAngle) + _noiseOffset.y) * _speed);
+            x += addX;
+            y += addY;
+
+            _xValues.Add(Mathf.Sin(xAngle));
+            _yValues.Add(Mathf.Cos(yAngle));
         }
 
         return (x, y);
@@ -252,7 +297,7 @@ public class WormPass : PassDataBase
         {
             for (int l = y - roomSize; l < y + roomSize; l++)
             {
-                if (IsWithinCoordinates(k, l, 0, 0, dimensions - 1, dimensions - 1))
+                if (IsWithingMapCoordinates(k, l))
                 {
                     float boundedNoise = noise.GetNoise(k, l);
 
@@ -280,11 +325,22 @@ public class WormPass : PassDataBase
 
     private void AddRoom(int x, int y)
     {
-        Rooms.Add(new(x, y));
+        if (IsWithingMapCoordinates(x, y))
+        {
+            Rooms.Add(new(x, y));
+        }
     }
 
     private void AddCaveDeadEnd(int x, int y)
     {
-        CaveDeadEnds.Add(new(x, y));
+        if (IsWithingMapCoordinates(x, y))
+        {
+            CaveDeadEnds.Add(new(x, y));
+        }
+    }
+
+    private bool IsWithingMapCoordinates(int x, int y)
+    {
+        return IsWithinCoordinates(x, y, 0, 0, _dimensions - 1, _dimensions - 1);
     }
 }

@@ -26,8 +26,8 @@ MonoBehaviour:
   _fractalPingPongStrength: 2
   _applyDomainWarp: 1
   _domainWarpType: 0
-  _domainWarpAmplitude: 30
-  _domainWarpFrequency: 0.02
+  _domainWarpAmplitude: 45
+  _domainWarpFrequency: 0.01
   _domainWarpFractalType: 0
   _domainWarpFractalOctaves: 2
   _domainWarpFractalLacunarity: 2

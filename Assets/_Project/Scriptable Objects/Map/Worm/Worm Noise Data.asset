@@ -12,23 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37b63181e60920f4fb068472d403eefa, type: 3}
   m_Name: Worm Noise Data
   m_EditorClassIdentifier: 
-  _noiseType: 1
-  _frequency: 0.01
-  _seed: 1
+  _noiseType: 0
+  _frequency: 0.012
+  _seed: -1964959410
   _cellularDistanceFunction: 0
   _cellularReturnType: 0
   _cellularJitter: 1
-  _fractalType: 1
-  _fractalOctaves: 2
-  _fractalWeightedStrength: 1
-  _fractalLacunarity: 4
+  _fractalType: 0
+  _fractalOctaves: 4
+  _fractalWeightedStrength: 0.567
+  _fractalLacunarity: 2
   _fractalGain: 0.5
   _fractalPingPongStrength: 2
   _applyDomainWarp: 0
   _domainWarpType: 0
   _domainWarpAmplitude: 30
-  _domainWarpFrequency: 0.02
+  _domainWarpFrequency: 0.0576
   _domainWarpFractalType: 0
   _domainWarpFractalOctaves: 2
-  _domainWarpFractalLacunarity: 2
+  _domainWarpFractalLacunarity: 1
   _domainWarpFractalGain: 0.5
+  _domainWarpFractalWeightedStrength: 1
