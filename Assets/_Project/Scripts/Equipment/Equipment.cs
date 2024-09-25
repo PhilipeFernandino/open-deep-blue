@@ -111,9 +111,24 @@ namespace Core
         {
             Debug.Log($"{collision} - enter");
 
-            if (collision.TryGetComponent(out IHealth health))
+            GameObject gameObject = collision.gameObject;
+            TryHurt(gameObject);
+        }
+
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            Debug.Log($"{collision} - enter");
+
+            GameObject gameObject = collision.gameObject;
+            TryHurt(gameObject);
+        }
+
+
+        private void TryHurt(GameObject gameObject)
+        {
+            if (gameObject.TryGetComponent(out HealthCollider healthCollider))
             {
-                if (health.TryHurt(new Attack(50f, AttackType.Damage)))
+                if (healthCollider.Health.TryHurt(new Attack(50f, AttackType.Damage)))
                 {
                     BlinkTime();
                 }

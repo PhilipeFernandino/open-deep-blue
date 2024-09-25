@@ -5,6 +5,7 @@
         "Coimbra",
         "Coimbra.Services",
         "Core.Util",
+        "TNRD.SerializableInterface",
         "UniTask"
     ],
     "includePlatforms": [],

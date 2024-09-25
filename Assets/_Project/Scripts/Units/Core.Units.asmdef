@@ -5,6 +5,7 @@
         "Asset.AutoGetComponent",
         "Cinemachine",
         "Coimbra",
+        "Coimbra.Listeners",
         "Core.Equipment",
         "Core.Extensions",
         "Core.HealthSystem",

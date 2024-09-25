@@ -44,6 +44,8 @@ namespace Core.Player
 
         public Vector2 PlayerMovementDirection => PlayerMovement.LastMovementInput;
 
+        public Vector2 Position => transform.position.XY();
+
         public IPlayerFSMState State => ((IPlayerFSMState)_fsm.State);
         #endregion
 

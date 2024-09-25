@@ -1,4 +1,5 @@
-﻿using Core.HealthSystem;
+﻿using Coimbra.Listeners;
+using Core.HealthSystem;
 using Cysharp.Threading.Tasks;
 using System.Collections;
 using UnityEngine;
@@ -8,7 +9,9 @@ namespace Core.Units.Bosses.Ant
     public class AntPaw : MonoBehaviour
     {
         [SerializeField] private HealthComponent _health;
-        [SerializeField] private BoxCollider2D _hitterCollider;
+        [SerializeField] private Collider2D _hitterCollider;
+
+        [SerializeField] private TriggerEnter2DListener _collisionListener;
 
         public float Health => _health.Health;
 
@@ -26,23 +29,17 @@ namespace Core.Units.Bosses.Ant
         }
         #endregion
 
-        private void OnCollisionEnter2D(Collision2D collision)
+        private void Start()
         {
-            Debug.Log($"[{gameObject.name} - {GetType()}]: Collider: {collision} - enter");
-
-            if (collision.gameObject.TryGetComponent(out IHealth health))
-            {
-                health.TryHurt(new Attack(500f, AttackType.Damage));
-            }
+            _collisionListener.OnTrigger += CollisionTriggered;
         }
 
-        private void OnTriggerEnter2D(Collider2D collider)
+        private void CollisionTriggered(Trigger2DListenerBase sender, Collider2D other)
         {
-            Debug.Log($"[{gameObject.name} - {GetType()}]: Collision = {collider} - enter");
-
-            if (collider.gameObject.TryGetComponent(out IHealth health))
+            Debug.Log(other);
+            if (other.gameObject.TryGetComponent(out HealthCollider healthCollider))
             {
-                health.TryHurt(new Attack(500f, AttackType.Damage));
+                healthCollider.Health.TryHurt(new Attack(500f, AttackType.Damage));
             }
         }
     }

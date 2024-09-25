@@ -2,8 +2,7 @@ using Cinemachine;
 using Cysharp.Threading.Tasks;
 using NaughtyAttributes;
 using PrimeTween;
-using Spine;
-using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Core.Units.Bosses.Ant
@@ -23,14 +22,19 @@ namespace Core.Units.Bosses.Ant
         [SerializeField] private ShakeSettings _shakeCameraSettings;
 
         [SerializeField] private float _distanceToDurationRatio = 0.5f;
+        [SerializeField] private float _trackerSpeed;
 
         private Player _player;
 
         private bool _isIdle;
         private AntPaw _currentPaw;
 
+        private HashSet<Track> _track;
+
         private void Awake()
         {
+            _track = new();
+
             _player = FindObjectOfType<Player>();
             _currentPaw = _paw1;
         }
@@ -38,6 +42,14 @@ namespace Core.Units.Bosses.Ant
         private void Start()
         {
             JumpingPawsAttackFlow().Forget();
+        }
+
+        private void Update()
+        {
+            foreach (var track in _track)
+            {
+                track.Tracker.position = Vector2.Lerp(track.Tracker.position.XY(), track.Target.position.XY(), track.Speed * Time.deltaTime);
+            }
         }
 
         private async UniTask JumpingPawsAttackFlow()
@@ -56,8 +68,13 @@ namespace Core.Units.Bosses.Ant
         {
             await RaisePaw(paw);
             await MoveToPosition(paw, _player.transform.position.XY(), _distanceToDurationRatio);
+
+            var tracker = new Track(_currentPaw.transform, _player.transform, _trackerSpeed);
+            _track.Add(tracker);
+
             await LowerPaw(paw);
 
+            _track.Remove(tracker);
         }
 
         private Vector2 RandomInsideSquare(BoundsInt boundsInt)
@@ -70,9 +87,11 @@ namespace Core.Units.Bosses.Ant
         private async UniTask DraggedPawsAttackFlow()
         {
             await RaisePaw(_currentPaw);
-            await MoveToPosition(_currentPaw, _player.transform.position.XY(), _distanceToDurationRatio);
+            await MoveToPosition(_currentPaw, _player.Position, _distanceToDurationRatio);
+
             await LowerPaw(_currentPaw);
             await MoveToPosition(_currentPaw, RandomInsideSquare(_arenaBounds), _distanceToDurationRatio / 2);
+
             SwitchCurrentPaw();
             DraggedPawsAttackFlow();
         }
@@ -116,6 +135,11 @@ namespace Core.Units.Bosses.Ant
                 .OnComplete(() => target.m_TrackedObjectOffset = Vector3.zero);
         }
 
+        private async UniTask RotatePaw(AntPaw paw)
+        {
+
+        }
+
         #region debug
         [Button]
         private void _RaiseHand()
@@ -136,5 +160,38 @@ namespace Core.Units.Bosses.Ant
             LowerPaw(_paw1);
         }
         #endregion
+    }
+}
+
+public class Track : IEqualityComparer<Track>
+{
+    private Transform _tracker;
+    private Transform _target;
+
+    private float _speed;
+
+    public Transform Tracker => _tracker;
+    public Transform Target => _target;
+    public float Speed => _speed;
+
+    public Track(Transform tracker, Transform target, float speed)
+    {
+        _tracker = tracker;
+        _target = target;
+        _speed = speed;
+    }
+
+
+    /// <summary>
+    /// Only compares the tracker as it can only track one object at a time. The target can be tracked by many objects
+    /// </summary>
+    public bool Equals(Track x, Track y)
+    {
+        return x.Tracker.Equals(y.Tracker);
+    }
+
+    public int GetHashCode(Track obj)
+    {
+        return obj.Tracker.GetHashCode();
     }
 }
