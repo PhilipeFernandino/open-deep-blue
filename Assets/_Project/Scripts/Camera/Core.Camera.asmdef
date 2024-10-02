@@ -1,15 +1,13 @@
 {
-    "name": "Core.Equipment",
-    "rootNamespace": "Core.Equipment",
+    "name": "Core.Camera",
+    "rootNamespace": "Core.Camera",
     "references": [
+        "Cinemachine",
         "Coimbra",
         "Coimbra.Services",
-        "Core.Camera",
-        "Core.Extensions",
-        "Core.HealthSystem",
-        "Core.Util",
+        "Coimbra.Services.Events",
         "PrimeTween.Runtime",
-        "UniTask"
+        "Unity.InputSystem"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

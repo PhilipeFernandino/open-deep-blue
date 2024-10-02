@@ -1,4 +1,6 @@
-﻿using Core.HealthSystem;
+﻿using Core.CameraSystem;
+using Core.HealthSystem;
+using Core.Utils;
 using Cysharp.Threading.Tasks;
 using PrimeTween;
 using System;
@@ -14,7 +16,12 @@ namespace Core
         [SerializeField] private float _usesPerSecond;
         [SerializeField] private float _angleOffset;
         [SerializeField] private float _disableSRDelaySeconds = 0.1f;
+
+        [SerializeField] private float _timeScaleOnBlink = 0.5f;
+        [SerializeField] private float _blinkSeconds = .2f;
+
         [SerializeField] private EquipmentUseEffect _useEffect;
+        [SerializeField] private ShakeSettings _shakeSettings;
 
         [SerializeField] private TweenSettings<Vector3> _rotTweenSettings;
 
@@ -26,6 +33,8 @@ namespace Core
 
         private TimeSpan _disableSRDelay;
         private CancellationTokenSource _disableSR_Cts;
+
+        private ICameraService _cameraService;
 
         private TimeSpan UseInterval => TimeSpan.FromSeconds(1f / _usesPerSecond);
 
@@ -59,6 +68,11 @@ namespace Core
             _spriteRenderer.enabled = false;
         }
 
+        private void Start()
+        {
+            _cameraService = ServiceLocatorUtilities.GetServiceAssert<ICameraService>();
+        }
+
         private async UniTask Use(Vector2 worldPosition)
         {
             _disableSR_Cts?.Cancel();
@@ -86,6 +100,8 @@ namespace Core
 
             _rotTweenSettings.startValue = new Vector3(0f, 0f, startAngle);
             _rotTweenSettings.endValue = new Vector3(0f, 0f, targetAngle);
+
+            transform.parent.eulerAngles = _rotTweenSettings.startValue;
 
             await Tween.EulerAngles(
                 transform.parent,
@@ -131,14 +147,15 @@ namespace Core
                 if (healthCollider.Health.TryHurt(new Attack(50f, AttackType.Damage)))
                 {
                     BlinkTime();
+                    _cameraService.ShakeCamera(_shakeSettings);
                 }
             }
         }
 
         private async void BlinkTime()
         {
-            Time.timeScale = .5f;
-            await UniTask.Delay(TimeSpan.FromSeconds(.1f), true);
+            Time.timeScale = _timeScaleOnBlink;
+            await UniTask.Delay(TimeSpan.FromSeconds(_blinkSeconds), true);
             Time.timeScale = 1;
         }
 

@@ -1,4 +1,6 @@
-using Cinemachine;
+using Coimbra.Services;
+using Core.CameraSystem;
+using Core.Utils;
 using Cysharp.Threading.Tasks;
 using NaughtyAttributes;
 using PrimeTween;
@@ -31,6 +33,8 @@ namespace Core.Units.Bosses.Ant
 
         private HashSet<Track> _track;
 
+        private ICameraService _cameraService;
+
         private void Awake()
         {
             _track = new();
@@ -42,6 +46,8 @@ namespace Core.Units.Bosses.Ant
         private void Start()
         {
             JumpingPawsAttackFlow().Forget();
+
+            _cameraService = ServiceLocatorUtilities.GetServiceAssert<ICameraService>();
         }
 
         private void Update()
@@ -126,13 +132,7 @@ namespace Core.Units.Bosses.Ant
             await Tween.Scale(paw.transform, _lowerPawScaleTws);
             paw.SetIsRaised(false);
 
-            var target = FindObjectOfType<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>();
-
-            _ = Tween.ShakeCustom(
-                target,
-                Vector3.zero,
-                _shakeCameraSettings, (target, val) => target.m_TrackedObjectOffset = val)
-                .OnComplete(() => target.m_TrackedObjectOffset = Vector3.zero);
+            _cameraService.ShakeCamera(_shakeCameraSettings);
         }
 
         private async UniTask RotatePaw(AntPaw paw)
