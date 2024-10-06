@@ -1,0 +1,11 @@
+dig-ground.png
+size:200,193
+filter:Linear,Linear
+pma:true
+ground
+bounds:124,2,189,74
+offsets:2,3,192,78
+rotate:90
+particles
+bounds:2,18,173,120
+rotate:90

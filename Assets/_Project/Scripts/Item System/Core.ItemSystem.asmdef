@@ -1,0 +1,23 @@
+{
+    "name": "Core.ItemSystem",
+    "rootNamespace": "Core.ItemSystem",
+    "references": [
+        "Coimbra",
+        "Coimbra.Services",
+        "Coimbra.Services.Events",
+        "Core.Util",
+        "NaughtyAttributes.Core",
+        "UniTask",
+        "Unity.TextMeshPro",
+        "UnityEngine.UI"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
