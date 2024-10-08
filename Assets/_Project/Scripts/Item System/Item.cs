@@ -22,5 +22,13 @@ namespace Core.ItemSystem
         public Sprite Icon => ItemData.Icon;
 
         public bool IsEquipable => ItemData.IsEquipable;
+
+        public override string ToString()
+        {
+            return $"[{Name}] - \n" +
+                $"Rarity: {Rarity}\n" +
+                $"Category: {Category}\n" +
+                $"IsEquipable: {IsEquipable}";
+        }
     }
 }

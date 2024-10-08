@@ -1,8 +1,10 @@
 using Coimbra;
 using Coimbra.Services;
+using NaughtyAttributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace Core.ItemSystem
 {
@@ -10,9 +12,9 @@ namespace Core.ItemSystem
     {
         private HashSet<Item> _items;
 
-        public List<Item> Items => _items.ToList();
+        public IEnumerable<Item> Items => _items.ToList();
 
-        public List<Item> Filter(ItemCategory? category = null, ItemRarity? rarity = null)
+        public IEnumerable<Item> Filter(ItemCategory? category = null, ItemRarity? rarity = null)
         {
             return _items.Where((x) =>
             {
@@ -27,10 +29,15 @@ namespace Core.ItemSystem
                 }
 
                 return true;
-            }).ToList();
+            });
         }
 
         public void AddItems(params Item[] items)
+        {
+            AddItems(items);
+        }
+
+        public void AddItems(IEnumerable<Item> items)
         {
             foreach (var item in items)
             {
@@ -39,12 +46,11 @@ namespace Core.ItemSystem
                     dbItem.Amount += item.Amount;
                     dbItem.Timestamp = DateTime.Now.Ticks;
                 }
+                else
+                {
+                    _items.Add(item);
+                }
             }
-        }
-
-        public void AddItems(List<Item> items)
-        {
-
         }
 
         protected override void OnInitialize()
@@ -54,14 +60,23 @@ namespace Core.ItemSystem
             ServiceLocator.Set<IInventoryService>(this);
         }
 
+        [Button]
+        private void LogItems()
+        {
+            foreach (var item in _items)
+            {
+                Debug.Log(item.ToString());
+            }
+        }
+
     }
 
     [DynamicService]
     public interface IInventoryService : IService
     {
-        public List<Item> Items { get; }
-        public List<Item> Filter(ItemCategory? category = null, ItemRarity? rarity = null);
+        public IEnumerable<Item> Items { get; }
+        public IEnumerable<Item> Filter(ItemCategory? category = null, ItemRarity? rarity = null);
         public void AddItems(params Item[] items);
-        public void AddItems(List<Item> items);
+        public void AddItems(IEnumerable<Item> items);
     }
 }

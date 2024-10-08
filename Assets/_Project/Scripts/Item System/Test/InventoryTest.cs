@@ -14,6 +14,9 @@ namespace Core.ItemSystem.Test
         private void Start()
         {
             _inventoryService = ServiceLocatorUtilities.GetServiceAssert<IInventoryService>();
+            Debug.Log(_inventoryService.GetType().Name);
+
+            _inventoryService.AddItems(_itemsToAdd);
         }
 
         [Button]
