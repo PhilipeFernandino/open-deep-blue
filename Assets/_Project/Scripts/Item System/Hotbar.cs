@@ -2,7 +2,7 @@
 
 namespace Core.ItemSystem
 {
-    public class HotbarDatabase : MonoBehaviour
+    public class Hotbar : MonoBehaviour
     {
 
     }

@@ -2,7 +2,10 @@
     "name": "Core.UI",
     "rootNamespace": "Core.UI",
     "references": [
-        "Coimbra"
+        "Coimbra",
+        "PrimeTween.Runtime",
+        "Unity.TextMeshPro",
+        "UnityEngine.UI"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

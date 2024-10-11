@@ -14,6 +14,7 @@ namespace Core.ItemSystem
 
         [Header("UI References")]
         [SerializeField] private TextMeshProUGUI _selectedItemTMP;
+        [SerializeField] private UIItemActions _itemActions;
 
         [Header("Tab References")]
         [SerializeField] private UIItemCategoryTab _tabPrefab;
@@ -116,17 +117,19 @@ namespace Core.ItemSystem
         private void ItemClickedEventHandler(UIInventoryItem item)
         {
             _selectedItemTMP.text = item.Item.Name;
+
+            if (_itemActions.InventoryItem == item)
+            {
+                _itemActions.Deactivate();
+            }
+            else
+            {
+                _itemActions.Setup(item, true);
+            }
         }
 
         public void SetCategories(List<UIItemCategory> categories)
         {
-            foreach (Transform child in _tabsParent)
-            {
-                child.Dispose(true);
-            }
-
-            _uiItemCategoryTabs.Clear();
-
             foreach (UIItemCategory category in categories)
             {
                 UIItemCategoryTab itemTab = Instantiate(_tabPrefab, _tabsParent);

@@ -16,8 +16,10 @@ namespace Core.ItemSystem
         public event Action<UIInventoryItem> Clicked;
 
         private Item _item;
+        private RectTransform _rectTransform;
 
         public Item Item => _item;
+        public RectTransform RectTransform => _rectTransform;
 
         public void Setup(Item item, Action<UIInventoryItem> onClickCallback = null)
         {
@@ -25,8 +27,6 @@ namespace Core.ItemSystem
             _quantityTMP.text = item.Amount > 1 ? item.Amount.ToString() : "";
 
             var colorSettings = ScriptableSettings.Get<UIItemRarityConfig>();
-
-            Debug.Log(colorSettings);
 
             _rarityImage.color = colorSettings.ItemRarityColor[item.Rarity];
 
@@ -58,6 +58,7 @@ namespace Core.ItemSystem
         private void Awake()
         {
             Deactivate();
+            _rectTransform = GetComponent<RectTransform>();
         }
     }
 }

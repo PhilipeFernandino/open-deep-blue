@@ -5,6 +5,8 @@
         "Coimbra",
         "Coimbra.Services",
         "Coimbra.Services.Events",
+        "Core.Extensions",
+        "Core.UI",
         "Core.Util",
         "NaughtyAttributes.Core",
         "UniTask",
