@@ -15,13 +15,13 @@ namespace Core.ItemSystem
 
         public event Action<UIInventoryItem> Clicked;
 
-        private Item _item;
+        private InventoryItem _item;
         private RectTransform _rectTransform;
 
-        public Item Item => _item;
+        public InventoryItem Item => _item;
         public RectTransform RectTransform => _rectTransform;
 
-        public void Setup(Item item, Action<UIInventoryItem> onClickCallback = null)
+        public void Setup(InventoryItem item, Action<UIInventoryItem> onClickCallback = null)
         {
             _icon.sprite = item.Icon;
             _quantityTMP.text = item.Amount > 1 ? item.Amount.ToString() : "";

@@ -34,8 +34,9 @@ namespace Core.ItemSystem
         private List<RectTransform> _uiItemLayouts;
         private List<UIInventoryItem> _uiItems;
 
-
         private IInventoryService _inventoryService;
+
+        public event Action<ItemAction> ItemActionRaised;
 
         private void Start()
         {
@@ -44,6 +45,8 @@ namespace Core.ItemSystem
             _uiItems = new();
             _uiItemLayouts = new();
             _uiItemCategoryTabs = new();
+
+            _itemActions.ItemActionRaised += ItemActionRaised;
 
             SpawnLayouts(_minLayoutCount);
 
@@ -72,7 +75,7 @@ namespace Core.ItemSystem
             RenderItems(showItems);
         }
 
-        private void RenderItems(List<Item> showItems)
+        private void RenderItems(List<InventoryItem> showItems)
         {
             int showItemsCount = showItems.Count;
             int availableCapacity = _uiItemLayouts.Count * _itemsPerLayout;

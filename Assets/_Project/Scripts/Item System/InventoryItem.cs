@@ -5,13 +5,13 @@ using UnityEngine;
 namespace Core.ItemSystem
 {
     [Serializable]
-    public class Item
+    public class InventoryItem
     {
         [field: SerializeField] public ItemSO ItemData { get; private set; }
 
         [field: SerializeField] public long Timestamp { get; set; }
         [field: SerializeField] public int Amount { get; set; }
-
+        [field: SerializeField] public bool IsFavorite { get; set; }
 
         public string Name => ItemData.Name;
 

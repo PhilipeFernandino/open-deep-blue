@@ -10,11 +10,11 @@ namespace Core.ItemSystem
 {
     public class InventoryDatabase : Actor, IInventoryService
     {
-        private HashSet<Item> _items;
+        private HashSet<InventoryItem> _items;
 
-        public IEnumerable<Item> Items => _items.ToList();
+        public IEnumerable<InventoryItem> Items => _items.ToList();
 
-        public IEnumerable<Item> Filter(ItemCategory? category = null, ItemRarity? rarity = null)
+        public IEnumerable<InventoryItem> Filter(ItemCategory? category = null, ItemRarity? rarity = null)
         {
             return _items.Where((x) =>
             {
@@ -32,16 +32,16 @@ namespace Core.ItemSystem
             });
         }
 
-        public void AddItems(params Item[] items)
+        public void AddItems(params InventoryItem[] items)
         {
             AddItems(items);
         }
 
-        public void AddItems(IEnumerable<Item> items)
+        public void AddItems(IEnumerable<InventoryItem> items)
         {
             foreach (var item in items)
             {
-                if (_items.TryGetValue(item, out Item dbItem))
+                if (_items.TryGetValue(item, out InventoryItem dbItem))
                 {
                     dbItem.Amount += item.Amount;
                     dbItem.Timestamp = DateTime.Now.Ticks;
@@ -74,9 +74,9 @@ namespace Core.ItemSystem
     [DynamicService]
     public interface IInventoryService : IService
     {
-        public IEnumerable<Item> Items { get; }
-        public IEnumerable<Item> Filter(ItemCategory? category = null, ItemRarity? rarity = null);
-        public void AddItems(params Item[] items);
-        public void AddItems(IEnumerable<Item> items);
+        public IEnumerable<InventoryItem> Items { get; }
+        public IEnumerable<InventoryItem> Filter(ItemCategory? category = null, ItemRarity? rarity = null);
+        public void AddItems(params InventoryItem[] items);
+        public void AddItems(IEnumerable<InventoryItem> items);
     }
 }

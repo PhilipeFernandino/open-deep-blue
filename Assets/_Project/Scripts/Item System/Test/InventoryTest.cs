@@ -7,7 +7,7 @@ namespace Core.ItemSystem.Test
 {
     public class InventoryTest : MonoBehaviour
     {
-        [SerializeField] private List<Item> _itemsToAdd = new();
+        [SerializeField] private List<InventoryItem> _itemsToAdd = new();
 
         private IInventoryService _inventoryService;
 

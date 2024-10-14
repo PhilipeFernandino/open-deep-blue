@@ -1,7 +1,9 @@
 ﻿using Core.UI;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace Core.ItemSystem
 {
@@ -10,13 +12,9 @@ namespace Core.ItemSystem
     {
         [SerializeField] private Vector2 _positionOffset;
 
-        [SerializeField] private TextBtn _equipTextButton;
-        [SerializeField] private TextBtn _discardTextButton;
-        [SerializeField] private TextBtn _favoriteTextButton;
+        [SerializeField] private List<ButtonItemAction> _actionTextButtons;
 
-        public event Action<UIInventoryItem> EquipTextButton;
-        public event Action<UIInventoryItem> FavoriteTextButton;
-        public event Action<UIInventoryItem> DiscardTextButton;
+        public event Action<ItemAction> ItemActionRaised;
 
         private RectTransform _rectTransform;
         private UIInventoryItem _inventoryItem;
@@ -55,14 +53,27 @@ namespace Core.ItemSystem
         {
             _rectTransform = GetComponent<RectTransform>();
 
-            _equipTextButton.Button.onClick.AddListener(() => EquipTextButton?.Invoke(_inventoryItem));
-            _discardTextButton.Button.onClick.AddListener(() => EquipTextButton?.Invoke(_inventoryItem));
-            _favoriteTextButton.Button.onClick.AddListener(() => EquipTextButton?.Invoke(_inventoryItem));
+            for (int i = 0; i < _actionTextButtons.Count; i++)
+            {
+                _actionTextButtons[i].TextButton.Button.onClick.AddListener(
+                    () => ItemActionRaised(_actionTextButtons[i].Action));
+            }
         }
 
         private void Start()
         {
             Deactivate();
         }
+
+        [Serializable]
+        private class ButtonItemAction { public ItemAction Action; public TextBtn TextButton; }
     }
+
+    public enum ItemAction
+    {
+        Equip,
+        Discard,
+        Favorite
+    }
+
 }

@@ -851,7 +851,7 @@ GameObject:
   - component: {fileID: 692790190}
   - component: {fileID: 692790189}
   m_Layer: 5
-  m_Name: Favourite Button
+  m_Name: Favorite Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1595,9 +1595,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _positionOffset: {x: 1.1, y: -1}
-  _equipTextButton: {fileID: 1355706671}
-  _discardTextButton: {fileID: 646766895}
-  _favoriteTextButton: {fileID: 692790192}
+  _actionTextButtons:
+  - Action: 0
+    TextButton: {fileID: 1355706671}
+  - Action: 1
+    TextButton: {fileID: 646766895}
+  - Action: 2
+    TextButton: {fileID: 692790192}
 --- !u!1 &1355706666
 GameObject:
   m_ObjectHideFlags: 0
