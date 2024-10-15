@@ -1,4 +1,5 @@
 ﻿using Core.UI;
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,7 +15,7 @@ namespace Core.ItemSystem
 
         [SerializeField] private List<ButtonItemAction> _actionTextButtons;
 
-        public event Action<ItemAction> ItemActionRaised;
+        public event Action<ItemActionRaisedEvent> ItemActionRaised;
 
         private RectTransform _rectTransform;
         private UIInventoryItem _inventoryItem;
@@ -44,8 +45,10 @@ namespace Core.ItemSystem
             _inventoryItem = null;
         }
 
-        public void OnDeselect(BaseEventData eventData)
+        public async void OnDeselect(BaseEventData eventData)
         {
+            // TODO? 
+            await UniTask.Delay(100);
             Deactivate();
         }
 
@@ -55,8 +58,15 @@ namespace Core.ItemSystem
 
             for (int i = 0; i < _actionTextButtons.Count; i++)
             {
-                _actionTextButtons[i].TextButton.Button.onClick.AddListener(
-                    () => ItemActionRaised(_actionTextButtons[i].Action));
+                var button = _actionTextButtons[i];
+
+                button.TextButton.Button.onClick.AddListener(
+                    () =>
+                    {
+                        Debug.Log("ok");
+                        ItemActionRaised?.Invoke(new ItemActionRaisedEvent(InventoryItem, button.Action));
+
+                    });
             }
         }
 
@@ -76,4 +86,9 @@ namespace Core.ItemSystem
         Favorite
     }
 
+    public record ItemActionRaisedEvent(UIInventoryItem Item, ItemAction Action)
+    {
+        public UIInventoryItem Item { get; private set; } = Item;
+        public ItemAction Action { get; private set; } = Action;
+    }
 }

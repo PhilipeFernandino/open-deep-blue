@@ -36,7 +36,7 @@ namespace Core.ItemSystem
 
         private IInventoryService _inventoryService;
 
-        public event Action<ItemAction> ItemActionRaised;
+        public event Action<ItemActionRaisedEvent> ItemActionRaised;
 
         private void Start()
         {

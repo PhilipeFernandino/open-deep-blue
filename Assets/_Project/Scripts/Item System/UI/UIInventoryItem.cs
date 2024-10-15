@@ -15,7 +15,7 @@ namespace Core.ItemSystem
 
         public event Action<UIInventoryItem> Clicked;
 
-        private InventoryItem _item;
+        private InventoryItem _item = null;
         private RectTransform _rectTransform;
 
         public InventoryItem Item => _item;
