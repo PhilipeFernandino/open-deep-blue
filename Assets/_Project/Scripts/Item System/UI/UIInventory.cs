@@ -121,14 +121,7 @@ namespace Core.ItemSystem
         {
             _selectedItemTMP.text = item.Item.Name;
 
-            if (_itemActions.InventoryItem == item)
-            {
-                _itemActions.Deactivate();
-            }
-            else
-            {
-                _itemActions.Setup(item, true);
-            }
+            _itemActions.Setup(item, true);
         }
 
         public void SetCategories(List<UIItemCategory> categories)

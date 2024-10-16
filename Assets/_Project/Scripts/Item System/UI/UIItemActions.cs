@@ -9,7 +9,7 @@ using UnityEngine.UI;
 namespace Core.ItemSystem
 {
     [RequireComponent(typeof(RectTransform))]
-    public class UIItemActions : MonoBehaviour, IDeselectHandler
+    public class UIItemActions : UIDynamicCanvas, IDeselectHandler, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField] private Vector2 _positionOffset;
 
@@ -20,12 +20,37 @@ namespace Core.ItemSystem
         private RectTransform _rectTransform;
         private UIInventoryItem _inventoryItem;
 
-        public UIInventoryItem InventoryItem => _inventoryItem;
+        private bool _isMouseOverMenu = false;
+
+        public UIInventoryItem InventoryItem
+        {
+            get => _inventoryItem;
+            private set
+            {
+                if (_inventoryItem == value)
+                {
+                    return;
+                }
+
+                if (_inventoryItem != null)
+                {
+                    _inventoryItem.SetHighlight(false);
+
+                }
+
+                if (value != null)
+                {
+                    value.SetHighlight(true);
+                }
+
+                _inventoryItem = value;
+            }
+        }
 
         public void Setup(UIInventoryItem item, bool activate = false)
         {
-            _inventoryItem = item;
             _rectTransform.position = item.RectTransform.position.XY() + _positionOffset;
+            InventoryItem = item;
 
             if (activate)
             {
@@ -35,27 +60,45 @@ namespace Core.ItemSystem
 
         public void Activate()
         {
-            gameObject.SetActive(true);
+            ShowSelf();
             EventSystem.current.SetSelectedGameObject(gameObject);
         }
 
         public void Deactivate()
         {
-            gameObject.SetActive(false);
-            _inventoryItem = null;
+            HideSelf();
+            InventoryItem = null;
         }
 
-        public async void OnDeselect(BaseEventData eventData)
+        public void OnDeselect(BaseEventData eventData)
         {
-            // TODO? 
-            await UniTask.Delay(100);
-            Deactivate();
+            if (!_isMouseOverMenu)
+                Deactivate();
         }
 
-        private void Awake()
+        public void OnPointerEnter(PointerEventData eventData)
         {
+            _isMouseOverMenu = true;
+            EventSystem.current.SetSelectedGameObject(gameObject);
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            _isMouseOverMenu = false;
+            EventSystem.current.SetSelectedGameObject(gameObject);
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
+
             _rectTransform = GetComponent<RectTransform>();
 
+            SetupActionButtons();
+        }
+
+        private void SetupActionButtons()
+        {
             for (int i = 0; i < _actionTextButtons.Count; i++)
             {
                 var button = _actionTextButtons[i];
@@ -63,9 +106,9 @@ namespace Core.ItemSystem
                 button.TextButton.Button.onClick.AddListener(
                     () =>
                     {
-                        Debug.Log("ok");
-                        ItemActionRaised?.Invoke(new ItemActionRaisedEvent(InventoryItem, button.Action));
-
+                        var inventoryItem = InventoryItem;
+                        Deactivate();
+                        ItemActionRaised?.Invoke(new ItemActionRaisedEvent(inventoryItem, button.Action));
                     });
             }
         }

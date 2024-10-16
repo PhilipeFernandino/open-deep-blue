@@ -10,6 +10,7 @@ namespace Core.ItemSystem
     public class UIInventoryItem : MonoBehaviour, IPointerClickHandler
     {
         [SerializeField] private Image _rarityImage;
+        [SerializeField] private Image _highlightImage;
         [SerializeField] private Image _icon;
         [SerializeField] private TextMeshProUGUI _quantityTMP;
 
@@ -48,6 +49,12 @@ namespace Core.ItemSystem
             _icon.enabled = false;
             _rarityImage.enabled = false;
             _quantityTMP.text = "";
+            SetHighlight(false);
+        }
+
+        public void SetHighlight(bool value)
+        {
+            _highlightImage.enabled = value;
         }
 
         public void OnPointerClick(PointerEventData eventData)

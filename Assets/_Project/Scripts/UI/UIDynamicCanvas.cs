@@ -9,33 +9,31 @@ namespace Core.UI
 
         private Canvas _canvas;
 
-        public Canvas Canvas => _canvas;
+        public Canvas Canvas => _canvas == null ? _canvas = GetComponent<Canvas>() : _canvas;
         public bool IsEnabled => _canvas.enabled;
 
         public virtual void ShowSelf()
         {
-            _canvas.enabled = true;
+            SetActiveState(true);
         }
 
         public virtual void HideSelf()
         {
-            _canvas.enabled = false;
+            SetActiveState(false);
         }
 
         public virtual void ToggleSelf()
         {
-            _canvas.enabled = !_canvas.enabled;
+            SetActiveState(Canvas.enabled);
         }
 
         public virtual void SetActiveState(bool state)
         {
-            _canvas.enabled = state;
+            Canvas.enabled = state;
         }
 
         protected virtual void Awake()
         {
-            _canvas = GetComponent<Canvas>();
-
             if (_hideSelfOnAwake)
             {
                 HideSelf();

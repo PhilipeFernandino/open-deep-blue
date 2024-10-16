@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using Core.UI;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace Core.ItemSystem
 {
-    public class UIHotbar : MonoBehaviour, ISelectHandler, IDeselectHandler
+    public class UIHotbar : UIDynamicCanvas, ISelectHandler, IDeselectHandler
     {
         [SerializeField] private UIInventory _uiInventory;
 
@@ -13,24 +14,55 @@ namespace Core.ItemSystem
         private List<InventoryItem> _items = new();
         private UIInventoryItem _activeItem;
 
+        public UIInventoryItem ActiveItem
+        {
+            get => _activeItem;
+            private set
+            {
+                if (_activeItem == value)
+                {
+                    return;
+                }
+
+                if (_activeItem != null)
+                {
+                    _activeItem.SetHighlight(false);
+
+                }
+
+                if (value != null)
+                {
+                    value.SetHighlight(true);
+                }
+
+                _activeItem = value;
+            }
+        }
+
+
         public void Activate()
         {
-            gameObject.SetActive(true);
+            ShowSelf();
         }
 
         public void Deactivate()
         {
-            gameObject.SetActive(false);
+            HideSelf();
         }
 
-        public void Setup(UIInventoryItem item, bool activate = false)
+        public void Setup(UIInventoryItem activeItem, bool activate = false)
         {
-            _activeItem = item;
+            ActiveItem = activeItem;
 
             if (activate)
             {
                 Activate();
             }
+        }
+
+        public void SetupSlot(InventoryItem item, int index)
+        {
+            _slots[index].Setup(item);
         }
 
         private void Start()
@@ -42,20 +74,18 @@ namespace Core.ItemSystem
                 int index = i;
                 _slots[i].Clicked += (item) => ItemClickedEventHandler(item, index);
             }
-
-            Deactivate();
         }
 
         private void ItemClickedEventHandler(UIInventoryItem uiItem, int index)
         {
-            Debug.Log($"hotbar slot clicked {uiItem}, {index}", this);
-
-            if (_activeItem == null)
+            if (ActiveItem == null)
             {
                 return;
             }
 
-            _slots[index].Setup(_activeItem.Item);
+            SetupSlot(ActiveItem.Item, index);
+
+            ActiveItem = null;
         }
 
         private void ItemActionRaisedEventHandler(ItemActionRaisedEvent e)
