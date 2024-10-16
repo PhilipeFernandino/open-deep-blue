@@ -765,8 +765,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 446294719}
-  - component: {fileID: 446294720}
   - component: {fileID: 446294721}
+  - component: {fileID: 446294720}
   - component: {fileID: 446294722}
   - component: {fileID: 446294724}
   - component: {fileID: 446294723}
@@ -847,6 +847,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _hideSelfOnAwake: 0
   _uiInventory: {fileID: 2071372418}
+  _hotbarDatabase: {fileID: 1366349340}
   _slots:
   - {fileID: 1806973023}
   - {fileID: 2037590548}
@@ -2485,6 +2486,50 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _button: {fileID: 1355706668}
   _buttonTMP: {fileID: 552093929}
+--- !u!1 &1366349339
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1366349341}
+  - component: {fileID: 1366349340}
+  m_Layer: 0
+  m_Name: Hotbar Database
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1366349340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1366349339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bddc55e81b2ac7c439c2644fbc28be14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1366349341
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1366349339}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.098507, y: 0.604224, z: 1087.8949}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1449929066
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3862,43 +3907,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a35f7c35c970244e8b413d0d98b99b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _itemsToAdd:
-  - <ItemData>k__BackingField: {fileID: 11400000, guid: c27d0b7ebab089440a0312cc1964a6d2, type: 2}
-    <Timestamp>k__BackingField: 0
-    <Amount>k__BackingField: 1
-    <IsFavorite>k__BackingField: 0
-  - <ItemData>k__BackingField: {fileID: 11400000, guid: 87274a499a235b34794f10f26da652bf, type: 2}
-    <Timestamp>k__BackingField: 0
-    <Amount>k__BackingField: 15
-    <IsFavorite>k__BackingField: 0
-  - <ItemData>k__BackingField: {fileID: 11400000, guid: 70406118837e27d4090253c4184b5864, type: 2}
-    <Timestamp>k__BackingField: 0
-    <Amount>k__BackingField: 1
-    <IsFavorite>k__BackingField: 0
-  - <ItemData>k__BackingField: {fileID: 11400000, guid: 480253d5914db184abbb75627b2476de, type: 2}
-    <Timestamp>k__BackingField: 0
-    <Amount>k__BackingField: 1
-    <IsFavorite>k__BackingField: 0
-  - <ItemData>k__BackingField: {fileID: 11400000, guid: 032f19385c0f69445882ee513ff74c02, type: 2}
-    <Timestamp>k__BackingField: 0
-    <Amount>k__BackingField: 1
-    <IsFavorite>k__BackingField: 0
-  - <ItemData>k__BackingField: {fileID: 11400000, guid: 9c6a280dd8d724249a9a9eb6a9f66770, type: 2}
-    <Timestamp>k__BackingField: 0
-    <Amount>k__BackingField: 1
-    <IsFavorite>k__BackingField: 0
-  - <ItemData>k__BackingField: {fileID: 11400000, guid: d5e56b91c574d6d45861104e3f52b59a, type: 2}
-    <Timestamp>k__BackingField: 0
-    <Amount>k__BackingField: 1
-    <IsFavorite>k__BackingField: 0
-  - <ItemData>k__BackingField: {fileID: 11400000, guid: 811ac290f7301af499678b9b7629a0da, type: 2}
-    <Timestamp>k__BackingField: 0
-    <Amount>k__BackingField: 1
-    <IsFavorite>k__BackingField: 0
-  - <ItemData>k__BackingField: {fileID: 11400000, guid: 8c1b573ba9681a647ab1cb0427777178, type: 2}
-    <Timestamp>k__BackingField: 0
-    <Amount>k__BackingField: 1
-    <IsFavorite>k__BackingField: 0
+  _icons:
+  - {fileID: 21300000, guid: 0af51eab9b6041b46944039eefefb84b, type: 3}
+  - {fileID: 21300000, guid: 7438e91eda020f042ae97b0dfab77b65, type: 3}
+  - {fileID: 21300000, guid: 11f26ae8d61d3db4cb6a987ecdcbdaa0, type: 3}
+  _addRandomItems: 20
 --- !u!224 &2089739745 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2878173338679448155, guid: 17c443b2c81a0ae46bdd69209a94ad69, type: 3}
@@ -3923,3 +3936,4 @@ SceneRoots:
   - {fileID: 2071372417}
   - {fileID: 977839174}
   - {fileID: 763933936}
+  - {fileID: 1366349341}

@@ -5,13 +5,13 @@ using UnityEngine;
 namespace Core.ItemSystem
 {
     [Serializable]
-    public class InventoryItem
+    public record InventoryItem(ItemSO ItemData, long Timestamp, int Amount, bool IsFavorite)
     {
-        [field: SerializeField] public ItemSO ItemData { get; private set; }
+        [field: SerializeField] public ItemSO ItemData { get; private set; } = ItemData;
 
-        [field: SerializeField] public long Timestamp { get; set; }
-        [field: SerializeField] public int Amount { get; set; }
-        [field: SerializeField] public bool IsFavorite { get; set; }
+        [field: SerializeField] public long Timestamp { get; set; } = Timestamp;
+        [field: SerializeField] public int Amount { get; set; } = Amount;
+        [field: SerializeField] public bool IsFavorite { get; set; } = IsFavorite;
 
         public string Name => ItemData.Name;
 
@@ -22,13 +22,5 @@ namespace Core.ItemSystem
         public Sprite Icon => ItemData.Icon;
 
         public bool IsEquipable => ItemData.IsEquipable;
-
-        public override string ToString()
-        {
-            return $"[{Name}] - \n" +
-                $"Rarity: {Rarity}\n" +
-                $"Category: {Category}\n" +
-                $"IsEquipable: {IsEquipable}";
-        }
     }
 }

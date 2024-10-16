@@ -12,5 +12,14 @@ namespace Core.ItemSystem
         [field: SerializeField] public ItemCategory Category { get; private set; }
         [field: SerializeField] public Sprite Icon { get; private set; }
         [field: SerializeField] public bool IsEquipable { get; private set; }
+
+        public void Setup(string name, ItemRarity rarity, ItemCategory category, Sprite icon, bool isEquipable)
+        {
+            Name = name;
+            Rarity = rarity;
+            Category = category;
+            Icon = icon;
+            IsEquipable = isEquipable;
+        }
     }
 }
