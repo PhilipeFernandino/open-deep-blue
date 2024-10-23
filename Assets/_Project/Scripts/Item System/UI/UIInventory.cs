@@ -37,6 +37,8 @@ namespace Core.ItemSystem
 
         private IInventoryService _inventoryService;
 
+        private ItemAction[] _itemInventoryActions = { ItemAction.Equip, ItemAction.Discard };
+
         public event Action<ItemActionRaisedEvent> ItemActionRaised;
 
         private void Start()
@@ -122,7 +124,7 @@ namespace Core.ItemSystem
         {
             _selectedItemTMP.text = item.Item.Name;
 
-            _itemActions.Setup(item, true);
+            _itemActions.Setup(item, _itemInventoryActions, true);
         }
 
         public void SetCategories(List<UIItemCategory> categories)

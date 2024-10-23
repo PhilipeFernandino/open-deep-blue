@@ -1,4 +1,5 @@
 ﻿using Core.UI;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -7,12 +8,16 @@ namespace Core.ItemSystem
 {
     public class UIHotbar : UIDynamicCanvas, ISelectHandler, IDeselectHandler
     {
+        [Header("References")]
         [SerializeField] private UIInventory _uiInventory;
         [SerializeField] private UISelectItem _uiSelectItem;
+        [SerializeField] private UIItemActions _itemActions;
 
         [SerializeField] private HotbarDatabase _hotbarDatabase;
 
         [SerializeField] private List<UIInventoryItem> _slots = new();
+
+        private ItemAction[] _itemInventoryActions = { ItemAction.Unequip };
 
         private UIInventoryItem ActiveItem => _uiSelectItem.SelectedItem;
 
@@ -44,7 +49,8 @@ namespace Core.ItemSystem
 
         private void Start()
         {
-            _uiInventory.ItemActionRaised += ItemActionRaisedEventHandler;
+            _uiInventory.ItemActionRaised += InventoryItemActionRaisedEventHandler;
+            _itemActions.ItemActionRaised += HotbarItemActionRaisedEventHandler;
 
             for (int i = 0; i < _slots.Count; i++)
             {
@@ -59,17 +65,31 @@ namespace Core.ItemSystem
         {
             if (ActiveItem == null)
             {
-                return;
+                if (uiItem.HasItem)
+                {
+                    _itemActions.Setup(uiItem, _itemInventoryActions, true);
+                }
+            }
+            else
+            {
+                _hotbarDatabase.SetupItem(ActiveItem.Item, index);
             }
 
-            _hotbarDatabase.SetupItem(ActiveItem.Item, index);
         }
 
-        private void ItemActionRaisedEventHandler(ItemActionRaisedEvent e)
+        private void InventoryItemActionRaisedEventHandler(ItemActionRaisedEvent e)
         {
             if (e.Action == ItemAction.Equip)
             {
                 Setup(e.Item, true);
+            }
+        }
+
+        private void HotbarItemActionRaisedEventHandler(ItemActionRaisedEvent e)
+        {
+            if (e.Action == ItemAction.Unequip)
+            {
+                _hotbarDatabase.RemoveItem(e.Item.Item);
             }
         }
 

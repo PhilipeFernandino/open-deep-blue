@@ -16,14 +16,24 @@ namespace Core.ItemSystem
 
         public event Action<UIInventoryItem> Clicked;
 
-        private InventoryItem _item = null;
+        private InventoryItem _item;
         private RectTransform _rectTransform;
 
+        public bool HasItem => _item is not null;
         public InventoryItem Item => _item;
         public RectTransform RectTransform => _rectTransform;
 
         public void Setup(InventoryItem item, Action<UIInventoryItem> onClickCallback = null)
         {
+            Debug.Log(_item);
+
+            if (item == null)
+            {
+                _item = null;
+                Deactivate();
+                return;
+            }
+
             _icon.sprite = item.Icon;
             _quantityTMP.text = item.Amount > 1 ? item.Amount.ToString() : "";
 
@@ -64,6 +74,7 @@ namespace Core.ItemSystem
 
         private void Awake()
         {
+            _item = null;
             Deactivate();
             _rectTransform = GetComponent<RectTransform>();
         }

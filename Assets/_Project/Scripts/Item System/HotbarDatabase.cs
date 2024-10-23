@@ -19,6 +19,13 @@ namespace Core.ItemSystem
             Updated?.Invoke(new(item, index));
         }
 
+        public void RemoveItem(InventoryItem item)
+        {
+            int dbItem = _items.FindIndex((i) => i == item);
+            _items[dbItem] = null;
+            Updated(new(null, dbItem));
+        }
+
         private void Awake()
         {
             _items = new(10);

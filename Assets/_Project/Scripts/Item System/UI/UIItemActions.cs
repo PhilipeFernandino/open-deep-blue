@@ -11,21 +11,30 @@ namespace Core.ItemSystem
     [RequireComponent(typeof(RectTransform))]
     public class UIItemActions : UIDynamicCanvas, IDeselectHandler, IPointerEnterHandler, IPointerExitHandler
     {
+        [Header("References")]
+        [SerializeField] private UISelectItem _uiSelectItem;
+        [SerializeField] private UIItemAction _buttonPrefab;
+        [SerializeField] private RectTransform _buttonsParent;
+
+        [Header("Settings")]
         [SerializeField] private Vector2 _positionOffset;
 
-        [SerializeField] private UISelectItem _uiSelectItem;
-        [SerializeField] private List<ButtonItemAction> _actionTextButtons;
-
-        public event Action<ItemActionRaisedEvent> ItemActionRaised;
+        private List<UIItemAction> _actionTextButtons;
 
         private RectTransform _rectTransform;
 
         private bool _isMouseOverMenu = false;
 
+
+        public event Action<ItemActionRaisedEvent> ItemActionRaised;
+
         public UIInventoryItem SelectedItem => _uiSelectItem.SelectedItem;
 
-        public void Setup(UIInventoryItem item, bool activate = false)
+
+        public void Setup(UIInventoryItem item, ItemAction[] actions, bool activate = false)
         {
+            SetupButtons(actions);
+
             _rectTransform.position = item.RectTransform.position.XY() + _positionOffset;
             _uiSelectItem.SelectItem(item);
 
@@ -72,23 +81,38 @@ namespace Core.ItemSystem
 
             _rectTransform = GetComponent<RectTransform>();
 
-            SetupActionButtons();
+            InstantiateButtons();
         }
 
-        private void SetupActionButtons()
+        private void InstantiateButtons()
         {
-            for (int i = 0; i < _actionTextButtons.Count; i++)
-            {
-                var button = _actionTextButtons[i];
+            _actionTextButtons = new(10);
 
-                button.TextButton.Button.onClick.AddListener(
-                    () =>
-                    {
-                        var inventoryItem = SelectedItem;
-                        _uiSelectItem.Deselect();
-                        Deactivate();
-                        ItemActionRaised?.Invoke(new ItemActionRaisedEvent(inventoryItem, button.Action));
-                    });
+            for (int i = 0; i < _actionTextButtons.Capacity; i++)
+            {
+                var itemAction = Instantiate(_buttonPrefab, _buttonsParent.transform);
+                _actionTextButtons.Add(itemAction);
+
+                _actionTextButtons[i].OnClick += (action) =>
+                {
+                    var inventoryItem = SelectedItem;
+                    _uiSelectItem.Deselect();
+                    Deactivate();
+                    ItemActionRaised?.Invoke(new ItemActionRaisedEvent(inventoryItem, action));
+                };
+            }
+        }
+
+        private void SetupButtons(ItemAction[] actions)
+        {
+            for (int i = 0; i < actions.Length; i++)
+            {
+                _actionTextButtons[i].Setup(actions[i]);
+            }
+
+            for (int i = actions.Length; i < _actionTextButtons.Count; i++)
+            {
+                _actionTextButtons[i].Deactivate();
             }
         }
 
@@ -96,16 +120,15 @@ namespace Core.ItemSystem
         {
             Deactivate();
         }
-
-        [Serializable]
-        private class ButtonItemAction { public ItemAction Action; public TextBtn TextButton; }
     }
 
     public enum ItemAction
     {
         Equip,
+        Unequip,
+        Sell,
         Discard,
-        Favorite
+        Favorite,
     }
 
     public record ItemActionRaisedEvent(UIInventoryItem Item, ItemAction Action)
