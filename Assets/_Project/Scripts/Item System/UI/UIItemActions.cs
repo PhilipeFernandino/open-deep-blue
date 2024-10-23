@@ -13,44 +13,21 @@ namespace Core.ItemSystem
     {
         [SerializeField] private Vector2 _positionOffset;
 
+        [SerializeField] private UISelectItem _uiSelectItem;
         [SerializeField] private List<ButtonItemAction> _actionTextButtons;
 
         public event Action<ItemActionRaisedEvent> ItemActionRaised;
 
         private RectTransform _rectTransform;
-        private UIInventoryItem _inventoryItem;
 
         private bool _isMouseOverMenu = false;
 
-        public UIInventoryItem InventoryItem
-        {
-            get => _inventoryItem;
-            private set
-            {
-                if (_inventoryItem == value)
-                {
-                    return;
-                }
-
-                if (_inventoryItem != null)
-                {
-                    _inventoryItem.SetHighlight(false);
-
-                }
-
-                if (value != null)
-                {
-                    value.SetHighlight(true);
-                }
-
-                _inventoryItem = value;
-            }
-        }
+        public UIInventoryItem SelectedItem => _uiSelectItem.SelectedItem;
 
         public void Setup(UIInventoryItem item, bool activate = false)
         {
             _rectTransform.position = item.RectTransform.position.XY() + _positionOffset;
-            InventoryItem = item;
+            _uiSelectItem.SelectItem(item);
 
             if (activate)
             {
@@ -67,13 +44,14 @@ namespace Core.ItemSystem
         public void Deactivate()
         {
             HideSelf();
-            InventoryItem = null;
         }
 
         public void OnDeselect(BaseEventData eventData)
         {
             if (!_isMouseOverMenu)
+            {
                 Deactivate();
+            }
         }
 
         public void OnPointerEnter(PointerEventData eventData)
@@ -106,7 +84,8 @@ namespace Core.ItemSystem
                 button.TextButton.Button.onClick.AddListener(
                     () =>
                     {
-                        var inventoryItem = InventoryItem;
+                        var inventoryItem = SelectedItem;
+                        _uiSelectItem.Deselect();
                         Deactivate();
                         ItemActionRaised?.Invoke(new ItemActionRaisedEvent(inventoryItem, button.Action));
                     });

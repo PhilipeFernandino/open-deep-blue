@@ -15,6 +15,7 @@ namespace Core.ItemSystem
         [Header("UI References")]
         [SerializeField] private TextMeshProUGUI _selectedItemTMP;
         [SerializeField] private UIItemActions _itemActions;
+        [SerializeField] private UISelectItem _selectItem;
 
         [Header("Tab References")]
         [SerializeField] private UIItemCategoryTab _tabPrefab;
@@ -71,7 +72,7 @@ namespace Core.ItemSystem
         public void SelectCategory(ItemCategory category)
         {
             var showItems = _inventoryService.Filter(category: category).ToList();
-
+            _selectItem.Deselect();
             RenderItems(showItems);
         }
 

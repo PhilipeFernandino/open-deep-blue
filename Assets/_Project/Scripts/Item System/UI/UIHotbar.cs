@@ -8,37 +8,13 @@ namespace Core.ItemSystem
     public class UIHotbar : UIDynamicCanvas, ISelectHandler, IDeselectHandler
     {
         [SerializeField] private UIInventory _uiInventory;
+        [SerializeField] private UISelectItem _uiSelectItem;
+
         [SerializeField] private HotbarDatabase _hotbarDatabase;
 
         [SerializeField] private List<UIInventoryItem> _slots = new();
 
-        private UIInventoryItem _activeItem;
-
-        public UIInventoryItem ActiveItem
-        {
-            get => _activeItem;
-            private set
-            {
-                if (_activeItem == value)
-                {
-                    return;
-                }
-
-                if (_activeItem != null)
-                {
-                    _activeItem.SetHighlight(false);
-
-                }
-
-                if (value != null)
-                {
-                    value.SetHighlight(true);
-                }
-
-                _activeItem = value;
-            }
-        }
-
+        private UIInventoryItem ActiveItem => _uiSelectItem.SelectedItem;
 
         public void Activate()
         {
@@ -52,7 +28,7 @@ namespace Core.ItemSystem
 
         public void Setup(UIInventoryItem activeItem, bool activate = false)
         {
-            ActiveItem = activeItem;
+            _uiSelectItem.SelectItem(activeItem);
 
             if (activate)
             {
@@ -62,6 +38,7 @@ namespace Core.ItemSystem
 
         private void SetupSlot(HotbarUpdateEventArgs e)
         {
+            _uiSelectItem.Deselect();
             _slots[e.Index].Setup(e.Item);
         }
 
@@ -86,8 +63,6 @@ namespace Core.ItemSystem
             }
 
             _hotbarDatabase.SetupItem(ActiveItem.Item, index);
-
-            ActiveItem = null;
         }
 
         private void ItemActionRaisedEventHandler(ItemActionRaisedEvent e)
