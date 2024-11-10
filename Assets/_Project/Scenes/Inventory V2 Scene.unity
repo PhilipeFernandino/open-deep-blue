@@ -1562,18 +1562,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1197169965}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2071372417}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 0, y: 354.38498}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1197169967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1668,7 +1668,7 @@ MonoBehaviour:
   _uiSelectItem: {fileID: 2071372420}
   _buttonPrefab: {fileID: 8857747445038271403, guid: a73d86981b0452546b04c162ac812758, type: 3}
   _buttonsParent: {fileID: 1197169966}
-  _positionOffset: {x: 1.1, y: -1}
+  _positionOffset: {x: 1.1, y: -0.45}
 --- !u!223 &1197169972
 Canvas:
   m_ObjectHideFlags: 0
@@ -2572,7 +2572,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -381.35995, y: -7.959961}
+  m_AnchoredPosition: {x: -381.36, y: -7.959961}
   m_SizeDelta: {x: -845.4, y: -59.61}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1862228758
@@ -3132,7 +3132,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 149228400}
-  - {fileID: 2071372417}
   - {fileID: 977839174}
   - {fileID: 763933936}
   - {fileID: 1366349341}
+  - {fileID: 2071372417}
