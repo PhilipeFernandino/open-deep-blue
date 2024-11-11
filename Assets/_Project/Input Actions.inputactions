@@ -24,11 +24,11 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Hotbar Navigation",
+                    "name": "Hotbar Navigation 1",
                     "type": "Button",
                     "id": "ddc786c3-afae-4ad9-bd29-aeab77623467",
                     "expectedControlType": "Button",
-                    "processors": "",
+                    "processors": "Scale",
                     "interactions": "",
                     "initialStateCheck": true
                 },
@@ -238,7 +238,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Hotbar Navigation",
+                    "action": "Hotbar Navigation 1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -249,7 +249,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Hotbar Navigation",
+                    "action": "Hotbar Navigation 1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -260,7 +260,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Hotbar Navigation",
+                    "action": "Hotbar Navigation 1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -271,7 +271,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Hotbar Navigation",
+                    "action": "Hotbar Navigation 1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -282,7 +282,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Hotbar Navigation",
+                    "action": "Hotbar Navigation 1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -293,7 +293,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Hotbar Navigation",
+                    "action": "Hotbar Navigation 1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -304,7 +304,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Hotbar Navigation",
+                    "action": "Hotbar Navigation 1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -315,7 +315,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Hotbar Navigation",
+                    "action": "Hotbar Navigation 1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -326,7 +326,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Hotbar Navigation",
+                    "action": "Hotbar Navigation 1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
