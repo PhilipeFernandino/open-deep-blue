@@ -1,14 +1,17 @@
 {
-    "name": "Core.Equipment",
-    "rootNamespace": "Core.Equipment",
+    "name": "Core.HoldableSystem",
+    "rootNamespace": "Core.HoldableSystem",
     "references": [
+        "AYellowpaper.SerializedCollections",
         "Coimbra",
         "Coimbra.Services",
         "Core.Camera",
         "Core.Extensions",
         "Core.HealthSystem",
+        "Core.ItemSystem",
         "Core.Util",
         "PrimeTween.Runtime",
+        "TNRD.SerializableInterface",
         "UniTask"
     ],
     "includePlatforms": [],

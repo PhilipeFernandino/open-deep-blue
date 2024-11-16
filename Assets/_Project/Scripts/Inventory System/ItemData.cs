@@ -16,7 +16,6 @@ namespace Core.InventorySystem
         [field: SerializeField] public bool CanSell { get; private set; }
         [field: SerializeField] public int SellPrice { get; private set; }
 
-        [field: SerializeField] public Equipment HoldableItem { get; private set; }
 
         public bool IsStackable => MaxStack > 1;
 

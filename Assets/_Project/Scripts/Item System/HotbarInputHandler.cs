@@ -6,7 +6,7 @@ namespace Systems.Item_System
 {
     public class HotbarInputHandler : MonoBehaviour
     {
-        [SerializeField] private UIHotbar _hotbar;
+        [SerializeField] private Hotbar _hotbar;
 
         public void HotbarNavigation(InputAction.CallbackContext context)
         {

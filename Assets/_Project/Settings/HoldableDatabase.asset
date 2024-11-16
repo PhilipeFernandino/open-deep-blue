@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6abfe9715113704468e90c1278089510, type: 3}
+  m_Name: HoldableDatabase
+  m_EditorClassIdentifier: 
+  _preload: 1
+  _type: 2
+  _holdables:
+    _serializedList:
+    - Key: {fileID: 11400000, guid: c27d0b7ebab089440a0312cc1964a6d2, type: 2}
+      Value:
+        mode: 0
+        unityReference: {fileID: 9206541709950824132, guid: 0b5cbca2e60e7374bbaf1391e8d3bbb0, type: 3}
+        rawReference:
+          rid: -2
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }

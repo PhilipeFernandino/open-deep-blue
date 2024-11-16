@@ -1,18 +1,22 @@
-﻿using System.Collections;
+﻿using Coimbra;
+using Coimbra.Services;
+using NaughtyAttributes;
+using System;
 using UnityEngine;
 
 namespace Core.ItemSystem
 {
-    public class UIHotbar : MonoBehaviour
+    public class Hotbar : Actor
     {
         [Header("References")]
-        [SerializeField] private UIHotbarRenderer _renderer;
-        [SerializeField] private HotbarDatabase _database;
-        [SerializeField] private UISelectItem _hotbarSelectedItem;
-
+        [SerializeField, Required] private UIHotbarRenderer _renderer;
+        [SerializeField, Required] private HotbarDatabase _database;
+        [SerializeField, Required] private UISelectItem _hotbarSelectedItem;
 
         private int _selectedHotbarIndex = 0;
         private int _hotbarSlots;
+
+        public event Action<InventoryItem> ItemSelected;
 
         public int SelectedHotbarIndex
         {
@@ -32,11 +36,14 @@ namespace Core.ItemSystem
                     _selectedHotbarIndex = value;
                 }
 
-                _hotbarSelectedItem.SelectItem(_renderer.GetSlot(_selectedHotbarIndex));
+                UIInventoryItem uiItem = _renderer.GetSlot(_selectedHotbarIndex);
+
+                _hotbarSelectedItem.SelectItem(uiItem);
+                ItemSelected?.Invoke(uiItem.Item);
             }
         }
 
-        private void Start()
+        protected override void OnInitialize()
         {
             _hotbarSlots = _renderer.SlotCount;
             _database.Updated += _renderer.SetupSlot;

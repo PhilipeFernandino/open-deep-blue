@@ -9,6 +9,8 @@ namespace Core.ItemSystem.Test
     public class InventoryTest : MonoBehaviour
     {
         [SerializeField] private List<Sprite> _icons = new();
+        [SerializeField] private List<ItemSO> _items = new();
+
         [SerializeField] private int _addRandomItems = 0;
 
         private IInventoryService _inventoryService;
@@ -35,6 +37,21 @@ namespace Core.ItemSystem.Test
                    true);
 
                 InventoryItem item = new(itemSO, 0, UnityEngine.Random.Range(1, 64), false);
+                addItems.Add(item);
+            }
+
+            _inventoryService.AddItems(addItems);
+        }
+
+        [Button(enabledMode: EButtonEnableMode.Playmode)]
+        public void AddDefinedItems()
+        {
+            List<InventoryItem> addItems = new(_addRandomItems);
+
+            for (int i = 0; i < _items.Count; i++)
+            {
+                ItemSO itemSO = _items[i];
+                InventoryItem item = new(itemSO, 0, 1, false);
                 addItems.Add(item);
             }
 

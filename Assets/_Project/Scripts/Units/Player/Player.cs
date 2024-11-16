@@ -1,6 +1,7 @@
 ﻿using Coimbra;
 using Core.FSM;
 using Core.HealthSystem;
+using Core.HoldableSystem;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,7 +9,7 @@ namespace Core.Player
 {
     using PlayerFSMState = IFSMState<PlayerState>;
 
-    [RequireComponent(typeof(PlayerHold))]
+    [RequireComponent(typeof(HoldableController))]
     [RequireComponent(typeof(PlayerAnimator))]
     [RequireComponent(typeof(PlayerMovement2D))]
     [RequireComponent(typeof(BoxCollider2D))]
@@ -21,7 +22,7 @@ namespace Core.Player
         [SerializeField] private float _dashSpeed;
         [SerializeField] private float _dashDuration;
 
-        private PlayerHold _playerHold;
+        private HoldableController _playerHold;
         private PlayerAnimator _playerAnimator;
         private PlayerMovement2D _playerMovement;
         private BoxCollider2D _boxCollider;
@@ -32,7 +33,7 @@ namespace Core.Player
 
         internal PlayerAnimator PlayerAnimator => _playerAnimator;
         internal PlayerMovement2D PlayerMovement => _playerMovement;
-        internal PlayerHold PlayerHold => _playerHold;
+        internal HoldableController PlayerHold => _playerHold;
         internal PlayerStateResolver StateResolver => _playerStateResolver;
         internal BoxCollider2D BoxCollider => _boxCollider;
 
@@ -87,7 +88,7 @@ namespace Core.Player
         {
             base.OnSpawn();
             _playerAnimator = GetComponent<PlayerAnimator>();
-            _playerHold = GetComponent<PlayerHold>();
+            _playerHold = GetComponent<HoldableController>();
             _playerMovement = GetComponent<PlayerMovement2D>();
             _boxCollider = GetComponent<BoxCollider2D>();
 

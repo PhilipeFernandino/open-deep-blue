@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Axe
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Axe
-  <Rarity>k__BackingField: 1
-  <Category>k__BackingField: 4
-  <Icon>k__BackingField: {fileID: 21300000, guid: 29e33692f363fb34eb7177931252296a, type: 3}
+  <Rarity>k__BackingField: 4
+  <Category>k__BackingField: 1
+  <Icon>k__BackingField: {fileID: 21300000, guid: 0af51eab9b6041b46944039eefefb84b, type: 3}
   <IsEquipable>k__BackingField: 1

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Start Sword
   m_EditorClassIdentifier: 
   <Name>k__BackingField: Start Sword
-  <Rarity>k__BackingField: 1
+  <Rarity>k__BackingField: 4
   <Category>k__BackingField: 4
   <Icon>k__BackingField: {fileID: 21300000, guid: 11f26ae8d61d3db4cb6a987ecdcbdaa0, type: 3}
   <IsEquipable>k__BackingField: 1

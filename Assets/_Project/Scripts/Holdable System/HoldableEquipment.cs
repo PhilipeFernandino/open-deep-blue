@@ -7,10 +7,10 @@ using System;
 using System.Threading;
 using UnityEngine;
 
-namespace Core
+namespace Core.HoldableSystem
 {
     [RequireComponent(typeof(Collider2D))]
-    public class Equipment : MonoBehaviour
+    public class HoldableEquipment : Holdable
     {
         [Tooltip("How many times the equipment can be used per second")]
         [SerializeField] private float _usesPerSecond;
@@ -20,7 +20,7 @@ namespace Core
         [SerializeField] private float _timeScaleOnBlink = 0.5f;
         [SerializeField] private float _blinkSeconds = .2f;
 
-        [SerializeField] private EquipmentUseEffect _useEffect;
+        [SerializeField] private HoldableUseEffect _useEffect;
         [SerializeField] private ShakeSettings _shakeSettings;
 
         [SerializeField] private TweenSettings<Vector3> _rotTweenSettings;
@@ -38,7 +38,7 @@ namespace Core
 
         private TimeSpan UseInterval => TimeSpan.FromSeconds(1f / _usesPerSecond);
 
-        public (bool success, EquipmentUseEffect effect) TryUse(Vector2 worldPosition)
+        public override (bool success, HoldableUseEffect effect) TryUse(Vector2 worldPosition)
         {
             if (_canUse)
             {
@@ -162,31 +162,6 @@ namespace Core
         private void OnTriggerExit2D(Collider2D collision)
         {
             Debug.Log($"{GetType()} - {collision} - exit");
-        }
-    }
-
-    [Serializable]
-    public struct EquipmentUseEffect
-    {
-        [field: SerializeField] public float LockDuration { get; private set; }
-
-        [field: SerializeField] public float AddedImpulseSpeed { get; private set; }
-        [field: SerializeField] public float AddedImpulseDuration { get; private set; }
-
-
-        public readonly Vector2 AddedVelocity;
-
-        public EquipmentUseEffect(float lockDuration, float addedImpulseSpeed, float addedImpulseDuration, Vector2 addedVelocity)
-        {
-            LockDuration = lockDuration;
-            AddedVelocity = addedVelocity;
-            AddedImpulseSpeed = addedImpulseSpeed;
-            AddedImpulseDuration = addedImpulseDuration;
-        }
-
-        public readonly EquipmentUseEffect Create(Vector2 addedVelocity)
-        {
-            return new EquipmentUseEffect(LockDuration, AddedImpulseSpeed, AddedImpulseDuration, addedVelocity);
         }
     }
 }

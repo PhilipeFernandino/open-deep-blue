@@ -29,7 +29,7 @@ namespace Core.Player
 
         public void UseEquipmentInput(Vector2 input, IFSMState<PlayerState> actor)
         {
-            var result = _player.PlayerHold.TryUseEquipment(input);
+            var result = _player.PlayerHold.TryUse(input);
             if (result.success)
             {
                 _player.TransferState(
