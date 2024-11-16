@@ -332,6 +332,17 @@
                 },
                 {
                     "name": "",
+                    "id": "d36a7c9c-a03f-489a-b98c-2739ef9c37b8",
+                    "path": "<Keyboard>/0",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Hotbar Navigation 1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "8a5bd606-05b5-4239-b9b0-d9178d59275c",
                     "path": "<Mouse>/scroll",
                     "interactions": "",

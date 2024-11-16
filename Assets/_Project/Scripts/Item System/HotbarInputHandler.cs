@@ -12,7 +12,14 @@ namespace Systems.Item_System
         {
             if (int.TryParse(context.control.name, out int value))
             {
-                _hotbar.SelectedHotbarIndex = value - 1;
+                if (value == 0)
+                {
+                    _hotbar.SelectedHotbarIndex = 9;
+                }
+                else
+                {
+                    _hotbar.SelectedHotbarIndex = value - 1;
+                }
             }
         }
 

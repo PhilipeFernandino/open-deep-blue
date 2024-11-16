@@ -1,4 +1,5 @@
 ﻿using Coimbra;
+using Core.UI;
 using Core.Utils;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using UnityEngine;
 
 namespace Core.ItemSystem
 {
-    public class UIInventory : MonoBehaviour
+    public class UIInventory : UIDynamicCanvas
     {
         [SerializeField] private List<UIItemCategory> _itemCategories;
 
