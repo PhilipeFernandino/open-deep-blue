@@ -65,7 +65,7 @@ namespace Core.InventorySystem
             }
             else
             {
-                (DraggableItem draggableItem, int added) = ScriptableSettings.Get<DraggableItemFactory>()
+                (DraggableItem draggableItem, int added) = ScriptableSettings.GetOrFind<DraggableItemFactory>()
                     .Create(itemData, amount, parentWhenDragging, transform);
 
                 DraggableItem = draggableItem;

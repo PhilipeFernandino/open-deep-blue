@@ -1,0 +1,20 @@
+{
+    "name": "Core.Utils.Editor",
+    "rootNamespace": "Core.Utils.Editor",
+    "references": [
+        "Coimbra"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "UNITY_EDITOR"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

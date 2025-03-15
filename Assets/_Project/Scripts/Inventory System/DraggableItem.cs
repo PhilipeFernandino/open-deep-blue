@@ -73,7 +73,7 @@ namespace Core.InventorySystem
                         int newItemStack = Stack;
                         TryTakeFromStack(Stack - (Stack / 2));
                         newItemStack -= Stack;
-                        ScriptableSettings.Get<DraggableItemFactory>()
+                        ScriptableSettings.GetOrFind<DraggableItemFactory>()
                             .Create(
                             ItemData,
                             newItemStack,

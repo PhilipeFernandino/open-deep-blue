@@ -37,7 +37,7 @@ namespace Core.ItemSystem
             _icon.sprite = item.Icon;
             _quantityTMP.text = item.Amount > 1 ? item.Amount.ToString() : "";
 
-            var colorSettings = ScriptableSettings.Get<UIItemRarityConfig>();
+            var colorSettings = ScriptableSettings.GetOrFind<UIItemRarityConfig>();
 
             _rarityImage.color = colorSettings.ItemRarityColor[item.Rarity];
 

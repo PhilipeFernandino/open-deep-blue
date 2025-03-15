@@ -50,7 +50,7 @@ namespace Core.HoldableSystem
 
         private void Awake()
         {
-            _holdableDb = ScriptableSettings.Get<HoldableDatabase>();
+            _holdableDb = ScriptableSettings.GetOrFind<HoldableDatabase>();
         }
 
         private void Start()

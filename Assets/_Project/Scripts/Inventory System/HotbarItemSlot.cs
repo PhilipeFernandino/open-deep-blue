@@ -38,7 +38,7 @@ namespace Core.InventorySystem
 
         public void Setup(Item item)
         {
-            HotbarItem = ScriptableSettings.Get<HotbarItemFactory>().Create(item);
+            HotbarItem = ScriptableSettings.GetOrFind<HotbarItemFactory>().Create(item);
         }
 
         public void Empty()

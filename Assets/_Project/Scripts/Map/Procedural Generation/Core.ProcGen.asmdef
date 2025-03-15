@@ -4,7 +4,9 @@
     "references": [
         "Coimbra",
         "Core.Util",
-        "NaughtyAttributes.Core"
+        "NaughtyAttributes.Core",
+        "Unity.Burst",
+        "Unity.Collections"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

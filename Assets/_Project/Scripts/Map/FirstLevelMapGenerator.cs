@@ -1,23 +1,25 @@
 using Coimbra;
+using Coimbra.Services;
 using Core.ProcGen;
 using Core.Utils;
 using NaughtyAttributes;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using TNRD;
+using Unity.Burst;
+using Unity.Collections;
+using Unity.Jobs;
 using UnityEngine;
 using UnityEngine.Serialization;
 using static Helper;
-
 using Debug = UnityEngine.Debug;
+using ReadOnly = Unity.Collections.ReadOnlyAttribute;
 
 namespace Core.Map
 {
-    public class FirstLevelMapGenerator : MonoBehaviour
+    public class FirstLevelMapGenerator : Actor, IFirstLevelMapGeneratorService
     {
         [SerializeField] private Tile[,] _map;
 
@@ -46,41 +48,171 @@ namespace Core.Map
 
         #region Debug
         [SerializeField] private bool _debug;
+        [SerializeField] private bool _parallel;
+        [SerializeField] private bool _generateOnAwake;
+
+
         #endregion
 
+        [BurstCompile]
+        public struct ValueTileJob : IJobParallelFor
+        {
+            public NativeArray<Tile> Map;
+            [ReadOnly] public NativeArray<float> CaveMap;
+            [ReadOnly] public NativeArray<float> BiomeMap;
+            [ReadOnly] public NativeArray<float> OreMap;
+            public int Dimensions;
+            public bool GenerateBiomes;
+            public bool GenerateOres;
+            [ReadOnly] public NativeArray<ValueToTile> StoneValueTiles;
+            [ReadOnly] public NativeArray<ValueToTile> OreValueTiles;
+
+            public void Execute(int index)
+            {
+                float caveValue = CaveMap[index];
+                if (caveValue == 1f)
+                {
+                    Map[index] = Tile.None;
+                }
+                else
+                {
+                    Tile currentTile = Map[index]; // Initially BlueStone from InitMap
+
+                    if (GenerateBiomes)
+                    {
+                        float biomeValue = BiomeMap[index];
+                        for (int k = 0; k < StoneValueTiles.Length; k++)
+                        {
+                            ValueToTile vt = StoneValueTiles[k];
+                            if (biomeValue >= vt.Range.x && biomeValue <= vt.Range.y)
+                            {
+                                currentTile = vt.Tile;
+                            }
+                        }
+                    }
+
+                    if (GenerateOres)
+                    {
+                        float oreValue = OreMap[index];
+                        for (int k = 0; k < OreValueTiles.Length; k++)
+                        {
+                            ValueToTile vt = OreValueTiles[k];
+                            if (oreValue >= vt.Range.x && oreValue <= vt.Range.y)
+                            {
+                                currentTile = vt.Tile;
+                            }
+                        }
+                    }
+
+                    Map[index] = currentTile;
+                }
+            }
+        }
+
+        protected override void OnInitialize()
+        {
+            base.OnInitialize();
+            if (_generateOnAwake)
+            {
+                GenerateMapLevel();
+            }
+        }
+
         [Button]
-        private void Generate()
+        public Tile[,] GenerateMapLevel()
         {
             Stopwatch sw = Stopwatch.StartNew();
-
-            InitMap(ref _map, _dimensions, Tile.BlueStone);
 
             float[,] caveMap = _basePass.MakePass(_dimensions);
             float[,] oreMap = _oreNoiseMap.Value.CreateMap(_dimensions);
             float[,] biomeMap = _biomeNoiseMap.Value.CreateMap(_dimensions);
 
-            for (int i = 0; i < _dimensions; i++)
+            if (_parallel)
             {
-                for (int j = 0; j < _dimensions; j++)
+
+                int total = _dimensions * _dimensions;
+                NativeArray<Tile> mapNative = new NativeArray<Tile>(total, Allocator.TempJob);
+                NativeArray<float> caveMapNative = new NativeArray<float>(total, Allocator.TempJob);
+                NativeArray<float> oreMapNative = new NativeArray<float>(total, Allocator.TempJob);
+                NativeArray<float> biomeMapNative = new NativeArray<float>(total, Allocator.TempJob);
+
+                // Copy data to NativeArrays
+                for (int i = 0; i < _dimensions; i++)
                 {
-                    if (caveMap[i, j] == 1f)
+                    for (int j = 0; j < _dimensions; j++)
                     {
-                        _map[i, j] = Tile.None;
+                        int index = i * _dimensions + j;
+                        caveMapNative[index] = caveMap[i, j];
+                        oreMapNative[index] = oreMap[i, j];
+                        biomeMapNative[index] = biomeMap[i, j];
                     }
-                    else
+                }
+
+                NativeArray<ValueToTile> stoneValueTilesNative = new NativeArray<ValueToTile>(_stoneValueTiles, Allocator.TempJob);
+                NativeArray<ValueToTile> oreValueTilesNative = new NativeArray<ValueToTile>(_oreValueTiles, Allocator.TempJob);
+
+                var job = new ValueTileJob
+                {
+                    Map = mapNative,
+                    CaveMap = caveMapNative,
+                    BiomeMap = biomeMapNative,
+                    OreMap = oreMapNative,
+                    Dimensions = _dimensions,
+                    GenerateBiomes = _generateBiomes,
+                    GenerateOres = _generateOres,
+                    StoneValueTiles = stoneValueTilesNative,
+                    OreValueTiles = oreValueTilesNative
+                };
+
+                JobHandle handle = job.Schedule(total, 128);
+                handle.Complete();
+
+                _map = new Tile[_dimensions, _dimensions];
+
+                // Copy back to 2D array
+                for (int i = 0; i < _dimensions; i++)
+                {
+                    for (int j = 0; j < _dimensions; j++)
                     {
-                        if (_generateBiomes)
-                        {
-                            // Using the biome value tiles to fill the map with biome stones
-                            ValueTileToTile(_stoneValueTiles, biomeMap[i, j], i, j);
-                        }
+                        int index = i * _dimensions + j;
+                        _map[i, j] = mapNative[index];
+                    }
+                }
 
-                        if (_generateOres)
+                // Cleanup
+                mapNative.Dispose();
+                caveMapNative.Dispose();
+                oreMapNative.Dispose();
+                biomeMapNative.Dispose();
+                stoneValueTilesNative.Dispose();
+                oreValueTilesNative.Dispose();
+            }
+            else
+            {
+                InitMap(ref _map, _dimensions, Tile.BlueStone);
+                for (int i = 0; i < _dimensions; i++)
+                {
+                    for (int j = 0; j < _dimensions; j++)
+                    {
+                        if (caveMap[i, j] == 1f)
                         {
-                            // Using the value tiles to convert the ore map to the tilemap 
-                            ValueTileToTile(_oreValueTiles, oreMap[i, j], i, j);
+                            _map[i, j] = Tile.None;
                         }
+                        else
+                        {
+                            if (_generateBiomes)
+                            {
+                                // Using the biome value tiles to fill the map with biome stones
+                                ValueTileToTile(_stoneValueTiles, biomeMap[i, j], i, j);
+                            }
 
+                            if (_generateOres)
+                            {
+                                // Using the value tiles to convert the ore map to the tilemap 
+                                ValueTileToTile(_oreValueTiles, oreMap[i, j], i, j);
+                            }
+
+                        }
                     }
                 }
             }
@@ -98,6 +230,8 @@ namespace Core.Map
                 LogMapValueCount(caveMap, "map");
                 LogMapValueCount(oreMap, "oreMap");
             }
+
+            return _map;
         }
 
         private void ValueTileToTile(ValueToTile[] valueTiles, float tileValue, int i, int j)
@@ -124,7 +258,7 @@ namespace Core.Map
 
                     (int x, int y) = (pos.x, pos.y);
 
-                    if (IsWithingMapCoordinates(x, y))
+                    if (IsWithinMapCoordinates(x, y))
                     {
                         map[x, y] = Tile.Chest;
                     }
@@ -201,7 +335,7 @@ namespace Core.Map
                     int x = i + startingPosition.x;
                     int y = j + startingPosition.y;
 
-                    if (IsWithingMapCoordinates(x, y))
+                    if (IsWithinMapCoordinates(x, y))
                     {
                         map[x, y] = tile;
                     }
@@ -249,9 +383,14 @@ namespace Core.Map
             Debug.Log(sb.ToString());
         }
 
-        private bool IsWithingMapCoordinates(int x, int y)
+        private bool IsWithinMapCoordinates(int x, int y)
         {
             return IsWithinCoordinates(x, y, 0, 0, _dimensions - 1, _dimensions - 1);
         }
+    }
+
+    [DynamicService]
+    public interface IFirstLevelMapGeneratorService : IMapLevelGeneratorService
+    {
     }
 }
