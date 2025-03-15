@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Core.Utils
+namespace Core.Util
 {
     public static class UIRaycastUtilities
     {

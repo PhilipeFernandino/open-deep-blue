@@ -1,6 +1,6 @@
 ﻿using Coimbra;
 using Core.UI;
-using Core.Utils;
+using Core.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;

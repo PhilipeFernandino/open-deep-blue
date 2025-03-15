@@ -3,7 +3,7 @@
 [CreateAssetMenu(fileName = "SineFunctionPass", menuName = "Pass/Algebraic/Sine Function")]
 public class SineFunctionPass : PassDataBase
 {
-    public override float[,] MakePass(int dimensions, float[,] map = null)
+    public override float[,] MakePass(int dimensions, System.Random random = null, float[,] map = null)
     {
         if (map != null)
         {

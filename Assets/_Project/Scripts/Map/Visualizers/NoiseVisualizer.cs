@@ -10,6 +10,9 @@ public class NoiseVisualizer : MonoBehaviour
     [SerializeField] private SerializableInterface<IMapCreator> _mapCreator;
     [SerializeField] private MeshRenderer _meshRenderer;
     [SerializeField] private int _dimensions;
+    [SerializeField] private int _seed;
+
+    private System.Random _random;
 
     private Texture2D _texture;
 
@@ -17,7 +20,9 @@ public class NoiseVisualizer : MonoBehaviour
     [Button("Apply and Show")]
     private void ApplyNoisePassesToTexture()
     {
-        float[,] values = _mapCreator.Value.CreateMap(_dimensions);
+        _random = new System.Random(_seed);
+
+        float[,] values = _mapCreator.Value.CreateMap(_dimensions, _random);
 
         Color[,] colors = new Color[_dimensions, _dimensions];
 

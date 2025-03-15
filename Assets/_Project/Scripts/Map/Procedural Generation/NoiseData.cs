@@ -10,7 +10,6 @@ public class NoiseData : ScriptableObject
 
     [SerializeField] private NoiseType _noiseType;
     [SerializeField, Range(0f, 1f)] private float _frequency = 0.01f;
-    [SerializeField] private int _seed;
 
     [Header("Cellular Noise Parameters")]
 
@@ -89,14 +88,9 @@ public class NoiseData : ScriptableObject
         return _fastNoiseLite.GetNoise(warpedX, warpedY);
     }
 
-    public void SetSeed(int seed)
+    public void Setup(int seed)
     {
-        _seed = seed;
-    }
-
-    public void Setup()
-    {
-        _fastNoiseLite = new(_seed);
+        _fastNoiseLite = new(seed);
 
         _fastNoiseLite.SetNoiseType(_noiseType);
         _fastNoiseLite.SetFrequency(_frequency);
@@ -123,7 +117,7 @@ public class NoiseData : ScriptableObject
 
         if (_applyDomainWarp)
         {
-            _domainWarpNoise = new(_seed);
+            _domainWarpNoise = new(seed + 100);
 
             _domainWarpNoise.SetDomainWarpType(_domainWarpType);
             _domainWarpNoise.SetDomainWarpAmp(_domainWarpAmplitude);
@@ -150,11 +144,6 @@ public class NoiseData : ScriptableObject
 
     private bool DomainWarpFractalType() => _applyDomainWarp && _domainWarpFractalType != FastNoiseLite.FractalType.None;
 
-    [Button]
-    private void RandomizeSeed()
-    {
-        _seed = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
-    }
     #endregion
 
 }

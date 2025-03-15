@@ -10,7 +10,7 @@ public class ValueBlendPass : PassDataBase
     [SerializeField]
     private BlendMode _blendMode;
 
-    public override float[,] MakePass(int dimensions, float[,] map = null)
+    public override float[,] MakePass(int dimensions, System.Random random = null, float[,] map = null)
     {
         return StaticMakePass(dimensions, _value, _blendMode, map);
     }

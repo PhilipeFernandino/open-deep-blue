@@ -3,7 +3,7 @@
 [CreateAssetMenu(fileName = "AbsFunctionPass", menuName = "Pass/Algebraic/Abs Function")]
 public class AbsFunctionPass : PassDataBase
 {
-    public override float[,] MakePass(int dimensions, float[,] map = null)
+    public override float[,] MakePass(int dimensions, System.Random random = null, float[,] map = null)
     {
         if (map != null)
         {

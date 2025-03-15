@@ -20,7 +20,7 @@ public class PassComposer : MonoBehaviour, IMapCreator
         return CombinePasses(_dimensions);
     }
 
-    public float[,] CombinePasses(int dimensions)
+    public float[,] CombinePasses(int dimensions, System.Random random = null)
     {
         Stopwatch sw = Stopwatch.StartNew();
         float[,] passValues = new float[dimensions, dimensions];
@@ -33,12 +33,12 @@ public class PassComposer : MonoBehaviour, IMapCreator
             {
                 if (isFirstPass)
                 {
-                    passValues = pass.MakePass(dimensions);
+                    passValues = pass.MakePass(dimensions, random);
                     isFirstPass = false;
                 }
                 else
                 {
-                    passValues = pass.MakePass(dimensions, passValues);
+                    passValues = pass.MakePass(dimensions, random, passValues);
                 }
             }
         }
@@ -49,8 +49,8 @@ public class PassComposer : MonoBehaviour, IMapCreator
         return passValues;
     }
 
-    public float[,] CreateMap(int dimensions)
+    public float[,] CreateMap(int dimensions, System.Random random = null)
     {
-        return CombinePasses(dimensions);
+        return CombinePasses(dimensions, random);
     }
 }

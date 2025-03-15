@@ -2,7 +2,7 @@
 using Coimbra.Services;
 using Core.HoldableSystem;
 using Core.ItemSystem;
-using Core.Utils;
+using Core.Util;
 using UnityEngine;
 
 namespace Core.HoldableSystem

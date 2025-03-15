@@ -11,9 +11,9 @@ public class NoisePass : PassDataBase
     [SerializeField]
     private NoiseMapData _noiseMap;
 
-    public override float[,] MakePass(int dimensions, float[,] map = null)
+    public override float[,] MakePass(int dimensions, System.Random rng, float[,] map = null)
     {
-        float[,] noiseValues = _noiseMap.GetNoiseMap(dimensions);
+        float[,] noiseValues = _noiseMap.GetNoiseMap(dimensions, rng);
 
         if (map != null)
         {

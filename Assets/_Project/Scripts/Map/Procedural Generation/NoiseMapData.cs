@@ -19,14 +19,14 @@ public class NoiseMapData : ScriptableObject, IMapCreator
 
     [ShowIf(nameof(GradientColorization)), SerializeField] private Gradient _colorGradient = new Gradient();
 
-    public float[,] CreateMap(int dimensions)
+    public float[,] CreateMap(int dimensions, System.Random rng)
     {
-        return GetNoiseMap(dimensions);
+        return GetNoiseMap(dimensions, rng);
     }
 
-    public float[,] GetNoiseMap(int dimensions)
+    public float[,] GetNoiseMap(int dimensions, System.Random rng)
     {
-        _noise.Setup();
+        _noise.Setup(rng.Next());
 
         int width = dimensions;
         int height = dimensions;

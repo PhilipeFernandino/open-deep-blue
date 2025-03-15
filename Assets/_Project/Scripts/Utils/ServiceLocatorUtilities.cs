@@ -1,7 +1,7 @@
 ﻿using Coimbra.Services;
 using UnityEngine;
 
-namespace Core.Utils
+namespace Core.Util
 {
     public static class ServiceLocatorUtilities
     {

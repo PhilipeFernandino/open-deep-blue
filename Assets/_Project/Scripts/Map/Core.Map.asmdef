@@ -10,8 +10,7 @@
         "Core.Util",
         "NaughtyAttributes.Core",
         "TNRD.SerializableInterface",
-        "Unity.Burst",
-        "Unity.Collections"
+        "UniTask"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

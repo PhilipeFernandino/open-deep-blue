@@ -3,7 +3,7 @@
 [CreateAssetMenu(fileName = "TangentFunctionPass", menuName = "Pass/Algebraic/Tangent Function")]
 public class TangentFunctionPass : PassDataBase
 {
-    public override float[,] MakePass(int dimensions, float[,] values = null)
+    public override float[,] MakePass(int dimensions, System.Random random = null, float[,] values = null)
     {
         if (values != null)
         {

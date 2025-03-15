@@ -1,10 +1,11 @@
 ﻿using Core.ProcGen;
-using Core.Utils;
+using Core.Util;
 using NaughtyAttributes;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
+using static Core.Util.Random;
 using static Helper;
 using Debug = UnityEngine.Debug;
 
@@ -12,10 +13,7 @@ using Debug = UnityEngine.Debug;
 public class WormPass : PassDataBase, IMapCreator
 {
     [Header("General Parameters")]
-
-    [SerializeField] private bool _randomizeSeed = true;
     [SerializeField] private bool _rawResult = false;
-    [SerializeField] private int _seed = 0;
 
     [Header("Worm Parameters")]
     [SerializeField] private int _worms = 1;
@@ -55,8 +53,6 @@ public class WormPass : PassDataBase, IMapCreator
     [Header("Reach Noise Parameters")]
     [SerializeField, Expandable] private NoiseData _wormReachData;
 
-    private int RoomSize => (int)(_lairSizeBase * Random.Range(_lairSizeMinVariation, _lairSizeMaxVariation));
-
     private int _dimensions;
 
     private List<float> _angleValues;
@@ -64,17 +60,15 @@ public class WormPass : PassDataBase, IMapCreator
     private List<float> _xValues;
     private List<float> _yValues;
 
-
-
     public List<Vector2Int> Rooms { get; private set; }
     public List<Vector2Int> CaveDeadEnds { get; private set; }
 
-    public float[,] CreateMap(int dimensions)
+    public float[,] CreateMap(int dimensions, System.Random random)
     {
-        return MakePass(dimensions, null);
+        return MakePass(dimensions, random, null);
     }
 
-    public override float[,] MakePass(int dimensions, float[,] map = null)
+    public override float[,] MakePass(int dimensions, System.Random rng, float[,] map = null)
     {
         _angleValues = new();
         _noiseValues = new();
@@ -88,21 +82,16 @@ public class WormPass : PassDataBase, IMapCreator
 
         InitNullMap(ref map, dimensions, -1f);
 
-        Random.InitState(_seed);
+        int seed = rng.Next();
 
-        _wormNoiseData.Setup();
-        _wormReachData.Setup();
-        _lairNoiseData.Setup();
-
-        _wormNoiseData.SetSeed(_seed);
-        _wormReachData.SetSeed(_seed);
-        _lairNoiseData.SetSeed(_seed);
+        _wormNoiseData.Setup(seed);
+        _wormReachData.Setup(seed + 1);
+        _lairNoiseData.Setup(seed + 2);
 
         FastNoiseLite wormNoise = _wormNoiseData.Noise;
         FastNoiseLite reachNoise = _wormReachData.Noise;
         FastNoiseLite lairNoise = _lairNoiseData.Noise;
 
-        int seed = _seed;
 
         Stopwatch sw = Stopwatch.StartNew();
 
@@ -126,15 +115,16 @@ public class WormPass : PassDataBase, IMapCreator
             int x = (int)(n1 * (dimensions));
             int y = (int)(n2 * (dimensions));
 
+            int roomSize = (int)(_lairSizeBase * Range(rng, _lairSizeMinVariation, _lairSizeMaxVariation));
 
             // Expand a room in the starting point
-            Expand(map, x, y, RoomSize, dimensions, _lairDistanceReachInfluence, _lairNoiseReachInfluence, _lairStep, lairNoise);
+            Expand(map, x, y, roomSize, dimensions, _lairDistanceReachInfluence, _lairNoiseReachInfluence, _lairStep, lairNoise);
 
             Debug.Log($"{GetType()} - Starting in ({x}, {y}), params\n" +
                 $"Hashes: ({h1}, {h2}, {h3}, {h4})\n" +
                 $"Noise: ({n1}, {n2})");
 
-            float reach = Random.Range(_reachRange.x, _reachRange.y);
+            float reach = Range(rng, _reachRange.x, _reachRange.y);
 
             (int endX, int endY) = WormWalk(
                 dimensions,
@@ -150,15 +140,28 @@ public class WormPass : PassDataBase, IMapCreator
                 _childRate,
                 reach,
                 _expandRate,
-                _expandChildRate);
+                _expandChildRate,
+                rng);
 
             // The starting point of a cave is also a dead end
             AddCaveDeadEnd(x, y);
 
             // Expand a room in the ending point
-            if (ChanceUtil.EventSuccess(0.5f))
+            if (ChanceUtil.EventSuccess(0.5f, rng))
             {
-                Expand(map, endX, endY, RoomSize, dimensions, _lairDistanceReachInfluence, _lairNoiseReachInfluence, _lairStep, lairNoise);
+                int roomSize2 = (int)(_lairSizeBase * Range(rng, _lairSizeMinVariation, _lairSizeMaxVariation));
+
+                Expand(
+                    map,
+                    endX,
+                    endY,
+                    roomSize2,
+                    dimensions,
+                    _lairDistanceReachInfluence,
+                    _lairNoiseReachInfluence,
+                    _lairStep,
+                    lairNoise);
+
                 AddRoom(endX, endY);
             }
             else
@@ -173,12 +176,6 @@ public class WormPass : PassDataBase, IMapCreator
         Debug.Log($"Noise mean = {_noiseValues.Sum() / _noiseValues.Count}");
         Debug.Log($"X mean = {_xValues.Sum() / _xValues.Count}");
         Debug.Log($"Y mean = {_yValues.Sum() / _yValues.Count}");
-
-
-        if (_randomizeSeed)
-        {
-            _seed = Random.Range(int.MinValue, int.MaxValue);
-        }
 
         return map;
     }
@@ -197,7 +194,8 @@ public class WormPass : PassDataBase, IMapCreator
         float childRate,
         float expandSize,
         float expandRate,
-        float expandChildRate
+        float expandChildRate,
+        System.Random rng
         )
     {
         Debug.Log($"{GetType()} - starting perlin worm");
@@ -220,7 +218,7 @@ public class WormPass : PassDataBase, IMapCreator
             }
 
             // Trying to start childs
-            if (ChanceUtil.EventSuccess(1f * childs / iterations) && remainingChilds > 0)
+            if (ChanceUtil.EventSuccess(1f * childs / iterations, rng) && remainingChilds > 0)
             {
                 Debug.Log($"Starting child at: {x}, {y}\n" +
                     $"Iterations: {(int)(_childIterationMultiplier * iterations)}\n" +
@@ -244,15 +242,16 @@ public class WormPass : PassDataBase, IMapCreator
                     childRate,
                     iteractiveExpandSize,
                     expandRate,
-                    expandChildRate);
+                    expandChildRate,
+                    rng);
 
 
-                int roomSize = (int)(_lairSizeBase * Random.Range(_lairSizeMinVariation, _lairSizeMaxVariation));
+                int roomSize = (int)(_lairSizeBase * Range(rng, _lairSizeMinVariation, _lairSizeMaxVariation));
 
                 AddCaveDeadEnd(endX, endY);
 
                 // Expand by making a room
-                if (ChanceUtil.EventSuccess(_roomOnChildChance))
+                if (ChanceUtil.EventSuccess(_roomOnChildChance, rng))
                 {
                     Expand(map, x, y, roomSize, dimensions, _lairDistanceReachInfluence, _lairNoiseReachInfluence, _lairStep, lairNoise);
                     AddRoom(x, y);

@@ -1,6 +1,6 @@
 ﻿using Core.CameraSystem;
 using Core.HealthSystem;
-using Core.Utils;
+using Core.Util;
 using Cysharp.Threading.Tasks;
 using PrimeTween;
 using System;

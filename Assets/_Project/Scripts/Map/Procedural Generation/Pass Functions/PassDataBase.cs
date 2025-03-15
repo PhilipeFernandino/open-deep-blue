@@ -2,5 +2,5 @@
 
 public abstract class PassDataBase : ScriptableObject
 {
-    public abstract float[,] MakePass(int dimensions, float[,] map = null);
+    public abstract float[,] MakePass(int dimensions, System.Random random = null, float[,] map = null);
 }

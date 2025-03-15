@@ -1,6 +1,6 @@
 
 using Coimbra;
-using Core.Utils;
+using Core.Util;
 using System;
 using TMPro;
 using UnityEngine;

@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 
-namespace Core.Utils
+namespace Core.Util
 {
+    using static Random;
     public static class ChanceUtil
     {
         /// <summary>
@@ -10,7 +11,13 @@ namespace Core.Utils
         /// </summary>
         public static bool EventSuccess(float chance)
         {
-            float randomValue = Random.Range(0f, 1f);
+            float randomValue = UnityEngine.Random.Range(0f, 1f);
+            return chance >= randomValue;
+        }
+
+        public static bool EventSuccess(float chance, System.Random rng)
+        {
+            float randomValue = Range(rng, 0f, 1f);
             return chance >= randomValue;
         }
     }

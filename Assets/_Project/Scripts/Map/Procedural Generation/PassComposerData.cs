@@ -24,9 +24,9 @@ public class PassComposerData : ScriptableObject
 
         public bool Active => _makePass;
 
-        public float[,] MakePass(int dimensions, float[,] map = null)
+        public float[,] MakePass(int dimensions, System.Random random = null, float[,] map = null)
         {
-            return _passData.MakePass(dimensions, map);
+            return _passData.MakePass(dimensions, random, map);
         }
     }
 }

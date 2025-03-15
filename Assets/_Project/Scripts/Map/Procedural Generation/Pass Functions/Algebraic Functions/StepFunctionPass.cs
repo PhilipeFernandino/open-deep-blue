@@ -7,7 +7,7 @@ public class StepFunctionPass : PassDataBase
     [SerializeField]
     private float _stepValue;
 
-    public override float[,] MakePass(int dimensions, float[,] map = null)
+    public override float[,] MakePass(int dimensions, System.Random random = null, float[,] map = null)
     {
         if (map != null)
         {

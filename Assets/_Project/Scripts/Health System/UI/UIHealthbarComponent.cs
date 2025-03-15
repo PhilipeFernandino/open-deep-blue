@@ -1,4 +1,4 @@
-﻿using Core.Utils;
+﻿using Core.Util;
 using UnityEngine;
 
 namespace Core.HealthSystem.UI

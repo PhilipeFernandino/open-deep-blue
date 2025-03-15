@@ -5,7 +5,7 @@ public class BlankPass : PassDataBase
 {
     [SerializeField, Range(-1f, 1f)] private float _value;
 
-    public override float[,] MakePass(int dimensions, float[,] map = null)
+    public override float[,] MakePass(int dimensions, System.Random random = null, float[,] map = null)
     {
         map = new float[dimensions, dimensions];
 
