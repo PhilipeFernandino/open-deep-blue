@@ -21,8 +21,6 @@ namespace Core.Map
 {
     public class FirstLevelMapGenerator : Actor
     {
-        [SerializeField] private Tile[,] _map;
-
         [SerializeField] private WormPass _basePass;
         [SerializeField] private SerializableInterface<IMapCreator> _oreNoiseMap;
         [SerializeField] private SerializableInterface<IMapCreator> _biomeNoiseMap;
@@ -69,8 +67,7 @@ namespace Core.Map
             var map = await GenerateMapLevelAsync();
             if (map != null)
             {
-                _map = map;
-                VisualizeColored(_map, _dimensions);
+                VisualizeColored(map, _dimensions);
             }
         }
 
@@ -137,7 +134,8 @@ namespace Core.Map
 
             Tile[,] map = new Tile[_dimensions, _dimensions];
 
-            InitMap(ref _map, _dimensions, Tile.BlueStone);
+            InitMap(ref map, _dimensions, Tile.BlueStone);
+
             for (int i = 0; i < _dimensions; i++)
             {
                 for (int j = 0; j < _dimensions; j++)
@@ -164,8 +162,8 @@ namespace Core.Map
                 }
             }
 
-            MakeQueenLair(_map);
-            SpawnChests(_map, _basePass);
+            MakeQueenLair(map);
+            SpawnChests(map, _basePass);
 
             sw.Stop();
             Debug.Log($"{sw.ElapsedMilliseconds} elapsed miliseconds to complete first map gen");
@@ -232,7 +230,7 @@ namespace Core.Map
                 new(-halfRoom - _areaAroundQueenRoom, halfRoom + _areaAroundQueenRoom));
 
             // Mark the center as the ant queen spawner
-            _map[antQueenRoomPosition.x, antQueenRoomPosition.y] = Tile.AntQueenSpawn;
+            map[antQueenRoomPosition.x, antQueenRoomPosition.y] = Tile.AntQueenSpawn;
 
             // Make walls by using the rectangle fn
             MakeRectangle(
