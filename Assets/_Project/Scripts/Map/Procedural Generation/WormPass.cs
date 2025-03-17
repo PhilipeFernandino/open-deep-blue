@@ -212,7 +212,7 @@ public class WormPass : PassDataBase, IMapCreator
 
         for (int i = 0; i < iterations; i++)
         {
-            if (IsWithingMapCoordinates(x, y))
+            if (IsWithinMapCoordinates(x, y))
             {
                 map[x, y] = 1f;
             }
@@ -296,7 +296,7 @@ public class WormPass : PassDataBase, IMapCreator
         {
             for (int l = y - roomSize; l < y + roomSize; l++)
             {
-                if (IsWithingMapCoordinates(k, l))
+                if (IsWithinMapCoordinates(k, l))
                 {
                     float boundedNoise = noise.GetNoise(k, l);
 
@@ -324,7 +324,7 @@ public class WormPass : PassDataBase, IMapCreator
 
     private void AddRoom(int x, int y)
     {
-        if (IsWithingMapCoordinates(x, y))
+        if (IsWithinMapCoordinates(x, y))
         {
             Rooms.Add(new(x, y));
         }
@@ -332,13 +332,13 @@ public class WormPass : PassDataBase, IMapCreator
 
     private void AddCaveDeadEnd(int x, int y)
     {
-        if (IsWithingMapCoordinates(x, y))
+        if (IsWithinMapCoordinates(x, y))
         {
             CaveDeadEnds.Add(new(x, y));
         }
     }
 
-    private bool IsWithingMapCoordinates(int x, int y)
+    private bool IsWithinMapCoordinates(int x, int y)
     {
         return IsWithinCoordinates(x, y, 0, 0, _dimensions - 1, _dimensions - 1);
     }

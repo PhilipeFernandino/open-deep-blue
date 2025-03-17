@@ -10,7 +10,7 @@ namespace Core.Util
         {
             var t = ServiceLocator.Get<T>();
 
-            Debug.Assert(t != null, $"{nameof(ServiceLocatorUtilities)} - {nameof(T)} not found");
+            Debug.Assert(t != null, $"{nameof(ServiceLocatorUtilities)} - {typeof(T)} not found");
 
             return t;
         }

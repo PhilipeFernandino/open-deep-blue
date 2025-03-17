@@ -1,10 +1,12 @@
 ﻿using Coimbra.Services;
+using Cysharp.Threading.Tasks;
 using System.Collections;
 
 namespace Core.Map
 {
+    [DynamicService]
     public interface IMapLevelGeneratorService : IService
     {
-        Tile[,] GenerateMapLevel();
+        UniTask<Map> GenerateMapLevel();
     }
 }

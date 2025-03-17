@@ -19,7 +19,7 @@ using Debug = UnityEngine.Debug;
 
 namespace Core.Map
 {
-    public class FirstLevelMapGenerator : Actor
+    public class FirstLevelMapGenerator : Actor, IFirstLevelMapGeneratorService
     {
         [SerializeField] private WormPass _basePass;
         [SerializeField] private SerializableInterface<IMapCreator> _oreNoiseMap;
@@ -52,31 +52,39 @@ namespace Core.Map
 
         #endregion
 
-        // Add these fields
         private CancellationTokenSource _cts;
         private IProgress<float> _generationProgress;
         private Tile[,] _asyncGeneratedMap;
         private System.Random _rng;
 
+        protected override void OnInitialize()
+        {
+            ServiceLocator.Set<IMapLevelGeneratorService>(this);
+        }
 
         [Button]
         public async void GenerateMapLevelTask()
         {
-            _rng = new System.Random(_seed);
+            Stopwatch sw = Stopwatch.StartNew();
+            var map = await GenerateMapLevel();
+            sw.Stop();
+            Debug.Log($"{sw.ElapsedMilliseconds} elapsed miliseconds to complete first map gen");
 
-            var map = await GenerateMapLevelAsync();
             if (map != null)
             {
-                VisualizeColored(map, _dimensions);
+                if (_debug)
+                {
+                    VisualizeColored(map.Tiles, _dimensions);
+                }
             }
         }
 
-        public async UniTask<Tile[,]> GenerateMapLevelAsync()
+        public async UniTask<Map> GenerateMapLevel()
         {
+            _rng = new System.Random(_seed);
             _cts = new CancellationTokenSource();
             _generationProgress = new Progress<float>(p =>
             {
-                // This callback is automatically marshaled to the main thread
                 Debug.Log($"Generation progress: {p:P0}");
             });
 
@@ -128,9 +136,8 @@ namespace Core.Map
             return results;
         }
 
-        public Tile[,] GenerateMapLevel(float[,] caveMap, float[,] oreMap, float[,] biomeMap)
+        public Map GenerateMapLevel(float[,] caveMap, float[,] oreMap, float[,] biomeMap)
         {
-            Stopwatch sw = Stopwatch.StartNew();
 
             Tile[,] map = new Tile[_dimensions, _dimensions];
 
@@ -165,9 +172,6 @@ namespace Core.Map
             MakeQueenLair(map);
             SpawnChests(map, _basePass);
 
-            sw.Stop();
-            Debug.Log($"{sw.ElapsedMilliseconds} elapsed miliseconds to complete first map gen");
-
             if (_debug)
             {
                 LogMapValueCount(caveMap, "map");
@@ -175,7 +179,9 @@ namespace Core.Map
             }
 
             _asyncGeneratedMap = map;
-            return map;
+
+            List<PointOfInterest> pois = new List<PointOfInterest>();
+            return new Map(map, pois, _dimensions);
         }
 
 

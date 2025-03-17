@@ -12,11 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5bca51a40054074baf625c5939ae857, type: 3}
   m_Name: First Level Worm Pass
   m_EditorClassIdentifier: 
-  _randomizeSeed: 1
   _rawResult: 0
-  _seed: -651069090
-  _worms: 8
-  _childs: 2
+  _worms: 16
+  _childs: 1
   _childRate: 0.5
   _childIterationMultiplier: 0.5
   _roomOnChildChance: 0.5
