@@ -1,6 +1,6 @@
 ﻿namespace Core.Map
 {
-    public enum Tile
+    public enum Tile : ushort
     {
         None = 0,
 

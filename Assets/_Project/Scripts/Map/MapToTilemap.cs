@@ -1,38 +1,42 @@
-﻿using Core.Util;
+﻿using Coimbra;
+using Coimbra.Services;
+using Core.Util;
+using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 namespace Core.Map
 {
-    [System.Serializable]
-    public class TileToTileBase
-    {
-        [field: SerializeField] public Tile Tile { get; private set; }
-        [field: SerializeField] public TileBase TileBase { get; private set; }
-    }
-
-
-    public class MapToTilemap : MonoBehaviour
+    public class MapToTilemap : Actor, ITilemapService
     {
         [SerializeField] private Tilemap _tilemap;
-        [SerializeField] List<TileToTileBase> _tileMapping;
 
-        public IMapLevelGeneratorService _mapLevelGeneratorService;
+        private IMapLevelGeneratorService _mapLevelGeneratorService;
+        private TilesSettings _tilesSettings;
+
         private BoundsInt area;
 
-        private void Start()
+        protected override void OnInitialize()
         {
-            _mapLevelGeneratorService = ServiceLocatorUtilities.GetServiceAssert<IMapLevelGeneratorService>();
-            ToTilemap();
+            base.OnInitialize();
+
+            ServiceLocator.Set<ITilemapService>(this);
         }
 
-        private async void ToTilemap()
+        protected override void OnSpawn()
         {
-            var map = await _mapLevelGeneratorService.GenerateMapLevel();
+            base.OnSpawn();
 
-            int ctl = _tileMapping.Count;
-            int dimensions = map.Dimensions;
+            _mapLevelGeneratorService = ServiceLocatorUtilities.GetServiceAssert<IMapLevelGeneratorService>();
+            _tilesSettings = ScriptableSettings.GetOrFind<TilesSettings>();
+        }
+
+        public async UniTask<Map> GenerateTilemap()
+        {
+            var mapMetadata = await _mapLevelGeneratorService.GenerateMapLevel();
+
+            int dimensions = mapMetadata.Dimensions;
             TileBase[] tiles = new TileBase[dimensions * dimensions];
 
             area.size = new Vector3Int(dimensions, dimensions, 1);
@@ -41,17 +45,13 @@ namespace Core.Map
             {
                 for (int h = 0; h < dimensions; h++)
                 {
-                    for (int c = 0; c < ctl; c++)
-                    {
-                        if (_tileMapping[c].Tile == map.Tiles[w, h])
-                        {
-                            tiles[w * dimensions + h] = _tileMapping[c].TileBase;
-                        }
-                    }
+                    tiles[w * dimensions + h] = _tilesSettings.GetTileBase(mapMetadata.Tiles[w, h]);
                 }
             }
 
             _tilemap.SetTilesBlock(area, tiles);
+
+            return new(mapMetadata, _tilemap);
         }
     }
 }

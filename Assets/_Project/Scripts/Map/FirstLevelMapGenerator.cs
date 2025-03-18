@@ -19,7 +19,7 @@ using Debug = UnityEngine.Debug;
 
 namespace Core.Map
 {
-    public class FirstLevelMapGenerator : Actor, IFirstLevelMapGeneratorService
+    public class FirstLevelMapGenerator : Actor, IMapLevelGeneratorService
     {
         [SerializeField] private WormPass _basePass;
         [SerializeField] private SerializableInterface<IMapCreator> _oreNoiseMap;
@@ -79,7 +79,7 @@ namespace Core.Map
             }
         }
 
-        public async UniTask<Map> GenerateMapLevel()
+        public async UniTask<MapMetadata> GenerateMapLevel()
         {
             _rng = new System.Random(_seed);
             _cts = new CancellationTokenSource();
@@ -136,7 +136,7 @@ namespace Core.Map
             return results;
         }
 
-        public Map GenerateMapLevel(float[,] caveMap, float[,] oreMap, float[,] biomeMap)
+        public MapMetadata GenerateMapLevel(float[,] caveMap, float[,] oreMap, float[,] biomeMap)
         {
 
             Tile[,] map = new Tile[_dimensions, _dimensions];
@@ -180,8 +180,19 @@ namespace Core.Map
 
             _asyncGeneratedMap = map;
 
-            List<PointOfInterest> pois = new List<PointOfInterest>();
-            return new Map(map, pois, _dimensions);
+            List<PointOfInterest> pois = new List<PointOfInterest>(_basePass.Rooms.Count + _basePass.CaveDeadEnds.Count);
+
+            foreach (var p in _basePass.Rooms)
+            {
+                pois.Add(new PointOfInterest(p.x, p.y, PointOfInterestType.Room));
+            }
+
+            foreach (var p in _basePass.CaveDeadEnds)
+            {
+                pois.Add(new PointOfInterest(p.x, p.y, PointOfInterestType.CaveDeadEnd));
+            }
+
+            return new MapMetadata(map, pois, _dimensions);
         }
 
 
@@ -338,10 +349,5 @@ namespace Core.Map
         {
             return IsWithinCoordinates(x, y, 0, 0, _dimensions - 1, _dimensions - 1);
         }
-    }
-
-    [DynamicService]
-    public interface IFirstLevelMapGeneratorService : IMapLevelGeneratorService
-    {
     }
 }

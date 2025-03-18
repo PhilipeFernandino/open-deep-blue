@@ -9,5 +9,12 @@ namespace Core.Map
         public PointOfInterestType Type;
 
         public readonly Vector2Int Position => new Vector2Int(X, Y);
+
+        public PointOfInterest(int x, int y, PointOfInterestType type)
+        {
+            X = x;
+            Y = y;
+            Type = type;
+        }
     }
 }
