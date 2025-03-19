@@ -1,0 +1,22 @@
+{
+    "name": "Core.Light",
+    "rootNamespace": "",
+    "references": [
+        "Coimbra",
+        "Coimbra.Services",
+        "Core.Map",
+        "Core.Util",
+        "NaughtyAttributes.Core",
+        "NaughtyAttributes.Editor",
+        "PrimeTween.Runtime"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
