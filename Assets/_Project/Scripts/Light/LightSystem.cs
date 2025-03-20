@@ -26,12 +26,13 @@ namespace Core.Light
     {
         [SerializeField] private Tilemap _groundTilemap;
         [SerializeField] private Tilemap _wallTilemap;
+        [SerializeField] private Material _lightOverlayMaterial;
+        [SerializeField] private MeshRenderer _meshRenderer;
 
         public int[,] _lightMap;
-        public Texture2D _lightTexture;
-        public Material _lightMaterial;
-        public Material _lightOverlayMaterial;
 
+        private Material _lightMaterial;
+        private Texture2D _lightTexture;
         private int _dimensions = 32;
 
         List<LightSource> _activeSources = new List<LightSource>();
@@ -114,6 +115,7 @@ namespace Core.Light
         {
             InitializeLightMap();
             InitializeLightTexture();
+            InitializeQuad();
         }
 
         private void InitializeLightMap()
@@ -149,6 +151,14 @@ namespace Core.Light
         private bool IsInBounds(Vector3Int pos)
         {
             return !IsOutOfBounds(pos);
+        }
+
+
+        private void InitializeQuad()
+        {
+            float height = Camera.main.orthographicSize * 2;
+            float width = height * Camera.main.aspect;
+            _meshRenderer.transform.localScale = new Vector3(width, height, 1);
         }
     }
 }

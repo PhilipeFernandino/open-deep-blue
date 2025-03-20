@@ -16,5 +16,10 @@ namespace Core.Map
             Y = y;
             Type = type;
         }
+
+        public override string ToString()
+        {
+            return $"X: {X}, Y: {Y}, Type: {Type}";
+        }
     }
 }

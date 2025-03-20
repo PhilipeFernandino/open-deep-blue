@@ -45,7 +45,8 @@ namespace Core.Map
             {
                 for (int h = 0; h < dimensions; h++)
                 {
-                    tiles[w * dimensions + h] = _tilesSettings.GetTileBase(mapMetadata.Tiles[w, h]);
+                    tiles[w * dimensions + h] = _tilesSettings.GetTileBase(
+                        mapMetadata.Tiles[h, w]);
                 }
             }
 

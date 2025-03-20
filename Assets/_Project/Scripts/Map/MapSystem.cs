@@ -25,12 +25,18 @@ namespace Core.Map
         {
             var sw = new Stopwatch();
             sw.Start();
-            var map = await _tilemapService.GenerateTilemap();
+            _map = await _tilemapService.GenerateTilemap();
             sw.Stop();
             Debug.Log($"{sw.ElapsedMilliseconds} elapsed miliseconds to complete first map gen");
 
-            var pt = map.Metadata.PointsOfInterest[1];
+            var pt = _map.Metadata.PointsOfInterest[1];
+            Debug.Log($"Setting player at: {pt}");
             _player.transform.position = new Vector2(pt.X, pt.Y);
+        }
+
+        public Tile GetTile(int x, int y)
+        {
+            return _map.Metadata.Tiles[x, y];
         }
     }
 }
