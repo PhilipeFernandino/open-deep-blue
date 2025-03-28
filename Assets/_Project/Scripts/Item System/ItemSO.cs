@@ -24,16 +24,20 @@ namespace Core.ItemSystem
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Name, Rarity);
+            var hash = HashCode.Combine(Name, Rarity);
+            return hash;
         }
 
         public bool Equals(ItemSO other)
         {
-            return
-                other != null
+            var isEqual = other != null
                 && GetType() == other.GetType()
                 && Name == other.Name
-                && Rarity == other.Rarity;
+                && Rarity == other.Rarity
+                && Category == other.Category
+                && IsEquipable == other.IsEquipable;
+
+            return isEqual;
         }
 
         public override bool Equals(object obj)
@@ -41,5 +45,9 @@ namespace Core.ItemSystem
             return Equals(obj as ItemSO);
         }
 
+        public override string ToString()
+        {
+            return $"(Name = {Name}, Rarity = {Rarity}, Category = {Category}, IsEquippable = {IsEquipable})";
+        }
     }
 }

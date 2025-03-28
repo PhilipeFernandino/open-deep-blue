@@ -12,6 +12,7 @@ namespace Core.ItemSystem.Test
         [SerializeField] private List<ItemSO> _items = new();
 
         [SerializeField] private int _addRandomItems = 0;
+        [SerializeField] private bool _addDefinedOnStart;
 
         private IInventoryService _inventoryService;
 
@@ -19,6 +20,11 @@ namespace Core.ItemSystem.Test
         {
             _inventoryService = ServiceLocatorUtilities.GetServiceAssert<IInventoryService>();
             AddItems();
+
+            if (_addDefinedOnStart)
+            {
+                AddDefinedItems();
+            }
         }
 
         [Button(enabledMode: EButtonEnableMode.Playmode)]

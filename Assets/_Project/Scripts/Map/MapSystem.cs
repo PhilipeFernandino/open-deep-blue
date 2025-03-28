@@ -25,7 +25,10 @@ namespace Core.Map
         {
             var sw = new Stopwatch();
             sw.Start();
-            _map = await _tilemapService.GenerateTilemap();
+            _map = await UniTask.RunOnThreadPool(() =>
+            {
+                return _tilemapService.GenerateTilemap();
+            });
             sw.Stop();
             Debug.Log($"{sw.ElapsedMilliseconds} elapsed miliseconds to complete first map gen");
 

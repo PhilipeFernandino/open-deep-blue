@@ -891,7 +891,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ff91dd28672dde4898f188345125b1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gridAxisRange: 1024
+  _gridAxisRange: 512
   _spritesPoolSize: 5
   _gridDrawOffset: {x: 0, y: 0}
   _tilemap: {fileID: 528902158}
@@ -1632,7 +1632,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5100123393815294630, guid: 73e316bda44597049b0ee0682e75ca04, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 520776.06
+      value: 524999.56
       objectReference: {fileID: 0}
     - target: {fileID: 5166222320962546861, guid: 73e316bda44597049b0ee0682e75ca04, type: 3}
       propertyPath: m_AnchorMax.y
@@ -2954,7 +2954,7 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.541
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 0.75
+  m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
   m_ApplyToSortingLayers: d15fd6ed00000000e734013623d649a0cb9d54a1793d0ff9

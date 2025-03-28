@@ -22,6 +22,12 @@ MonoBehaviour:
         unityReference: {fileID: 9206541709950824132, guid: 0b5cbca2e60e7374bbaf1391e8d3bbb0, type: 3}
         rawReference:
           rid: -2
+    - Key: {fileID: 11400000, guid: 70406118837e27d4090253c4184b5864, type: 2}
+      Value:
+        mode: 0
+        unityReference: {fileID: 9206541709950824132, guid: 0b5cbca2e60e7374bbaf1391e8d3bbb0, type: 3}
+        rawReference:
+          rid: -2
   references:
     version: 2
     RefIds:

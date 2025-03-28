@@ -23,23 +23,34 @@ namespace Core.HoldableSystem
                 _holdable.Dispose(true);
             }
 
-            Debug.Log("instantiating");
             _holdable = Instantiate((Holdable)holdable, _equipmentParent);
         }
 
         public void TrySetItem(ItemSO item)
         {
-            Debug.Log($"try set ite {item} {_holdableDb}");
-
-            if (item != null && _holdableDb.Holdables.TryGetValue(item, out TNRD.SerializableInterface<IHoldable> value))
+            if (item == null || !item.IsEquipable)
             {
-                Debug.Log(value.Value.ToString());
-                SetEquipment(value.Value);
+                Debug.Log($"{GetType()} - Non equippable selected {item}");
+                return;
+            }
+
+            Debug.Log($"{GetType()} - Trying to set {item} from {_holdableDb}");
+
+            if (_holdableDb.TryGetHoldable(item, out var holdable))
+            {
+                Debug.Log($"{GetType()} - Found holdable {holdable}");
+                SetEquipment(holdable);
+            }
+            else
+            {
+                Debug.LogError($"{GetType()} - Item is equippable but holdable not found");
             }
         }
 
         public (bool success, HoldableUseEffect effect) TryUse(Vector2 worldPosition)
         {
+            Debug.Log($"{GetType()} Try use: {_holdable}");
+
             if (_holdable == null)
             {
                 return (false, HoldableUseEffect.None);
@@ -61,11 +72,9 @@ namespace Core.HoldableSystem
 
         private void HotbarItemSelected(InventoryItem item)
         {
-            Debug.Log(item);
+            Debug.Log($"{GetType()} - Item Selected: {item}");
             if (item != null)
-            {
                 TrySetItem(item.ItemData);
-            }
         }
     }
 }
