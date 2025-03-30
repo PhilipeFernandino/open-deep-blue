@@ -11,15 +11,14 @@ namespace Core.Player
 
         public void MoveInput(InputAction.CallbackContext context)
         {
+            Debug.Log($"Movement context {context}");
             _player.MoveInput(context.ReadValue<Vector2>());
         }
 
         public void UseCurrentItemInput(InputAction.CallbackContext context)
         {
-            if (context.performed)
-            {
-                _player.UseEquipmentInput(To2DWorldPosition(Input.mousePosition));
-            }
+            Debug.Log($"Use current item context {context}");
+            _player.UseEquipmentInput(To2DWorldPosition(Mouse.current.position.ReadValue()));
         }
 
         public void InteractInput(InputAction.CallbackContext context)
