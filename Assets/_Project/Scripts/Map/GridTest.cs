@@ -1,6 +1,8 @@
-﻿using Core.Map;
+﻿using Coimbra;
+using Core.Map;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 using Tile = Core.Map.Tile;
 
@@ -9,7 +11,6 @@ namespace Systems.Grid_System
     public class GridTest : MonoBehaviour
     {
         [Tooltip("Size of the grid from -thisValue to thisValue")]
-        [SerializeField] private int _gridAxisRange;
         [SerializeField] private int _spritesPoolSize;
         [SerializeField] private Vector2 _gridDrawOffset = Vector2.zero;
         [SerializeField] private Tilemap _tilemap;
@@ -19,18 +20,19 @@ namespace Systems.Grid_System
 
         private List<SpriteRenderer> _gridSprites;
 
-        private Tile[,] _grid;
+        private TileInstance[,] _grid;
+        private TilesSettings _tilesSettings;
+
         private int _offset;
         private int _gridSize;
         private int _lastGridDrawSize = 0;
-
-        public int GridAxisRange => _gridAxisRange;
+        private bool _isInitialized = false;
 
         private void Update()
         {
-            var mousePos = Input.mousePosition;
+            var mousePos = (Vector3)Mouse.current.position.ReadValue();
             mousePos.z = 10f;
-            var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            var pos = Camera.main.ScreenToWorldPoint((Vector3)Mouse.current.position.ReadValue());
             pos.z = 0f;
 
             DrawInGrid(pos, new Vector2Int(1, 1));
@@ -38,6 +40,9 @@ namespace Systems.Grid_System
 
         public void DrawInGrid(Vector2 position, in Vector2Int size)
         {
+            if (!_isInitialized)
+                return;
+
             var rounded = new Vector2Int(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y));
 
             for (int i = 0; i < size.x; i++)
@@ -51,18 +56,10 @@ namespace Systems.Grid_System
 
                     _gridSprites[index].transform.position = new Vector2(x, y) + _gridDrawOffset;
 
-                    if (TryGetTileAt(x, y, out Tile tile))
+                    if (TryGetTileAt(x, y, out TileInstance tile))
                     {
-                        var t = _tilemap.GetTile(new Vector3Int(x, y, 0));
-                        if (t != null)
-                        {
-                            _gridSprites[index].color = Color.blue;
-                            Debug.Log($"{t}, {_mapSystem.GetTile(x, y)}");
-                        }
-                        else
-                        {
-                            _gridSprites[index].color = Color.white;
-                        }
+                        _gridSprites[index].color = Color.blue;
+                        Debug.Log($"{tile} at {x}, {y}, {_mapSystem.GetTile(x, y)}, {_tilesSettings.GetDefinition(_mapSystem.GetTile(x, y))}");
                     }
                     else
                     {
@@ -80,14 +77,14 @@ namespace Systems.Grid_System
             }
         }
 
-        public bool TryGetTileAt(int x, int y, out Tile tile)
+        public bool TryGetTileAt(int x, int y, out TileInstance tile)
         {
-            int xGrid = x + _offset;
-            int yGrid = y + _offset;
+            int xGrid = x;
+            int yGrid = y;
 
             if ((xGrid < 0 || xGrid >= _gridSize) || (yGrid < 0 || yGrid >= _gridSize))
             {
-                tile = Tile.None;
+                tile = TileInstance.None;
                 return false;
             }
 
@@ -97,20 +94,37 @@ namespace Systems.Grid_System
 
         private void Awake()
         {
-            InitializeGrid();
-            InitializeDrawGridSprites();
+            _tilesSettings = ScriptableSettings.GetOrFind<TilesSettings>();
         }
 
-        private void InitializeGrid()
+        private void Start()
         {
-            if (_gridAxisRange % 2 != 0 || _gridAxisRange == 0)
+            _mapSystem.MapLoaded += MapLoadedEventHandler;
+        }
+
+        private void MapLoadedEventHandler(Map map)
+        {
+            InitializeGrid(map);
+            InitializeDrawGridSprites();
+            _isInitialized = true;
+        }
+
+
+        private void InitializeGrid(Map map)
+        {
+            _gridSize = map.Metadata.Dimensions;
+            _grid = new TileInstance[_gridSize, _gridSize];
+
+            for (int i = 0; i < map.Metadata.Dimensions; i++)
             {
-                Debug.LogError($"{GetType()} - Grid axis size must be pair and above 0");
+                for (int j = 0; j < map.Metadata.Dimensions; j++)
+                {
+                    _grid[i, j] = (TileInstance)_tilesSettings.GetDefinition(map.Metadata.Tiles[i, j]);
+                }
             }
 
-            _gridSize = _gridAxisRange * 2;
-            _grid = new Tile[_gridSize, _gridSize];
-            _offset = _gridAxisRange;
+            _offset = 0;
+            _gridDrawOffset = Vector2.zero;
         }
 
         private void InitializeDrawGridSprites()

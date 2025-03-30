@@ -891,7 +891,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ff91dd28672dde4898f188345125b1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gridAxisRange: 512
   _spritesPoolSize: 5
   _gridDrawOffset: {x: 0, y: 0}
   _tilemap: {fileID: 528902158}
@@ -1567,6 +1566,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3793254190692224981, guid: 73e316bda44597049b0ee0682e75ca04, type: 3}
+      propertyPath: _addDefinedOnStart
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3793254190692224981, guid: 73e316bda44597049b0ee0682e75ca04, type: 3}
       propertyPath: _icons.Array.data[0]
       value: 
       objectReference: {fileID: 21300000, guid: 11f26ae8d61d3db4cb6a987ecdcbdaa0, type: 3}
@@ -1632,7 +1635,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5100123393815294630, guid: 73e316bda44597049b0ee0682e75ca04, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 524999.56
+      value: 529592.56
       objectReference: {fileID: 0}
     - target: {fileID: 5166222320962546861, guid: 73e316bda44597049b0ee0682e75ca04, type: 3}
       propertyPath: m_AnchorMax.y
@@ -2802,6 +2805,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5013929561928299169, guid: f67cc0aa19ce7f74e9e59c1899443fd5, type: 3}
+      propertyPath: m_PointAction
+      value: 
+      objectReference: {fileID: -7665342375507058346, guid: cb9c810f645393d4098791e9dd689daf, type: 3}
+    - target: {fileID: 5013929561928299169, guid: f67cc0aa19ce7f74e9e59c1899443fd5, type: 3}
+      propertyPath: m_LeftClickAction
+      value: 
+      objectReference: {fileID: -3950581224535143314, guid: cb9c810f645393d4098791e9dd689daf, type: 3}
     - target: {fileID: 5349829815461163123, guid: f67cc0aa19ce7f74e9e59c1899443fd5, type: 3}
       propertyPath: m_Name
       value: Input Manager

@@ -20,6 +20,9 @@ namespace Core.Map
 
         protected override void OnLoaded()
         {
+            TileToTileBase = TileToTileBase.ToArray();
+            TileDefinitions = TileDefinitions.ToArray();
+
             SetTileDefinitions();
             SetTileToTileBase();
         }

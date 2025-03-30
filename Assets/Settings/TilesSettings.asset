@@ -35,4 +35,34 @@ MonoBehaviour:
     <TileBase>k__BackingField: {fileID: 11400000, guid: 0740d841b11f6b846855f9a8c8f6144d, type: 2}
   - <TileType>k__BackingField: 1001
     <TileBase>k__BackingField: {fileID: 11400000, guid: 0740d841b11f6b846855f9a8c8f6144d, type: 2}
-  <TileDefinitions>k__BackingField: []
+  <TileDefinitions>k__BackingField:
+  - TileType: 0
+    TileProperties: 0
+    MaxHitPoints: 0
+  - TileType: 1
+    TileProperties: 7
+    MaxHitPoints: 50
+  - TileType: 2
+    TileProperties: 7
+    MaxHitPoints: 50
+  - TileType: 3
+    TileProperties: 7
+    MaxHitPoints: 50
+  - TileType: 4
+    TileProperties: 7
+    MaxHitPoints: 50
+  - TileType: 5
+    TileProperties: 7
+    MaxHitPoints: 50
+  - TileType: 6
+    TileProperties: 7
+    MaxHitPoints: 50
+  - TileType: 1001
+    TileProperties: 23
+    MaxHitPoints: 100
+  - TileType: 2001
+    TileProperties: 0
+    MaxHitPoints: 0
+  - TileType: 2002
+    TileProperties: 0
+    MaxHitPoints: 0

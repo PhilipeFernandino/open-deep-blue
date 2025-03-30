@@ -10,7 +10,8 @@
         "Core.Util",
         "NaughtyAttributes.Core",
         "TNRD.SerializableInterface",
-        "UniTask"
+        "UniTask",
+        "Unity.InputSystem"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

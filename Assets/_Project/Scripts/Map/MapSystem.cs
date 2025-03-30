@@ -1,5 +1,6 @@
 ﻿using Core.Util;
 using Cysharp.Threading.Tasks;
+using System;
 using System.Diagnostics;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
@@ -12,8 +13,11 @@ namespace Core.Map
         [SerializeField] private GameObject _player;
 
         private Map _map;
-        private TileInstance[,] _tiles;
         private ITilemapService _tilemapService;
+
+        public Map Map => _map;
+
+        public event Action<Map> MapLoaded;
 
         private void Start()
         {
@@ -35,6 +39,8 @@ namespace Core.Map
             var pt = _map.Metadata.PointsOfInterest[1];
             Debug.Log($"Setting player at: {pt}");
             _player.transform.position = new Vector2(pt.X, pt.Y);
+
+            MapLoaded.Invoke(Map);
         }
 
         public Tile GetTile(int x, int y)
