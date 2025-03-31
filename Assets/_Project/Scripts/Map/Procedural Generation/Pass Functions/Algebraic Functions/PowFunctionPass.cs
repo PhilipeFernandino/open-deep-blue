@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "PowFunctionPass", menuName = "Pass/Algebraic/Pow Function")]
+[CreateAssetMenu(fileName = "PowFunctionPass", menuName = "Core/ProcGen/Pass/Algebraic/Pow Function")]
 public class PowFunctionPass : PassDataBase
 {
     [SerializeField] private float expoent;

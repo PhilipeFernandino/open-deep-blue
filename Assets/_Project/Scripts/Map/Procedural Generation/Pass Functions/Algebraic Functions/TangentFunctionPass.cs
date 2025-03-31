@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "TangentFunctionPass", menuName = "Pass/Algebraic/Tangent Function")]
+[CreateAssetMenu(fileName = "TangentFunctionPass", menuName = "Core/ProcGen/Pass/Algebraic/Tangent Function")]
 public class TangentFunctionPass : PassDataBase
 {
     public override float[,] MakePass(int dimensions, System.Random random = null, float[,] values = null)

@@ -1,7 +1,7 @@
 ﻿using NaughtyAttributes;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Pass/Noise Pass")]
+[CreateAssetMenu(menuName = "Core/ProcGen/Pass/Noise Pass")]
 public class NoisePass : PassDataBase
 {
     [SerializeField]

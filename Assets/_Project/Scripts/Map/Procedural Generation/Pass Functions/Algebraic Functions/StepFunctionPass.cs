@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "StepFunctionPass", menuName = "Pass/Algebraic/Step Function")]
+[CreateAssetMenu(fileName = "StepFunctionPass", menuName = "Core/ProcGen/Pass/Algebraic/Step Function")]
 public class StepFunctionPass : PassDataBase
 {
     [Range(-1f, 1f)]

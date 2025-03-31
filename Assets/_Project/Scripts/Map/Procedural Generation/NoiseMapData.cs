@@ -2,7 +2,7 @@
 using NaughtyAttributes;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NoiseMap")]
+[CreateAssetMenu(fileName = "NoiseMap", menuName = "Core/ProcGen/Noise")]
 public class NoiseMapData : ScriptableObject, IMapCreator
 {
     [Header("General")]

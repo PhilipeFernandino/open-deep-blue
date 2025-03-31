@@ -9,7 +9,7 @@ using static Core.Util.Random;
 using static Helper;
 using Debug = UnityEngine.Debug;
 
-[CreateAssetMenu(fileName = "PerlinWormPass", menuName = "Pass/Perlin Worm")]
+[CreateAssetMenu(fileName = "PerlinWormPass", menuName = "Core/ProcGen/Pass/Perlin Worm")]
 public class WormPass : PassDataBase, IMapCreator
 {
     [Header("General Parameters")]

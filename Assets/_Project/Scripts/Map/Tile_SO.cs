@@ -6,7 +6,7 @@ using UnityEngine.Tilemaps;
 
 namespace Core.Map
 {
-    [CreateAssetMenu(menuName = "Map/Tile")]
+    [CreateAssetMenu(menuName = "Core/Map/Tile")]
     public class Tiles_SO : ScriptableObject
     {
         [field: SerializeField] public List<EnumTileData> Tiles { get; private set; }

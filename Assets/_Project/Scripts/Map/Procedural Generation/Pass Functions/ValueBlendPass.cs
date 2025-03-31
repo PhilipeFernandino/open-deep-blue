@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "ValueBlendPass", menuName = "Pass/Value Blend Pass")]
+[CreateAssetMenu(fileName = "ValueBlendPass", menuName = "Core/ProcGen/Pass/Value Blend Pass")]
 public class ValueBlendPass : PassDataBase
 {
     [Range(-1f, 1f)]

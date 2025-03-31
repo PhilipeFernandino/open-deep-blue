@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "SmoothStepFunctionPass", menuName = "Pass/Algebraic/Smooth Step Function")]
+[CreateAssetMenu(fileName = "SmoothStepFunctionPass", menuName = "Core/ProcGen/Pass/Algebraic/Smooth Step Function")]
 public class SmoothStepPass : PassDataBase
 {
     public override float[,] MakePass(int dimensions, System.Random random = null, float[,] map = null)

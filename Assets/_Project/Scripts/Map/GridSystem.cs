@@ -1,14 +1,16 @@
 ﻿using Coimbra;
+using Coimbra.Services;
 using Core.Map;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
+using UnityEngine.UIElements;
 using Tile = Core.Map.Tile;
 
 namespace Systems.Grid_System
 {
-    public class GridTest : MonoBehaviour
+    public class GridSystem : Actor, IGridService
     {
         [Tooltip("Size of the grid from -thisValue to thisValue")]
         [SerializeField] private int _spritesPoolSize;
@@ -28,15 +30,7 @@ namespace Systems.Grid_System
         private int _lastGridDrawSize = 0;
         private bool _isInitialized = false;
 
-        private void Update()
-        {
-            var mousePos = (Vector3)Mouse.current.position.ReadValue();
-            mousePos.z = 10f;
-            var pos = Camera.main.ScreenToWorldPoint((Vector3)Mouse.current.position.ReadValue());
-            pos.z = 0f;
-
-            DrawInGrid(pos, new Vector2Int(1, 1));
-        }
+        private Map _map;
 
         public void DrawInGrid(Vector2 position, in Vector2Int size)
         {
@@ -59,7 +53,7 @@ namespace Systems.Grid_System
                     if (TryGetTileAt(x, y, out TileInstance tile))
                     {
                         _gridSprites[index].color = Color.blue;
-                        Debug.Log($"{tile} at {x}, {y}, {_mapSystem.GetTile(x, y)}, {_tilesSettings.GetDefinition(_mapSystem.GetTile(x, y))}");
+                        Debug.Log($"{tile} at {x}, {y}, {_map.Metadata.Tiles[x, y]}, {_tilesSettings.GetDefinition(_map.Metadata.Tiles[x, y])}");
                     }
                     else
                     {
@@ -92,14 +86,63 @@ namespace Systems.Grid_System
             return true;
         }
 
-        private void Awake()
+        public bool TryGetTileAt(Vector2 v, out TileInstance tile)
         {
-            _tilesSettings = ScriptableSettings.GetOrFind<TilesSettings>();
+            var pos = ToGridPosition(v);
+            return TryGetTileAt(pos.x, pos.y, out tile);
         }
 
-        private void Start()
+        public void DamageTileAt(int x, int y, ushort damage)
+        {
+            _grid[x, y].CurrentHitPoints -= damage;
+            if (_grid[x, y].CurrentHitPoints < 0)
+            {
+                SetTileAt(x, y, null);
+            }
+        }
+
+        public void DamageTileAt(Vector2 v, ushort damage)
+        {
+            var pos = ToGridPosition(v);
+            DamageTileAt(pos.x, pos.y, damage);
+        }
+
+        private (int x, int y) ToGridPosition(Vector2 v)
+        {
+            Vector2Int v2 = new(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y));
+            return (v2.x, v2.y);
+        }
+
+        public void SetTileAt(int x, int y, TileBase tileBase)
+        {
+            _tilemap.SetTile(new Vector3Int(x, y, 0), tileBase);
+        }
+
+        public void SetTileAt(Vector2 v, TileBase tileBase)
+        {
+            var pos = ToGridPosition(v);
+            SetTileAt(pos.x, pos.y, tileBase);
+        }
+
+        protected override void OnInitialize()
+        {
+            _tilesSettings = ScriptableSettings.GetOrFind<TilesSettings>();
+            ServiceLocator.Set<IGridService>(this);
+        }
+
+        protected override void OnSpawn()
         {
             _mapSystem.MapLoaded += MapLoadedEventHandler;
+        }
+
+        private void Update()
+        {
+            var mousePos = (Vector3)Mouse.current.position.ReadValue();
+            mousePos.z = 10f;
+            var pos = Camera.main.ScreenToWorldPoint((Vector3)Mouse.current.position.ReadValue());
+            pos.z = 0f;
+
+            DrawInGrid(pos, new Vector2Int(1, 1));
         }
 
         private void MapLoadedEventHandler(Map map)
@@ -107,8 +150,8 @@ namespace Systems.Grid_System
             InitializeGrid(map);
             InitializeDrawGridSprites();
             _isInitialized = true;
+            _map = map;
         }
-
 
         private void InitializeGrid(Map map)
         {

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Pass Composer")]
+[CreateAssetMenu(fileName = "Pass Composer", menuName = "Core/ProcGen/Pass")]
 public class PassComposerData : ScriptableObject
 {
     [SerializeField]

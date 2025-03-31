@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 using static FastNoiseLite;
 
-[CreateAssetMenu(fileName = "Noise Data")]
+[CreateAssetMenu(fileName = "Noise Data", menuName = "Core/ProcGen/Noise")]
 public class NoiseData : ScriptableObject
 {
     [Header("General")]

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "AbsFunctionPass", menuName = "Pass/Algebraic/Abs Function")]
+[CreateAssetMenu(fileName = "AbsFunctionPass", menuName = "Core/ProcGen/Pass/Algebraic/Abs Function")]
 public class AbsFunctionPass : PassDataBase
 {
     public override float[,] MakePass(int dimensions, System.Random random = null, float[,] map = null)
