@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e3428b66e5c2654d908dda550547b3c, type: 3}
+  m_Name: Pickaxe SO
+  m_EditorClassIdentifier: 
+  <UsesPerSecond>k__BackingField: 1
+  <AngleOffset>k__BackingField: 0
+  <DisableSRDelaySeconds>k__BackingField: 0.1
+  <TimeScaleOnBlink>k__BackingField: 0.5
+  <BlinkSeconds>k__BackingField: 0.2
+  <UseEffect>k__BackingField:
+    <LockDuration>k__BackingField: 0
+    <AddedImpulseSpeed>k__BackingField: 0
+    <AddedImpulseDuration>k__BackingField: 0
+  <ShakeSettings>k__BackingField:
+    strength: {x: 0, y: 0, z: 0}
+    duration: 1
+    frequency: 10
+    enableFalloff: 0
+    falloffEase: 0
+    strengthOverTime:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    asymmetry: 0
+    easeBetweenShakes: 0
+    cycles: 1
+    startDelay: 0
+    endDelay: 0
+    useUnscaledTime: 0
+    useFixedUpdate: 0
+  <RotTweenSettings>k__BackingField:
+    startFromCurrent: 0
+    startValue: {x: 0, y: 0, z: 0}
+    endValue: {x: 0, y: 0, z: 0}
+    settings:
+      duration: 1
+      ease: 0
+      customEase:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      cycles: 1
+      cycleMode: 0
+      startDelay: 0
+      endDelay: 0
+      useUnscaledTime: 0
+      useFixedUpdate: 0
+  <MiningStrength>k__BackingField: 5

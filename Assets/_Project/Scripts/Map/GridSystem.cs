@@ -94,8 +94,9 @@ namespace Systems.Grid_System
 
         public void DamageTileAt(int x, int y, ushort damage)
         {
+            Debug.Log($"{GetType()} - DamageTileAt - {x}, {y}, {damage}");
             _grid[x, y].CurrentHitPoints -= damage;
-            if (_grid[x, y].CurrentHitPoints < 0)
+            if (_grid[x, y].CurrentHitPoints <= 0)
             {
                 SetTileAt(x, y, null);
             }

@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using PrimeTween;
 using System;
 using System.Threading;
+using Systems.Grid_System;
 using UnityEngine;
 
 namespace Core.HoldableSystem
@@ -23,6 +24,7 @@ namespace Core.HoldableSystem
         protected CancellationTokenSource _disableSR_Cts;
 
         protected ICameraService _cameraService;
+        protected IGridService _gridService;
 
         protected TimeSpan ReloadInterval => TimeSpan.FromSeconds(1f / _attributes.UsesPerSecond);
 
@@ -62,6 +64,7 @@ namespace Core.HoldableSystem
         protected void Start()
         {
             _cameraService = ServiceLocatorUtilities.GetServiceAssert<ICameraService>();
+            _gridService = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
         }
 
         protected async UniTask Use(Vector2 worldPosition)

@@ -6,13 +6,11 @@ namespace Core.HoldableSystem
 
     public class Pickaxe : Equipment
     {
-        [SerializeField] protected new PickaxeAttributesSO _attributes;
-
-        private IGridService _gridService;
+        public PickaxeAttributesSO Attributes => (PickaxeAttributesSO)_attributes;
 
         protected override void UseBehavior(Vector2 worldPosition)
         {
-            _gridService.DamageTileAt(worldPosition, _attributes.Damage);
+            _gridService.DamageTileAt(worldPosition, Attributes.MiningStrength);
         }
     }
 }
