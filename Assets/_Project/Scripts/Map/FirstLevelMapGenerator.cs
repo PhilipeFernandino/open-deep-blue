@@ -138,10 +138,19 @@ namespace Core.Map
 
         public MapMetadata GenerateMapLevel(float[,] caveMap, float[,] oreMap, float[,] biomeMap)
         {
+            Tile[,] tiles = new Tile[_dimensions, _dimensions];
+            Tile[,] biomeTiles = new Tile[_dimensions, _dimensions];
 
-            Tile[,] map = new Tile[_dimensions, _dimensions];
+            InitMap(ref tiles, _dimensions, Tile.BlueStone);
 
-            InitMap(ref map, _dimensions, Tile.BlueStone);
+
+            for (int i = 0; i < _dimensions; i++)
+            {
+                for (int j = 0; j < _dimensions; j++)
+                {
+                    ValueTileToTile(biomeTiles, _stoneValueTiles, biomeMap[i, j], i, j);
+                }
+            }
 
             for (int i = 0; i < _dimensions; i++)
             {
@@ -149,28 +158,26 @@ namespace Core.Map
                 {
                     if (caveMap[i, j] == 1f)
                     {
-                        map[i, j] = Tile.None;
+                        tiles[i, j] = Tile.None;
                     }
                     else
                     {
                         if (_generateBiomes)
                         {
-                            // Using the biome value tiles to fill the map with biome stones
-                            ValueTileToTile(map, _stoneValueTiles, biomeMap[i, j], i, j);
+                            tiles[i, j] = biomeTiles[i, j];
                         }
 
                         if (_generateOres)
                         {
                             // Using the value tiles to convert the ore map to the tilemap 
-                            ValueTileToTile(map, _oreValueTiles, oreMap[i, j], i, j);
+                            ValueTileToTile(tiles, _oreValueTiles, oreMap[i, j], i, j);
                         }
-
                     }
                 }
             }
 
-            MakeQueenLair(map);
-            SpawnChests(map, _basePass);
+            MakeQueenLair(tiles);
+            SpawnChests(tiles, _basePass);
 
             if (_debug)
             {
@@ -178,7 +185,7 @@ namespace Core.Map
                 LogMapValueCount(oreMap, "oreMap");
             }
 
-            _asyncGeneratedMap = map;
+            _asyncGeneratedMap = tiles;
 
             List<PointOfInterest> pois = new List<PointOfInterest>(_basePass.Rooms.Count + _basePass.CaveDeadEnds.Count);
 
@@ -192,7 +199,7 @@ namespace Core.Map
                 pois.Add(new PointOfInterest(p.x, p.y, PointOfInterestType.CaveDeadEnd));
             }
 
-            return new MapMetadata(map, pois, _dimensions);
+            return new MapMetadata(tiles, biomeTiles, pois, _dimensions);
         }
 
 
@@ -204,6 +211,7 @@ namespace Core.Map
                 if (tileValue >= range.x && tileValue <= range.y)
                 {
                     map[i, j] = valueTiles[k].Tile;
+                    return;
                 }
             }
         }

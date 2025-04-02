@@ -11,6 +11,7 @@ namespace Core.Map
     public class MapToTilemap : Actor, ITilemapService
     {
         [SerializeField] private Tilemap _tilemap;
+        [SerializeField] private Tilemap _floorTilemap;
 
         private IMapLevelGeneratorService _mapLevelGeneratorService;
         private TilesSettings _tilesSettings;
@@ -38,6 +39,7 @@ namespace Core.Map
 
             int dimensions = mapMetadata.Dimensions;
             TileBase[] tiles = new TileBase[dimensions * dimensions];
+            TileBase[] floorTiles = new TileBase[dimensions * dimensions];
 
             area.size = new Vector3Int(dimensions, dimensions, 1);
 
@@ -45,12 +47,14 @@ namespace Core.Map
             {
                 for (int h = 0; h < dimensions; h++)
                 {
-                    tiles[w * dimensions + h] = _tilesSettings.GetTileBase(
-                        mapMetadata.Tiles[h, w]);
+                    int index = w * dimensions + h;
+                    tiles[index] = _tilesSettings.GetTileBase(mapMetadata.Tiles[h, w]);
+                    floorTiles[index] = _tilesSettings.GetFloorTileBase(mapMetadata.BiomeTiles[h, w]);
                 }
             }
 
             _tilemap.SetTilesBlock(area, tiles);
+            _floorTilemap.SetTilesBlock(area, floorTiles);
 
             return new(mapMetadata, _tilemap);
         }

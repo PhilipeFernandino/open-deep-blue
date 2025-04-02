@@ -35,7 +35,7 @@ namespace Core.Map
 
             var pt = map.Metadata.PointsOfInterest[1];
             Debug.Log($"Setting player at: {pt}");
-            _player.transform.position = new Vector2(pt.X, pt.Y);
+            _player.transform.position = new Vector2(pt.X + 1, pt.Y);
 
             MapLoaded.Invoke(map);
         }

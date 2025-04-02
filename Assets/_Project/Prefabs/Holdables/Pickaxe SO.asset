@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e3428b66e5c2654d908dda550547b3c, type: 3}
   m_Name: Pickaxe SO
   m_EditorClassIdentifier: 
-  <UsesPerSecond>k__BackingField: 1
+  <UsesPerSecond>k__BackingField: 2
   <AngleOffset>k__BackingField: 0
   <DisableSRDelaySeconds>k__BackingField: 0.1
   <TimeScaleOnBlink>k__BackingField: 0.5
@@ -59,4 +59,4 @@ MonoBehaviour:
       endDelay: 0
       useUnscaledTime: 0
       useFixedUpdate: 0
-  <MiningStrength>k__BackingField: 5
+  <MiningStrength>k__BackingField: 100
