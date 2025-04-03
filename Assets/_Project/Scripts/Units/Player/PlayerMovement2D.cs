@@ -8,6 +8,8 @@ namespace Core.Player
     {
         [SerializeField] private Rigidbody2D _rb2D;
 
+        public Vector2 Position => _rb2D.position;
+
         private float _speed;
 
         // Let's keep this here so the rigidbody doesn't get touched by multiple components at the same time 

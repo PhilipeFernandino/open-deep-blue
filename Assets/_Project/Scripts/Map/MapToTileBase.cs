@@ -8,40 +8,30 @@ using UnityEngine.Tilemaps;
 
 namespace Core.Map
 {
-    public class MapToTilemap : Actor, ITilemapService
+    public class MapToTileBase : Actor, IMapToTibeBaleService
     {
-        [SerializeField] private Tilemap _tilemap;
-        [SerializeField] private Tilemap _floorTilemap;
-
-        private IMapLevelGeneratorService _mapLevelGeneratorService;
-        private TilesSettings _tilesSettings;
-
-        private BoundsInt area;
+        private TilesSettings _tilesSettings; // get
 
         protected override void OnInitialize()
         {
             base.OnInitialize();
 
-            ServiceLocator.Set<ITilemapService>(this);
+            ServiceLocator.Set<IMapToTibeBaleService>(this);
         }
 
         protected override void OnSpawn()
         {
             base.OnSpawn();
-
-            _mapLevelGeneratorService = ServiceLocatorUtilities.GetServiceAssert<IMapLevelGeneratorService>();
-            _tilesSettings = ScriptableSettings.GetOrFind<TilesSettings>();
         }
 
-        public async UniTask<Map> GenerateTilemap()
+        public async UniTask<Map> GenerateTilemap(Map map)
         {
-            var mapMetadata = await _mapLevelGeneratorService.GenerateMapLevel();
+            var mapMetadata = map.Metadata;
 
             int dimensions = mapMetadata.Dimensions;
             TileBase[] tiles = new TileBase[dimensions * dimensions];
             TileBase[] floorTiles = new TileBase[dimensions * dimensions];
 
-            area.size = new Vector3Int(dimensions, dimensions, 1);
 
             for (int w = 0; w < dimensions; w++)
             {
@@ -53,10 +43,7 @@ namespace Core.Map
                 }
             }
 
-            _tilemap.SetTilesBlock(area, tiles);
-            _floorTilemap.SetTilesBlock(area, floorTiles);
-
-            return new(mapMetadata, _tilemap);
+            return new(mapMetadata, tiles, floorTiles);
         }
     }
 }

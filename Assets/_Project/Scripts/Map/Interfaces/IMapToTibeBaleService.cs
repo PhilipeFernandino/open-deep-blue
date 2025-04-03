@@ -5,7 +5,7 @@ using System;
 namespace Core.Map
 {
     [DynamicService]
-    public interface ITilemapService : IService
+    public interface IMapToTibeBaleService : IService
     {
         public async UniTask<Map> GenerateTilemap() { throw new NotImplementedException(); }
     }

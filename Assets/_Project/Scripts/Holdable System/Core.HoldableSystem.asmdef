@@ -9,11 +9,11 @@
         "Core.Extensions",
         "Core.HealthSystem",
         "Core.ItemSystem",
-        "Core.Map",
         "Core.Util",
         "PrimeTween.Runtime",
         "TNRD.SerializableInterface",
-        "UniTask"
+        "UniTask",
+        "Core.Level"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -3,7 +3,7 @@ using Core.Map;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace Systems.Grid_System
+namespace Core.Level
 {
     [DynamicService]
     public interface IGridService : IService

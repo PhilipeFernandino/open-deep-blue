@@ -1,5 +1,4 @@
-﻿using Systems.Grid_System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Core.HoldableSystem
 {

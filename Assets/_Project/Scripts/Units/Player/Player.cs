@@ -1,4 +1,5 @@
 ﻿using Coimbra;
+using Core.EventBus;
 using Core.FSM;
 using Core.HealthSystem;
 using Core.HoldableSystem;
@@ -21,6 +22,8 @@ namespace Core.Player
         [SerializeField] private float _movementSpeed;
         [SerializeField] private float _dashSpeed;
         [SerializeField] private float _dashDuration;
+
+        [SerializeField] private PositionEventBus _positionEventBus;
 
         private HoldableController _playerHold;
         private PlayerAnimator _playerAnimator;
@@ -77,6 +80,7 @@ namespace Core.Player
         private void Update()
         {
             _fsm.Update();
+            _positionEventBus.Position = _playerMovement.Position;
         }
 
         private void FixedUpdate()
@@ -111,6 +115,7 @@ namespace Core.Player
 
             TransferState(PlayerState.Idle, null, null);
         }
+
 
         public void TransferState(PlayerState nextState, IEnterStateData enterStateData, PlayerFSMState actor) => _fsm.TransferState(nextState, enterStateData, actor);
     }

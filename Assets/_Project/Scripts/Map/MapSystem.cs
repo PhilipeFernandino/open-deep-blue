@@ -1,4 +1,6 @@
-﻿using Core.Util;
+﻿using Coimbra;
+using Coimbra.Services;
+using Core.Util;
 using Cysharp.Threading.Tasks;
 using System;
 using System.Diagnostics;
@@ -8,36 +10,24 @@ using Debug = UnityEngine.Debug;
 namespace Core.Map
 {
 
-    public class MapSystem : MonoBehaviour
+    public class MapSystem : Actor, IMapService
     {
-        [SerializeField] private GameObject _player;
+        private IMapLevelGeneratorService _mapLevelGeneratorService;
 
-        private ITilemapService _tilemapService;
-
-        public event Action<Map> MapLoaded;
-
-        private void Start()
+        protected override void OnInitialize()
         {
-            _tilemapService = ServiceLocatorUtilities.GetServiceAssert<ITilemapService>();
             InitializeGame().Forget();
+            _mapLevelGeneratorService = ServiceLocatorUtilities.GetServiceAssert<IMapLevelGeneratorService>();
         }
 
         private async UniTask InitializeGame()
         {
-            var sw = new Stopwatch();
-            sw.Start();
-            var map = await UniTask.RunOnThreadPool(() =>
-            {
-                return _tilemapService.GenerateTilemap();
-            });
-            sw.Stop();
-            Debug.Log($"{sw.ElapsedMilliseconds} elapsed miliseconds to complete first map gen");
-
-            var pt = map.Metadata.PointsOfInterest[1];
-            Debug.Log($"Setting player at: {pt}");
-            _player.transform.position = new Vector2(pt.X + 1, pt.Y);
-
-            MapLoaded.Invoke(map);
+            var mapMetadata = await _mapLevelGeneratorService.GenerateMapLevel();
+            new MapMetadataGeneratedEvent(mapMetadata).Invoke(this);
         }
+    }
+
+    public interface IMapService : IService
+    {
     }
 }

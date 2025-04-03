@@ -4,9 +4,10 @@ using UnityEngine.Tilemaps;
 
 namespace Core.Map
 {
-    public record Map(MapMetadata Metadata, Tilemap Tilemap)
+    public record Map(MapMetadata Metadata, TileBase[] TileBases, TileBase[] FloorTileBases)
     {
         public MapMetadata Metadata { get; private set; } = Metadata;
-        public Tilemap Tilemap { get; private set; } = Tilemap;
+        public TileBase[] TileBases { get; private set; } = TileBases;
+        public TileBase[] FloorTileBases { get; private set; } = FloorTileBases;
     }
 }

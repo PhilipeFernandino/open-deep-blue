@@ -1,14 +1,16 @@
 ﻿using Coimbra;
 using Coimbra.Services;
+using Coimbra.Services.Events;
 using Core.Map;
+using NaughtyAttributes;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
-using Tile = Core.Map.Tile;
 
-namespace Systems.Grid_System
+namespace Core.Level
 {
     public class GridSystem : Actor, IGridService
     {
@@ -30,7 +32,7 @@ namespace Systems.Grid_System
         private int _lastGridDrawSize = 0;
         private bool _isInitialized = false;
 
-        private Map _map;
+        private Map.Map _map;
 
         public void DrawInGrid(Vector2 position, in Vector2Int size)
         {
@@ -95,8 +97,8 @@ namespace Systems.Grid_System
         public void DamageTileAt(int x, int y, ushort damage)
         {
             Debug.Log($"{GetType()} - DamageTileAt - {x}, {y}, {damage}");
-            _grid[x, y].CurrentHitPoints -= damage;
-            if (_grid[x, y].CurrentHitPoints <= 0)
+            int currentHitPoints = Mathf.Max(0, (int)_grid[x, y].CurrentHitPoints - (int)damage);
+            if (currentHitPoints <= 0)
             {
                 SetTileAt(x, y, null);
             }
@@ -133,28 +135,18 @@ namespace Systems.Grid_System
 
         protected override void OnSpawn()
         {
-            _mapSystem.MapLoaded += MapLoadedEventHandler;
+            MapMetadataGeneratedEvent.AddListener(MapLoadedEventHandler);
         }
 
-        private void Update()
+        private void MapLoadedEventHandler(ref EventContext context, in MapMetadataGeneratedEvent e)
         {
-            var mousePos = (Vector3)Mouse.current.position.ReadValue();
-            mousePos.z = 10f;
-            var pos = Camera.main.ScreenToWorldPoint((Vector3)Mouse.current.position.ReadValue());
-            pos.z = 0f;
-
-            DrawInGrid(pos, new Vector2Int(1, 1));
-        }
-
-        private void MapLoadedEventHandler(Map map)
-        {
-            InitializeGrid(map);
+            InitializeGrid(e.MapMetadata);
             InitializeDrawGridSprites();
             _isInitialized = true;
-            _map = map;
+            _map = e.MapMetadata;
         }
 
-        private void InitializeGrid(Map map)
+        private void InitializeGrid(Map.Map map)
         {
             _gridSize = map.Metadata.Dimensions;
             _grid = new TileInstance[_gridSize, _gridSize];
@@ -179,6 +171,22 @@ namespace Systems.Grid_System
             {
                 _gridSprites.Add(Instantiate(_gridSpriteRendererPrefab, transform));
                 _gridSprites[i].enabled = false;
+            }
+        }
+
+        [Header("Debug")]
+        [SerializeField] private int _clearDimensions;
+
+        [Button]
+        private void ClearTiles()
+        {
+            for (int i = 0; i < _clearDimensions; i++)
+            {
+                for (int j = 0; j <= _clearDimensions; j++)
+                {
+
+                    _tilemap.SetTile(new Vector3Int(i, j, 0), null);
+                }
             }
         }
     }
