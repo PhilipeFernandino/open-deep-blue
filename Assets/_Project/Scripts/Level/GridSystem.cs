@@ -16,9 +16,11 @@ namespace Core.Level
     {
         [Tooltip("Size of the grid from -thisValue to thisValue")]
         [SerializeField] private int _spritesPoolSize;
-        [SerializeField] private Vector2 _gridDrawOffset = Vector2.zero;
         [SerializeField] private Tilemap _tilemap;
+        [SerializeField] private Tilemap _floorTilemap;
+
         [SerializeField] private MapSystem _mapSystem;
+        [SerializeField] private ChunkController _chunkController;
 
         [SerializeField] private SpriteRenderer _gridSpriteRendererPrefab;
 
@@ -27,12 +29,11 @@ namespace Core.Level
         private TileInstance[,] _grid;
         private TilesSettings _tilesSettings;
 
-        private int _offset;
         private int _gridSize;
         private int _lastGridDrawSize = 0;
         private bool _isInitialized = false;
 
-        private Map.Map _map;
+        private MapMetadata _mapMetadata;
 
         public void DrawInGrid(Vector2 position, in Vector2Int size)
         {
@@ -50,12 +51,11 @@ namespace Core.Level
 
                     int index = j + i * size.y;
 
-                    _gridSprites[index].transform.position = new Vector2(x, y) + _gridDrawOffset;
+                    _gridSprites[index].transform.position = new Vector2(x, y);
 
                     if (TryGetTileAt(x, y, out TileInstance tile))
                     {
                         _gridSprites[index].color = Color.blue;
-                        Debug.Log($"{tile} at {x}, {y}, {_map.Metadata.Tiles[x, y]}, {_tilesSettings.GetDefinition(_map.Metadata.Tiles[x, y])}");
                     }
                     else
                     {
@@ -129,12 +129,12 @@ namespace Core.Level
 
         protected override void OnInitialize()
         {
-            _tilesSettings = ScriptableSettings.GetOrFind<TilesSettings>();
             ServiceLocator.Set<IGridService>(this);
         }
 
         protected override void OnSpawn()
         {
+            _tilesSettings = ScriptableSettings.GetOrFind<TilesSettings>();
             MapMetadataGeneratedEvent.AddListener(MapLoadedEventHandler);
         }
 
@@ -143,24 +143,22 @@ namespace Core.Level
             InitializeGrid(e.MapMetadata);
             InitializeDrawGridSprites();
             _isInitialized = true;
-            _map = e.MapMetadata;
+            _mapMetadata = e.MapMetadata;
+            _chunkController.Setup(_mapMetadata, _tilemap, _floorTilemap);
         }
 
-        private void InitializeGrid(Map.Map map)
+        private void InitializeGrid(MapMetadata mapMetadata)
         {
-            _gridSize = map.Metadata.Dimensions;
+            _gridSize = mapMetadata.Dimensions;
             _grid = new TileInstance[_gridSize, _gridSize];
 
-            for (int i = 0; i < map.Metadata.Dimensions; i++)
+            for (int i = 0; i < mapMetadata.Dimensions; i++)
             {
-                for (int j = 0; j < map.Metadata.Dimensions; j++)
+                for (int j = 0; j < mapMetadata.Dimensions; j++)
                 {
-                    _grid[i, j] = (TileInstance)_tilesSettings.GetDefinition(map.Metadata.Tiles[i, j]);
+                    _grid[i, j] = (TileInstance)_tilesSettings.GetDefinition(mapMetadata.Tiles[i, j]);
                 }
             }
-
-            _offset = 0;
-            _gridDrawOffset = Vector2.zero;
         }
 
         private void InitializeDrawGridSprites()

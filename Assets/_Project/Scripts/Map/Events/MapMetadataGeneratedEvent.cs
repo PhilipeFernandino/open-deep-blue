@@ -4,11 +4,11 @@ namespace Core.Map
 {
     public readonly partial struct MapMetadataGeneratedEvent : IEvent
     {
-        public readonly MapMetadata Map;
+        public readonly MapMetadata MapMetadata;
 
-        public MapMetadataGeneratedEvent(MapMetadata map)
+        public MapMetadataGeneratedEvent(MapMetadata mapMetadata)
         {
-            MapMetadata = map;
+            MapMetadata = mapMetadata;
         }
     }
 }

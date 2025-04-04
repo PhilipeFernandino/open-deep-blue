@@ -1,5 +1,7 @@
-﻿using Core.EventBus;
+﻿using Coimbra;
+using Core.EventBus;
 using Core.Map;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -8,73 +10,132 @@ namespace Core.Level
 {
     public class ChunkController : MonoBehaviour
     {
+        [SerializeField] private TileBase _debugTileBase;
+
         [SerializeField] private PositionEventBus _positionEventBus;
+        [SerializeField] private Tilemap _tilemapPrefab;
         [SerializeField] private int _chunkSize = 16;
         [SerializeField] private int _loadNearChunks = 1;
 
         private TilesSettings _tilesSettings;
 
-        private Tilemap[] _tilemaps;
+        private HashSet<Vector2Int> _tilemapOn = new();
+        private HashSet<Vector2Int> _chunkAnchors = new();
 
-        private Dictionary<Vector2Int, Tilemap> _tilemapOn;
+        private Tilemap _tilemap;
+        private Tilemap _floorTilemap;
 
+        private List<Vector2Int> _chunksToRemove = new();
 
-        private Map.Map _map;
+        private MapMetadata _mapMetadata;
+        TileBase[] _emptyTiles;
 
         private void Awake()
         {
             _positionEventBus.PositionChanged += PositionChanged_EventHandler;
+            _tilesSettings = ScriptableSettings.GetOrFind<TilesSettings>();
         }
 
-        public void Setup(Map.Map map)
+        public void Setup(MapMetadata mapMetadata, Tilemap tilemap, Tilemap floorTilemap)
         {
-            _map = map;
+            _mapMetadata = mapMetadata;
+            _tilemap = tilemap;
+            _floorTilemap = floorTilemap;
+            _emptyTiles = new TileBase[_chunkSize * _chunkSize];
         }
 
         private void PositionChanged_EventHandler(Vector2 vector)
         {
-            Debug.Log($"{GetType()} - position changed to {vector}");
+            if (_mapMetadata == null)
+            {
+                return;
+            }
 
-            int dim = _map.Metadata.Dimensions;
-            Vector2 playerPos = _positionEventBus.Position;
-            Vector2Int playerChunk = new(
-                ToClosestLowerMultiple((int)playerPos.x, _chunkSize),
-                ToClosestLowerMultiple((int)playerPos.x, _chunkSize));
+            Vector2Int currChunk = new(
+                ToClosestLowerMultiple((int)vector.x, _chunkSize),
+                ToClosestLowerMultiple((int)vector.y, _chunkSize));
+
+            Debug.Log($"{GetType()} - (Pos = {vector}, PosChunk = {currChunk})");
+
+            _chunkAnchors.Clear();
 
             for (int i = -_loadNearChunks; i <= _loadNearChunks; i++)
             {
                 for (int j = -_loadNearChunks; j <= _loadNearChunks; j++)
                 {
-                    var chunkPos = playerChunk + new Vector2Int(i, j);
-                    if (!_tilemapOn.TryGetValue(chunkPos, out var _))
-                    {
-                        int mapDim = _map.Metadata.Dimensions;
-                        var tilemap = Instantiate(new GameObject(), Vector3.zero, Quaternion.identity).AddComponent<Tilemap>();
-                        _tilemapOn.Add(chunkPos, tilemap);
-
-                        BoundsInt area = new();
-                        area.SetMinMax(
-                            new(chunkPos.x, chunkPos.y, 1),
-                            new(chunkPos.x + _chunkSize, chunkPos.y + _chunkSize, 1));
-
-                        //TileBase[] tiles = new TileBase[dimensions * dimensions];
-                        //TileBase[] floorTiles = new TileBase[];
-
-                        //for (int w = chunkPos.x; w < chunkPos.x + _chunkSize; w++)
-                        //{
-                        //    for (int h = chunkPos.y; h < chunkPos.y + _chunkSize; h++)
-                        //    {
-                        //        int index = w * _chunkSize + h;
-                        //        tiles[index] = _tilesSettings.GetTileBase(_map.Metadata.Tiles[h, w]);
-                        //        floorTiles[index] = _tilesSettings.GetFloorTileBase(_map.Metadata.BiomeTiles[h, w]);
-                        //    }
-                        //}
-
-                        tilemap.SetTilesBlock(area, _map.TileBases[_..1]);
-
-                    }
+                    var chunkAnchor = currChunk + new Vector2Int(i, j) * _chunkSize;
+                    _chunkAnchors.Add(chunkAnchor);
                 }
             }
+
+            foreach (var chunkAnchor in _chunkAnchors)
+            {
+                if (!_tilemapOn.Contains(chunkAnchor))
+                {
+                    SetTileChunk(chunkAnchor);
+                }
+            }
+
+            _chunksToRemove.Clear();
+
+            foreach (var pos in _tilemapOn)
+            {
+                if (!_chunkAnchors.Contains(pos))
+                {
+                    _chunksToRemove.Add(pos);
+                }
+            }
+
+            // Unload and remove old chunks
+            foreach (var pos in _chunksToRemove)
+            {
+                UnsetTileChunk(pos);
+                _tilemapOn.Remove(pos);
+            }
+        }
+
+        private void SetTileChunk(Vector2Int chunkAnchor)
+        {
+            BoundsInt area = new();
+            area.SetMinMax(
+                new(chunkAnchor.x, chunkAnchor.y, 0),
+                new(chunkAnchor.x + _chunkSize, chunkAnchor.y + _chunkSize, 1));
+
+            TileBase[] tiles = new TileBase[_chunkSize * _chunkSize];
+            TileBase[] floorTiles = new TileBase[_chunkSize * _chunkSize];
+            Debug.Log($"{GetType()} - {area}");
+
+            for (int w = chunkAnchor.y; w < chunkAnchor.y + _chunkSize; w++)
+            {
+                for (int h = chunkAnchor.x; h < chunkAnchor.x + _chunkSize; h++)
+                {
+                    int ww = w - chunkAnchor.y;
+                    int hh = h - chunkAnchor.x;
+
+                    int index = ww * _chunkSize + hh;
+                    Debug.Log(index);
+                    tiles[index] = _tilesSettings.GetTileBase(_mapMetadata.Tiles[h, w]);
+                    floorTiles[index] = _tilesSettings.GetFloorTileBase(_mapMetadata.BiomeTiles[h, w]);
+                }
+            }
+
+            _tilemap.SetTilesBlock(area, tiles);
+            _floorTilemap.SetTilesBlock(area, floorTiles);
+
+            Debug.Log($"{GetType()} - Tilemap added for: {chunkAnchor}");
+
+            _tilemapOn.Add(chunkAnchor);
+        }
+
+        private void UnsetTileChunk(Vector2Int chunkAnchor)
+        {
+            BoundsInt area = new();
+            area.SetMinMax(
+                new(chunkAnchor.x, chunkAnchor.y, 0),
+                new(chunkAnchor.x + _chunkSize, chunkAnchor.y + _chunkSize, 1));
+
+            _tilemap.SetTilesBlock(area, _emptyTiles);
+            _floorTilemap.SetTilesBlock(area, _emptyTiles);
         }
 
         private int ToClosestLowerMultiple(int value, int multiplier)

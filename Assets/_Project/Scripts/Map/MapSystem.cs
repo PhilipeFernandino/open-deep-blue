@@ -14,15 +14,16 @@ namespace Core.Map
     {
         private IMapLevelGeneratorService _mapLevelGeneratorService;
 
-        protected override void OnInitialize()
+        protected override void OnSpawn()
         {
-            InitializeGame().Forget();
             _mapLevelGeneratorService = ServiceLocatorUtilities.GetServiceAssert<IMapLevelGeneratorService>();
+            InitializeGame().Forget();
         }
 
         private async UniTask InitializeGame()
         {
             var mapMetadata = await _mapLevelGeneratorService.GenerateMapLevel();
+            Debug.Log(mapMetadata.ToString());
             new MapMetadataGeneratedEvent(mapMetadata).Invoke(this);
         }
     }

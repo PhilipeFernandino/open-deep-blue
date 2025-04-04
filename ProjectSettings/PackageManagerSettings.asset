@@ -34,6 +34,7 @@ MonoBehaviour:
     - com.cysharp.unitask
     - com.dbrizov.naughtyattributes
     - com.openupm
+    - com.tayx.graphy
     - com.wooshii.hierarchydecorator
     - net.tnrd.serializableinterface
     m_IsDefault: 0
