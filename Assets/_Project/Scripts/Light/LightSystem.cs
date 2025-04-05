@@ -1,31 +1,16 @@
-﻿using NaughtyAttributes;
-using System.Collections;
+﻿using Coimbra;
+using Coimbra.Services;
+using Core.Level;
+using Core.Util;
+using NaughtyAttributes;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
+using UnityEngine.UIElements;
 
 namespace Core.Light
 {
-    [System.Serializable]
-    public class LightSource
+    public class LightSystem : Actor, ILightService
     {
-        public Vector3Int Position; // Tilemap position (e.g., obstacleTilemap.WorldToCell(worldPos))
-        public int Intensity;       // Light strength (e.g., 15 for full brightness)
-        public Color Color;         // Optional: For colored lights
-
-
-        public LightSource(Vector3Int pos, int intensity, Color color = default)
-        {
-            Position = pos;
-            Intensity = intensity;
-            Color = color == default ? Color.white : color;
-        }
-
-    }
-    public class LightSystem : MonoBehaviour
-    {
-        [SerializeField] private Tilemap _groundTilemap;
-        [SerializeField] private Tilemap _wallTilemap;
         [SerializeField] private Material _lightOverlayMaterial;
         [SerializeField] private MeshRenderer _meshRenderer;
         [SerializeField] private int _dimensions = 32;
@@ -33,64 +18,61 @@ namespace Core.Light
 
         public int[,] _lightMap;
 
+        private IGridService _gridService;
+
         private Material _lightMaterial;
         private Texture2D _lightTexture;
 
-        List<LightSource> _activeSources = new List<LightSource>();
+        List<LightSource> _activeSources = new();
+        private Queue<Vector2Int> _propagateLightQueue = new();
 
-        #region debug
-        public int x, y, intensity;
-        [Button]
-        public void AddLightAt()
-        {
-            AddLightSource(new Vector3Int(x, y, 0), intensity);
-        }
+        private Vector2Int[] _neighboors = {
+                Vector2Int.up, Vector2Int.down,
+                Vector2Int.left, Vector2Int.right
+            };
 
-        #endregion
-
-        public void AddLightSource(Vector3Int position, int intensity)
+        public void AddLightSource(Vector2Int position, int intensity)
         {
             _activeSources.Add(new LightSource(position, intensity));
             PropagateLight(position, intensity);
-            UpdateLightTexture(); // Refresh visual representation
+            UpdateLightTexture();
         }
 
-        private bool IsTileSolid(Vector3Int position)
+        private void PropagateLight(Vector2Int sourcePos, int intensity)
         {
-            return _wallTilemap.HasTile(position);
-        }
+            _propagateLightQueue.Clear();
 
-        private void PropagateLight(Vector3Int sourcePos, int intensity)
-        {
-            Queue<Vector3Int> queue = new Queue<Vector3Int>();
+            //if (_gridService.IsTileLoaded(sourcePos))
+            //{
+
+            //}
+
             _lightMap[sourcePos.x, sourcePos.y] = intensity;
-            queue.Enqueue(sourcePos);
+            _propagateLightQueue.Enqueue(sourcePos);
 
-            Vector3Int[] directions = {
-                Vector3Int.up, Vector3Int.down,
-                Vector3Int.left, Vector3Int.right
-            };
 
-            while (queue.Count > 0)
+
+            while (_propagateLightQueue.Count > 0)
             {
-                Vector3Int current = queue.Dequeue();
+                Vector2Int current = _propagateLightQueue.Dequeue();
                 int currentLevel = _lightMap[current.x, current.y];
 
-                foreach (Vector3Int dir in directions)
-                { // Up, down, left, right
-                    Vector3Int next = current + dir;
-                    if (IsOutOfBounds(next))
+                foreach (var dir in _neighboors)
+                {
+                    Vector2Int next = current + dir;
+                    if (Range.IsWithinBounds(next, Vector2Int.zero, new Vector2Int()))
                         continue;
 
                     int newLevel = currentLevel - 1;
                     if (newLevel > _lightMap[next.x, next.y])
                     {
-                        if (!IsTileSolid(current))
+                        if (!_gridService.HasTileAt(current))
                         {
-
                             _lightMap[next.x, next.y] = newLevel;
                             if (newLevel > 1)
-                                queue.Enqueue(next);
+                            {
+                                _propagateLightQueue.Enqueue(next);
+                            }
                         }
                         else
                         {
@@ -103,7 +85,6 @@ namespace Core.Light
 
         private void UpdateLightTexture()
         {
-            // Convert lightMap to texture colors
             Color[] pixels = new Color[_dimensions * _dimensions];
             for (int x = 0; x < _dimensions; x++)
             {
@@ -114,22 +95,29 @@ namespace Core.Light
                 }
             }
 
-            // Apply to texture
             _lightTexture.SetPixels(pixels);
             _lightTexture.Apply();
             _lightOverlayMaterial.SetTexture("_LightTex", _lightTexture);
         }
 
-        private void Start()
+        protected override void OnInitialize()
         {
             InitializeLightMap();
             InitializeLightTexture();
-            InitializeQuad();
+
+            _meshRenderer.sortingLayerName = "Light Overlay";
+
+            //InitializeQuad();
         }
+
+        protected override void OnSpawn()
+        {
+            _gridService = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
+        }
+
 
         private void InitializeLightMap()
         {
-            // For a dimxdim grid:
             _lightMap = new int[_dimensions, _dimensions];
 
             // Optional: Initialize with ambient light (e.g., zero for caves)
@@ -152,22 +140,27 @@ namespace Core.Light
             _lightOverlayMaterial.SetTexture("_LightTex", _lightTexture);
         }
 
-        private bool IsOutOfBounds(Vector3Int pos)
-        {
-            return pos.x < 0 || pos.x >= _dimensions || pos.y < 0 || pos.y >= _dimensions;
-        }
-
-        private bool IsInBounds(Vector3Int pos)
-        {
-            return !IsOutOfBounds(pos);
-        }
-
-
-        private void InitializeQuad()
+        private void SetProportionalQuad()
         {
             float height = Camera.main.orthographicSize * 2;
             float width = height * Camera.main.aspect;
-            //_meshRenderer.transform.localScale = new Vector3(width, height, 1);
+            _meshRenderer.transform.localScale = new Vector3(width, height, 1);
         }
+
+        #region debug
+        public int x, y, intensity;
+        [Button]
+        public void AddLightAt()
+        {
+            AddLightSource(new Vector2Int(x, y), intensity);
+        }
+
+        #endregion
+    }
+
+    [DynamicService]
+    public interface ILightService : IService
+    {
+
     }
 }

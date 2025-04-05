@@ -1,0 +1,111 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6827201274670148773
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 252470727127239303}
+  - component: {fileID: 4663650280490330702}
+  m_Layer: 0
+  m_Name: Level Generator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &252470727127239303
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6827201274670148773}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4663650280490330702
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6827201274670148773}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc04c6be7207c6445af8ade02cb166be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _assertAwake: 0
+  _activateOnSpawn: 0
+  _deactivateOnDispose: 0
+  _basePass: {fileID: 11400000, guid: 4a9f6fc7f3c46b7428427e373467f987, type: 2}
+  _oreNoiseMap:
+    mode: 0
+    unityReference: {fileID: 11400000, guid: 72348286c15c43441a01515319a1c9fc, type: 2}
+    rawReference:
+      rid: -2
+  _biomeNoiseMap:
+    mode: 0
+    unityReference: {fileID: 11400000, guid: 67f7fa33ff3f0b1448f3ed295110cbba, type: 2}
+    rawReference:
+      rid: -2
+  _generateOres: 1
+  _generateBiomes: 1
+  _dimensions: 512
+  _meshRenderer: {fileID: 0}
+  _colorTile:
+  - <Tile>k__BackingField: 0
+    <Color>k__BackingField: {r: 0, g: 0, b: 0, a: 1}
+  - <Tile>k__BackingField: 1
+    <Color>k__BackingField: {r: 0.11120505, g: 0.29676485, b: 0.46226418, a: 1}
+  - <Tile>k__BackingField: 6
+    <Color>k__BackingField: {r: 0.42606238, g: 0.5660378, b: 0.41384837, a: 1}
+  - <Tile>k__BackingField: 5
+    <Color>k__BackingField: {r: 0.46431115, g: 0.6095557, b: 0.6981132, a: 1}
+  - <Tile>k__BackingField: 2
+    <Color>k__BackingField: {r: 0.8113208, g: 0.4206601, b: 0.06505875, a: 1}
+  - <Tile>k__BackingField: 3
+    <Color>k__BackingField: {r: 0.8018868, g: 0.7905393, b: 0.7905393, a: 1}
+  - <Tile>k__BackingField: 4
+    <Color>k__BackingField: {r: 0.5451228, g: 0.896073, b: 0.9245283, a: 1}
+  - <Tile>k__BackingField: 2001
+    <Color>k__BackingField: {r: 1, g: 0, b: 0.79518604, a: 1}
+  - <Tile>k__BackingField: 2002
+    <Color>k__BackingField: {r: 0.6226415, g: 0.27901387, b: 0.48468885, a: 1}
+  - <Tile>k__BackingField: 1001
+    <Color>k__BackingField: {r: 1, g: 0.6849057, b: 0.21226418, a: 1}
+  _stoneValueTiles:
+  - <Range>k__BackingField: {x: -0.55, y: 0.74}
+    <Tile>k__BackingField: 1
+  - <Range>k__BackingField: {x: 0.74, y: 1}
+    <Tile>k__BackingField: 5
+  - <Range>k__BackingField: {x: -1, y: -0.55}
+    <Tile>k__BackingField: 6
+  _oreValueTiles:
+  - <Range>k__BackingField: {x: -1, y: -0.98}
+    <Tile>k__BackingField: 2
+  - <Range>k__BackingField: {x: -0.29, y: -0.28}
+    <Tile>k__BackingField: 3
+  - <Range>k__BackingField: {x: 0.22, y: 0.225}
+    <Tile>k__BackingField: 4
+  _antQueenRoomSize: 25
+  _areaAroundQueenRoom: 1
+  _antQueenRoomDoorSize: 2
+  _roomChestChance: 1
+  _seed: 4
+  _debug: 0
+  _generateOnAwake: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }

@@ -224,7 +224,7 @@ namespace Core.Map
 
             for (int i = 0; i < rooms.Count; i++)
             {
-                if (ChanceUtil.EventSuccess(_roomChestChance, _rng))
+                if (Chance.EventSuccess(_roomChestChance, _rng))
                 {
                     Vector2Int pos = rooms[i];
 

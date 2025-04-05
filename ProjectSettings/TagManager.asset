@@ -41,6 +41,9 @@ TagManager:
   - name: Background
     uniqueID: 3990249425
     locked: 0
+  - name: Tilemap
+    uniqueID: 3664374509
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
@@ -52,6 +55,9 @@ TagManager:
     locked: 0
   - name: Top
     uniqueID: 2706677195
+    locked: 0
+  - name: Light Overlay
+    uniqueID: 2845765619
     locked: 0
   - name: UI
     uniqueID: 4178525561

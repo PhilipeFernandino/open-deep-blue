@@ -147,7 +147,7 @@ public class WormPass : PassDataBase, IMapCreator
             AddCaveDeadEnd(x, y);
 
             // Expand a room in the ending point
-            if (ChanceUtil.EventSuccess(0.5f, rng))
+            if (Chance.EventSuccess(0.5f, rng))
             {
                 int roomSize2 = (int)(_lairSizeBase * Range(rng, _lairSizeMinVariation, _lairSizeMaxVariation));
 
@@ -218,7 +218,7 @@ public class WormPass : PassDataBase, IMapCreator
             }
 
             // Trying to start childs
-            if (ChanceUtil.EventSuccess(1f * childs / iterations, rng) && remainingChilds > 0)
+            if (Chance.EventSuccess(1f * childs / iterations, rng) && remainingChilds > 0)
             {
                 Debug.Log($"Starting child at: {x}, {y}\n" +
                     $"Iterations: {(int)(_childIterationMultiplier * iterations)}\n" +
@@ -251,7 +251,7 @@ public class WormPass : PassDataBase, IMapCreator
                 AddCaveDeadEnd(endX, endY);
 
                 // Expand by making a room
-                if (ChanceUtil.EventSuccess(_roomOnChildChance, rng))
+                if (Chance.EventSuccess(_roomOnChildChance, rng))
                 {
                     Expand(map, x, y, roomSize, dimensions, _lairDistanceReachInfluence, _lairNoiseReachInfluence, _lairStep, lairNoise);
                     AddRoom(x, y);

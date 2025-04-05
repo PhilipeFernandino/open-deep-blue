@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using static Core.Util.Range;
 
 namespace Core.Level
 {
@@ -42,6 +43,8 @@ namespace Core.Level
             _tilemap = tilemap;
             _floorTilemap = floorTilemap;
             _emptyTiles = new TileBase[_chunkSize * _chunkSize];
+
+            PositionChanged_EventHandler(_positionEventBus.Position);
         }
 
         private void PositionChanged_EventHandler(Vector2 vector)
@@ -111,7 +114,7 @@ namespace Core.Level
             {
                 for (int h = chunkAnchor.x; h < chunkAnchor.x + _chunkSize; h++)
                 {
-                    if (IsWithinIndex(w, h, 0, 0, _mapMetadata.Dimensions, _mapMetadata.Dimensions))
+                    if (IsWithinBounds(w, h, 0, 0, _mapMetadata.Dimensions, _mapMetadata.Dimensions))
                     {
                         int ww = w - chunkAnchor.y;
                         int hh = h - chunkAnchor.x;
@@ -141,17 +144,6 @@ namespace Core.Level
 
             _tilemap.SetTilesBlock(area, _emptyTiles);
             _floorTilemap.SetTilesBlock(area, _emptyTiles);
-        }
-
-        private int ToClosestLowerMultiple(int value, int multiplier)
-        {
-            return value - value % multiplier;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsWithinIndex(float x, float y, float xMin, float yMin, float xMax, float yMax)
-        {
-            return x >= xMin && x < xMax && y >= yMin && y < yMax;
         }
     }
 }

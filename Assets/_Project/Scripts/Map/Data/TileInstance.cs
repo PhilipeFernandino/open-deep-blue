@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Linq;
 
 namespace Core.Map
 {
-    public struct TileInstance
+    public struct TileInstance : IEquatable<TileInstance>
     {
         public Tile TileType;
         public ushort CurrentHitPoints;
@@ -21,9 +20,26 @@ namespace Core.Map
             return new TileInstance(tile.TileType, tile.MaxHitPoints);
         }
 
+        public static bool operator ==(TileInstance a, TileInstance b)
+        {
+            return Equals(a, b);
+        }
+
+        public static bool operator !=(TileInstance a, TileInstance b)
+        {
+            return !Equals(a, b);
+        }
+
         public override string ToString()
         {
             return $"({nameof(TileType)} = {TileType}, {nameof(CurrentHitPoints)}: {CurrentHitPoints})";
+        }
+
+        public bool Equals(TileInstance other)
+        {
+            return GetType() == other.GetType()
+                && TileType == other.TileType
+                && CurrentHitPoints == other.CurrentHitPoints;
         }
     }
 }

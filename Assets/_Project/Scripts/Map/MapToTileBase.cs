@@ -8,7 +8,7 @@ using UnityEngine.Tilemaps;
 
 namespace Core.Map
 {
-    public class MapToTileBase : Actor, IMapToTibeBaleService
+    public class MapToTileBase : Actor, IMapToTileBaseService
     {
         private TilesSettings _tilesSettings; // get
 
@@ -16,7 +16,7 @@ namespace Core.Map
         {
             base.OnInitialize();
 
-            ServiceLocator.Set<IMapToTibeBaleService>(this);
+            ServiceLocator.Set<IMapToTileBaseService>(this);
         }
 
         protected override void OnSpawn()

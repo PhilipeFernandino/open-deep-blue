@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 75167420}
   - component: {fileID: 75167419}
   m_Layer: 0
-  m_Name: Tilemap
+  m_Name: Floor Tilemap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -176,7 +176,7 @@ TilemapRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 6103f0f42263e07418c0dff25286faca, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -28536,6 +28536,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 99420455}
+  - component: {fileID: 99420456}
   - component: {fileID: 99420454}
   m_Layer: 0
   m_Name: Grid
@@ -28573,6 +28574,22 @@ Transform:
   - {fileID: 1797682164}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &99420456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 99420453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb06bd9055f661840b8c0c5a5e2f5684, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _assertAwake: 0
+  _activateOnSpawn: 0
+  _deactivateOnDispose: 0
+  _tilemap: {fileID: 1797682166}
 --- !u!1 &129459692
 GameObject:
   m_ObjectHideFlags: 0
@@ -28822,12 +28839,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e73f14011114ff41a54868cdd7ddfc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _groundTilemap: {fileID: 75167420}
-  _wallTilemap: {fileID: 1797682166}
+  _assertAwake: 0
+  _activateOnSpawn: 0
+  _deactivateOnDispose: 0
   _lightOverlayMaterial: {fileID: 2100000, guid: 6ee6e46abff02d7438f9139b92918451, type: 2}
   _meshRenderer: {fileID: 129459693}
   _dimensions: 100
-  _filterMode: 1
+  _filterMode: 0
   x: 32
   y: 33
   intensity: 20
@@ -28858,7 +28876,7 @@ GameObject:
   - component: {fileID: 1797682166}
   - component: {fileID: 1797682165}
   m_Layer: 0
-  m_Name: Tilemap (1)
+  m_Name: Block Tilemap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

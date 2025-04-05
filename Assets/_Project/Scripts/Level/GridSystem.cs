@@ -9,6 +9,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
+using UnityEngine.WSA;
+using static Core.Util.Range;
 
 namespace Core.Level
 {
@@ -75,23 +77,14 @@ namespace Core.Level
 
         public bool TryGetTileAt(int x, int y, out TileInstance tile)
         {
-            int xGrid = x;
-            int yGrid = y;
-
-            if ((xGrid < 0 || xGrid >= _gridSize) || (yGrid < 0 || yGrid >= _gridSize))
+            if (!IsWithinBounds(x, y, 0, _mapMetadata.Dimensions))
             {
                 tile = TileInstance.None;
                 return false;
             }
 
-            tile = _grid[xGrid, yGrid];
+            tile = _grid[x, y];
             return true;
-        }
-
-        public bool TryGetTileAt(Vector2 v, out TileInstance tile)
-        {
-            var pos = ToGridPosition(v);
-            return TryGetTileAt(pos.x, pos.y, out tile);
         }
 
         public void DamageTileAt(int x, int y, ushort damage)
@@ -104,27 +97,19 @@ namespace Core.Level
             }
         }
 
-        public void DamageTileAt(Vector2 v, ushort damage)
+        public bool HasTileAt(int x, int y)
         {
-            var pos = ToGridPosition(v);
-            DamageTileAt(pos.x, pos.y, damage);
+            return IsWithinBounds(x, y, 0, _mapMetadata.Dimensions) && _grid[x, y] != TileInstance.None;
         }
 
-        private (int x, int y) ToGridPosition(Vector2 v)
+        public bool IsTileLoaded(int x, int y)
         {
-            Vector2Int v2 = new(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y));
-            return (v2.x, v2.y);
+            return IsWithinBounds(x, y, 0, _mapMetadata.Dimensions); // load from chunk
         }
 
         public void SetTileAt(int x, int y, TileBase tileBase)
         {
             _tilemap.SetTile(new Vector3Int(x, y, 0), tileBase);
-        }
-
-        public void SetTileAt(Vector2 v, TileBase tileBase)
-        {
-            var pos = ToGridPosition(v);
-            SetTileAt(pos.x, pos.y, tileBase);
         }
 
         protected override void OnInitialize()

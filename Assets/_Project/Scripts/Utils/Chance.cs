@@ -3,7 +3,7 @@
 namespace Core.Util
 {
     using static Random;
-    public static class ChanceUtil
+    public static class Chance
     {
         /// <summary>
         /// Returns a event considering one experiment with the passed <paramref name="chance"/>. 
