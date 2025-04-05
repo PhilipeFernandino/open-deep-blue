@@ -1,7 +1,6 @@
 ﻿using Coimbra;
 using Coimbra.Services;
 using Core.Map;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -10,6 +9,12 @@ namespace Core.Level
     public class PreloadedGrid : Actor, IGridService
     {
         [SerializeField] private Tilemap _tilemap;
+
+        public int ChunkSize => 100000;
+
+        public int LoadedDimensions => 100000;
+
+        public int MapDimensions => 100000;
 
         protected override void OnInitialize()
         {

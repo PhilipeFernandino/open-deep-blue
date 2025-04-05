@@ -763,7 +763,6 @@ GameObject:
   - component: {fileID: 497808805}
   - component: {fileID: 497808804}
   - component: {fileID: 497808808}
-  - component: {fileID: 497808809}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -819,25 +818,11 @@ MonoBehaviour:
   _tilemap: {fileID: 528902158}
   _floorTilemap: {fileID: 1417364280}
   _mapSystem: {fileID: 1605951600}
-  _chunkController: {fileID: 497808809}
   _gridSpriteRendererPrefab: {fileID: 8197624334944396840, guid: 23360a4f25f0114478edecb041aba077, type: 3}
-  _clearDimensions: 512
---- !u!114 &497808809
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 497808803}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b69c3cf5eef4308479958ffe0769c402, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _debugTileBase: {fileID: 11400000, guid: 42cae335e8043cc45a267828a2b87427, type: 2}
-  _positionEventBus: {fileID: 11400000, guid: c68c603d4a7cd8342a08d6678937d8f4, type: 2}
   _chunkSize: 32
   _loadNearChunks: 1
+  _positionEventBus: {fileID: 11400000, guid: c68c603d4a7cd8342a08d6678937d8f4, type: 2}
+  _clearDimensions: 512
 --- !u!4 &528902155
 Transform:
   m_ObjectHideFlags: 0
@@ -1801,7 +1786,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5100123393815294630, guid: 73e316bda44597049b0ee0682e75ca04, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 673089.06
+      value: 684359.06
       objectReference: {fileID: 0}
     - target: {fileID: 5166222320962546861, guid: 73e316bda44597049b0ee0682e75ca04, type: 3}
       propertyPath: m_AnchorMax.y
@@ -4838,8 +4823,8 @@ Transform:
   m_GameObject: {fileID: 1788661055}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 256, y: 256, z: 0}
-  m_LocalScale: {x: 512, y: 512, z: 1}
+  m_LocalPosition: {x: 432.9, y: 209.3, z: 0}
+  m_LocalScale: {x: 96, y: 96, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -5475,8 +5460,10 @@ MonoBehaviour:
   _deactivateOnDispose: 0
   _lightOverlayMaterial: {fileID: 2100000, guid: 6ee6e46abff02d7438f9139b92918451, type: 2}
   _meshRenderer: {fileID: 1788661056}
-  _dimensions: 512
+  _positionEventBus: {fileID: 11400000, guid: c68c603d4a7cd8342a08d6678937d8f4, type: 2}
   _filterMode: 1
+  _chunkSize: 32
+  _loadNearChunks: 1
   x: 432
   y: 210
   intensity: 25

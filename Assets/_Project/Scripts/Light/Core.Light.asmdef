@@ -9,7 +9,8 @@
         "NaughtyAttributes.Core",
         "NaughtyAttributes.Editor",
         "PrimeTween.Runtime",
-        "Core.Level"
+        "Core.Level",
+        "Core.EventBus"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

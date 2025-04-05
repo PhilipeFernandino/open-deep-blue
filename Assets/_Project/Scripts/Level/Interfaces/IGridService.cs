@@ -8,6 +8,10 @@ namespace Core.Level
     [DynamicService]
     public interface IGridService : IService
     {
+        public int ChunkSize { get; }
+        public int LoadedDimensions { get; }
+        public int MapDimensions { get; }
+
         public bool HasTileAt(int x, int y);
         public void SetTileAt(int x, int y, TileBase tileBase);
         public bool TryGetTileAt(int x, int y, out TileInstance tile);

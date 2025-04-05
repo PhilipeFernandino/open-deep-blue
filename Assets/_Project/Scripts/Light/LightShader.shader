@@ -6,6 +6,7 @@ Shader "Custom/LightOverlay" {
         _LightColor ("Light Color", Color) = (1, 0.8, 0.5, 1) 
         _LightIntensity ("Light Intensity", Float) = 1.0
         _FallofIntensity ("Fallof Intensity", Float) = 0.2
+        _Origin ("Origin", Vector) = (0, 0, 0, 0)
     }
 
     SubShader {
@@ -40,11 +41,12 @@ Shader "Custom/LightOverlay" {
             float4 _LightColor;
             float _LightIntensity;
             float _FallofIntensity;
+            float4 _Origin;
 
             v2f vert (appdata v) {
                 v2f o;
                 o.pos = UnityObjectToClipPos(v.vertex);
-                o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz; // World position
+                o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz - _Origin.xyz; // World position
                 return o;
             }
 

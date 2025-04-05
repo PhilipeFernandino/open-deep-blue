@@ -1,35 +1,42 @@
 ﻿using Coimbra;
 using Coimbra.Services;
+using Core.EventBus;
 using Core.Level;
 using Core.Util;
 using NaughtyAttributes;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Core.Light
 {
-    public class LightSystem : Actor, ILightService
+    public class LightSystem : Actor, ILightService, IChunkController
     {
         [SerializeField] private Material _lightOverlayMaterial;
         [SerializeField] private MeshRenderer _meshRenderer;
-        [SerializeField] private int _dimensions = 32;
-        [SerializeField] private FilterMode _filterMode;
+        [SerializeField] private PositionEventBus _positionEventBus;
 
-        public int[,] _lightMap;
+        [SerializeField] private FilterMode _filterMode;
+        [SerializeField] private int _chunkSize = 16;
+        [SerializeField] private int _loadNearChunks = 1;
+
+        private Vector2Int _origin;
+        private int _dimensions;
+
+        private int[,] _lightMap;
 
         private IGridService _gridService;
 
         private Material _lightMaterial;
         private Texture2D _lightTexture;
 
-        List<LightSource> _activeSources = new();
+        private ChunkController _chunkController;
+
+        private List<LightSource> _activeSources = new();
         private Queue<Vector2Int> _propagateLightQueue = new();
 
-        private Vector2Int[] _neighboors = {
-                Vector2Int.up, Vector2Int.down,
-                Vector2Int.left, Vector2Int.right
-            };
+        private Vector2Int[] _neighboors = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
 
         public void AddLightSource(Vector2Int position, int intensity)
         {
@@ -40,43 +47,41 @@ namespace Core.Light
 
         private void PropagateLight(Vector2Int sourcePos, int intensity)
         {
+            Vector2Int overlayNormPos = sourcePos - _origin;
+
             _propagateLightQueue.Clear();
 
-            //if (_gridService.IsTileLoaded(sourcePos))
-            //{
-
-            //}
-
-            _lightMap[sourcePos.x, sourcePos.y] = intensity;
-            _propagateLightQueue.Enqueue(sourcePos);
-
-
+            _lightMap[overlayNormPos.x, overlayNormPos.y] = intensity;
+            _propagateLightQueue.Enqueue(overlayNormPos);
 
             while (_propagateLightQueue.Count > 0)
             {
-                Vector2Int current = _propagateLightQueue.Dequeue();
-                int currentLevel = _lightMap[current.x, current.y];
+                Vector2Int overlayCurrentPos = _propagateLightQueue.Dequeue();
+
+                int currentLevel = _lightMap[overlayCurrentPos.x, overlayCurrentPos.y];
 
                 foreach (var dir in _neighboors)
                 {
-                    Vector2Int next = current + dir;
-                    if (Range.IsWithinBounds(next, Vector2Int.zero, new Vector2Int()))
-                        continue;
+                    Vector2Int nextWorldPos = overlayCurrentPos + _origin + dir;
+                    Vector2Int nextOverlayPos = overlayCurrentPos + dir;
+
+                    //if (Range.IsWithinBounds(nextWorldPos, Vector2Int.zero, ))
+                    //    continue;
 
                     int newLevel = currentLevel - 1;
-                    if (newLevel > _lightMap[next.x, next.y])
+                    if (newLevel > _lightMap[nextOverlayPos.x, nextOverlayPos.y])
                     {
-                        if (!_gridService.HasTileAt(current))
+                        if (!_gridService.HasTileAt(nextWorldPos))
                         {
-                            _lightMap[next.x, next.y] = newLevel;
+                            _lightMap[nextOverlayPos.x, nextOverlayPos.y] = newLevel;
                             if (newLevel > 1)
                             {
-                                _propagateLightQueue.Enqueue(next);
+                                _propagateLightQueue.Enqueue(nextOverlayPos);
                             }
                         }
                         else
                         {
-                            _lightMap[next.x, next.y] += newLevel / 2;
+                            _lightMap[nextOverlayPos.x, nextOverlayPos.y] += newLevel / 2;
                         }
                     }
                 }
@@ -100,21 +105,19 @@ namespace Core.Light
             _lightOverlayMaterial.SetTexture("_LightTex", _lightTexture);
         }
 
-        protected override void OnInitialize()
-        {
-            InitializeLightMap();
-            InitializeLightTexture();
-
-            _meshRenderer.sortingLayerName = "Light Overlay";
-
-            //InitializeQuad();
-        }
-
         protected override void OnSpawn()
         {
             _gridService = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
-        }
+            _dimensions = _gridService.LoadedDimensions;
 
+            _chunkController = new(_chunkSize, _loadNearChunks, this);
+
+            _positionEventBus.PositionChanged += _chunkController.UpdatePosition;
+
+            InitializeLightMap();
+            InitializeLightTexture();
+            InitializeMeshRenderer();
+        }
 
         private void InitializeLightMap()
         {
@@ -140,21 +143,38 @@ namespace Core.Light
             _lightOverlayMaterial.SetTexture("_LightTex", _lightTexture);
         }
 
-        private void SetProportionalQuad()
+        private void InitializeMeshRenderer()
         {
-            float height = Camera.main.orthographicSize * 2;
-            float width = height * Camera.main.aspect;
-            _meshRenderer.transform.localScale = new Vector3(width, height, 1);
+            _meshRenderer.sortingLayerName = "Light Overlay";
+            _meshRenderer.transform.localScale = new Vector3Int(_chunkController.LoadedDimensions, _chunkController.LoadedDimensions, 1);
+        }
+
+        public void SetOrigin(Vector2Int origin)
+        {
+            _meshRenderer.transform.position = new Vector3Int(origin.x + _chunkController.LoadedDimensions / 2, origin.y + _chunkController.LoadedDimensions / 2, 0);
+            _lightOverlayMaterial.SetVector("_Origin", new Vector4(origin.x, y: origin.y, 0, 0));
+            _origin = origin;
+        }
+
+        public void SetTileChunk(BoundsInt area, Vector2Int anchor)
+        {
+            Debug.Log(anchor);
+        }
+
+        public void UnsetTileChunk(BoundsInt area, Vector2Int anchor)
+        {
+
         }
 
         #region debug
-        public int x, y, intensity;
+        [Header("Debug")]
+        [SerializeField] private int x;
+        [SerializeField] private int y, intensity;
         [Button]
         public void AddLightAt()
         {
             AddLightSource(new Vector2Int(x, y), intensity);
         }
-
         #endregion
     }
 

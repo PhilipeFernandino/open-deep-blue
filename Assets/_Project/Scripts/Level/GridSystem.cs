@@ -1,15 +1,13 @@
 ﻿using Coimbra;
 using Coimbra.Services;
 using Coimbra.Services.Events;
+using Core.EventBus;
 using Core.Map;
 using NaughtyAttributes;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
-using UnityEngine.WSA;
 using static Core.Util.Range;
 
 namespace Core.Level
@@ -20,15 +18,18 @@ namespace Core.Level
         [SerializeField] private int _spritesPoolSize;
         [SerializeField] private Tilemap _tilemap;
         [SerializeField] private Tilemap _floorTilemap;
-
         [SerializeField] private MapSystem _mapSystem;
-        [SerializeField] private ChunkController _chunkController;
-
         [SerializeField] private SpriteRenderer _gridSpriteRendererPrefab;
+
+        [Header("Chunk Control")]
+        [SerializeField] private int _chunkSize;
+        [SerializeField] private int _loadNearChunks;
+        [SerializeField] private PositionEventBus _positionEventBus;
 
         private List<SpriteRenderer> _gridSprites;
 
         private TileInstance[,] _grid;
+        private TileChunkController _chunkController;
         private TilesSettings _tilesSettings;
 
         private int _gridSize;
@@ -36,6 +37,10 @@ namespace Core.Level
         private bool _isInitialized = false;
 
         private MapMetadata _mapMetadata;
+
+        public int ChunkSize => _chunkSize;
+        public int LoadedDimensions => _chunkSize * (_loadNearChunks * 2 + 1);
+        public int MapDimensions => _mapMetadata.Dimensions;
 
         public void DrawInGrid(Vector2 position, in Vector2Int size)
         {
@@ -120,16 +125,17 @@ namespace Core.Level
         protected override void OnSpawn()
         {
             _tilesSettings = ScriptableSettings.GetOrFind<TilesSettings>();
-            MapMetadataGeneratedEvent.AddListener(MapLoadedEventHandler);
+            MapMetadataGeneratedEvent.AddListener(MapLoaded_EventHandler);
         }
 
-        private void MapLoadedEventHandler(ref EventContext context, in MapMetadataGeneratedEvent e)
+        private void MapLoaded_EventHandler(ref EventContext context, in MapMetadataGeneratedEvent e)
         {
             InitializeGrid(e.MapMetadata);
             InitializeDrawGridSprites();
             _isInitialized = true;
             _mapMetadata = e.MapMetadata;
-            _chunkController.Setup(_mapMetadata, _tilemap, _floorTilemap);
+            _chunkController = new(_mapMetadata, _tilemap, _floorTilemap,
+                _chunkSize, _loadNearChunks, _positionEventBus, _tilesSettings);
         }
 
         private void InitializeGrid(MapMetadata mapMetadata)
