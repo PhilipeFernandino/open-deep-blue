@@ -3,6 +3,7 @@ using Core.EventBus;
 using Core.Map;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -109,13 +110,16 @@ namespace Core.Level
             {
                 for (int h = chunkAnchor.x; h < chunkAnchor.x + _chunkSize; h++)
                 {
-                    int ww = w - chunkAnchor.y;
-                    int hh = h - chunkAnchor.x;
+                    if (IsWithinIndex(w, h, 0, 0, _mapMetadata.Dimensions, _mapMetadata.Dimensions))
+                    {
+                        int ww = w - chunkAnchor.y;
+                        int hh = h - chunkAnchor.x;
 
-                    int index = ww * _chunkSize + hh;
-                    Debug.Log(index);
-                    tiles[index] = _tilesSettings.GetTileBase(_mapMetadata.Tiles[h, w]);
-                    floorTiles[index] = _tilesSettings.GetFloorTileBase(_mapMetadata.BiomeTiles[h, w]);
+                        int index = ww * _chunkSize + hh;
+
+                        tiles[index] = _tilesSettings.GetTileBase(_mapMetadata.Tiles[h, w]);
+                        floorTiles[index] = _tilesSettings.GetFloorTileBase(_mapMetadata.BiomeTiles[h, w]);
+                    }
                 }
             }
 
@@ -141,6 +145,12 @@ namespace Core.Level
         private int ToClosestLowerMultiple(int value, int multiplier)
         {
             return value - value % multiplier;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsWithinIndex(float x, float y, float xMin, float yMin, float xMax, float yMax)
+        {
+            return x >= xMin && x < xMax && y >= yMin && y < yMax;
         }
     }
 }

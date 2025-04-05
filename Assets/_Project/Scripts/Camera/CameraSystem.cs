@@ -1,17 +1,17 @@
-﻿using Cinemachine;
-using Coimbra;
+﻿using Coimbra;
 using Coimbra.Services;
 using Coimbra.Services.Events;
 using PrimeTween;
 using System;
+using Unity.Cinemachine;
 using UnityEngine;
 
 namespace Core.CameraSystem
 {
     public class CameraSystem : Actor, ICameraService
     {
-        private CinemachineVirtualCamera _cv;
-        private CinemachineFramingTransposer _framingTransposer;
+        private CinemachineVirtualCameraBase _cv;
+        private CinemachinePositionComposer _positionComposer;
 
         protected override void OnInitialize()
         {
@@ -19,8 +19,8 @@ namespace Core.CameraSystem
 
             ServiceLocator.Set<ICameraService>(this);
 
-            _cv = FindObjectOfType<CinemachineVirtualCamera>();
-            _framingTransposer = _cv.GetCinemachineComponent<CinemachineFramingTransposer>();
+            _cv = _cv.GetComponent<CinemachineVirtualCameraBase>();
+            //_positionComposer = _cv.GetCinemachineComponent<CinemachinePositionComposer>();
 
             CameraShakedEvent.AddListener(CameraShakedEventHandler);
         }
@@ -32,11 +32,11 @@ namespace Core.CameraSystem
 
         public void ShakeCamera(ShakeSettings shakeSettings)
         {
-            _ = Tween.ShakeCustom(
-                _framingTransposer,
-                Vector3.zero,
-                shakeSettings, (target, val) => target.m_TrackedObjectOffset = val)
-                .OnComplete(() => _framingTransposer.m_TrackedObjectOffset = Vector3.zero);
+            //_ = Tween.ShakeCustom(
+            //    _framingTransposer,
+            //    Vector3.zero,
+            //    shakeSettings, (target, val) => target.m_TrackedObjectOffset = val)
+            //    .OnComplete(() => _framingTransposer.m_TrackedObjectOffset = Vector3.zero);
         }
     }
 

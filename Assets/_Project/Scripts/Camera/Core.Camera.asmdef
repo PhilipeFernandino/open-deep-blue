@@ -2,12 +2,12 @@
     "name": "Core.Camera",
     "rootNamespace": "Core.Camera",
     "references": [
-        "Cinemachine",
         "Coimbra",
         "Coimbra.Services",
         "Coimbra.Services.Events",
         "PrimeTween.Runtime",
-        "Unity.InputSystem"
+        "Unity.InputSystem",
+        "Unity.Cinemachine"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

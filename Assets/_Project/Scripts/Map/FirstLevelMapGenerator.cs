@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using TNRD;
@@ -178,6 +179,7 @@ namespace Core.Map
 
             MakeQueenLair(tiles);
             SpawnChests(tiles, _basePass);
+            MakeMapLimits(tiles);
 
             if (_debug)
             {
@@ -247,65 +249,73 @@ namespace Core.Map
             int halfRoom = _antQueenRoomSize / 2;
 
             // Clean the area
-            MakeRectangle(
+            FillRectangle(
                 map,
                 antQueenRoomPosition,
                 Tile.None,
-                new(-halfRoom - _areaAroundQueenRoom, halfRoom + _areaAroundQueenRoom),
-                new(-halfRoom - _areaAroundQueenRoom, halfRoom + _areaAroundQueenRoom));
+                new(-halfRoom - _areaAroundQueenRoom, halfRoom + _areaAroundQueenRoom + 1),
+                new(-halfRoom - _areaAroundQueenRoom, halfRoom + _areaAroundQueenRoom + 1));
 
             // Mark the center as the ant queen spawner
             map[antQueenRoomPosition.x, antQueenRoomPosition.y] = Tile.AntQueenSpawn;
 
-            // Make walls by using the rectangle fn
-            MakeRectangle(
-                map,
-                antQueenRoomPosition,
-                Tile.AntQueenRoomTile,
-                new(-halfRoom, halfRoom),
-                new(-halfRoom, -halfRoom));
+            MakeRectangle(map, new Vector2Int(antQueenRoomPosition.x - halfRoom, antQueenRoomPosition.y - halfRoom), _antQueenRoomSize, Tile.AntQueenRoomTile);
 
-            MakeRectangle(
-                map,
-                antQueenRoomPosition,
-                Tile.AntQueenRoomTile,
-                new(-halfRoom, halfRoom),
-                new(halfRoom, halfRoom));
-
-            MakeRectangle(
-                map,
-                antQueenRoomPosition,
-                Tile.AntQueenRoomTile,
-                new(halfRoom, halfRoom),
-                new(-halfRoom, halfRoom));
-
-            MakeRectangle(
-                map,
-                antQueenRoomPosition,
-                Tile.AntQueenRoomTile,
-                new(-halfRoom, -halfRoom),
-                new(-halfRoom, halfRoom));
-
-            // Make doors
-
-            MakeRectangle(
+            FillRectangle(
                 map,
                 antQueenRoomPosition,
                 Tile.None,
-                new(-_antQueenRoomDoorSize / 2, _antQueenRoomDoorSize / 2),
-                new(-halfRoom, -halfRoom));
+                new(-_antQueenRoomDoorSize / 2, _antQueenRoomDoorSize / 2 + 1),
+                new(-halfRoom, -halfRoom + 1));
         }
 
-        private void MakeRectangle(Tile[,] map, Vector2Int startingPosition, Tile tile, Vector2Int xBounds, Vector2Int yBounds)
+        private void MakeMapLimits(Tile[,] map)
         {
-            for (int i = xBounds.x; i <= xBounds.y; i++)
+            Tile mapLimitTile = Tile.AntQueenRoomTile;
+            MakeRectangle(map, Vector2Int.zero, _dimensions, mapLimitTile);
+        }
+
+        private void MakeRectangle(Tile[,] map, Vector2Int startingPosition, int size, Tile tile)
+        {
+            FillRectangle(
+                map,
+                startingPosition,
+                tile,
+                new(0, size),
+                new(0, 1));
+
+            FillRectangle(
+                map,
+                startingPosition,
+                tile,
+                new(0, 1),
+                new(0, size));
+
+            FillRectangle(
+                map,
+                new(startingPosition.x, startingPosition.y + size - 1),
+                tile,
+                new(0, size),
+                new(0, 1));
+
+            FillRectangle(
+                map,
+                new(startingPosition.x + size - 1, startingPosition.y),
+                tile,
+                new(0, 1),
+                new(0, size));
+        }
+
+        private void FillRectangle(Tile[,] map, Vector2Int startingPosition, Tile tile, Vector2Int xBounds, Vector2Int yBounds)
+        {
+            for (int i = xBounds.x; i < xBounds.y; i++)
             {
-                for (int j = yBounds.x; j <= yBounds.y; j++)
+                for (int j = yBounds.x; j < yBounds.y; j++)
                 {
                     int x = i + startingPosition.x;
                     int y = j + startingPosition.y;
 
-                    if (IsWithinMapCoordinates(x, y))
+                    if (IsWithinIndex(x, y, 0, 0, _dimensions, _dimensions))
                     {
                         map[x, y] = tile;
                     }
@@ -356,6 +366,13 @@ namespace Core.Map
         private bool IsWithinMapCoordinates(int x, int y)
         {
             return IsWithinCoordinates(x, y, 0, 0, _dimensions - 1, _dimensions - 1);
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsWithinIndex(float x, float y, float xMin, float yMin, float xMax, float yMax)
+        {
+            return x >= xMin && x < xMax && y >= yMin && y < yMax;
         }
     }
 }
