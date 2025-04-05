@@ -19,7 +19,7 @@ namespace Core.CameraSystem
 
             ServiceLocator.Set<ICameraService>(this);
 
-            _cv = _cv.GetComponent<CinemachineVirtualCameraBase>();
+            _cv = GetComponentInChildren<CinemachineVirtualCameraBase>();
             //_positionComposer = _cv.GetCinemachineComponent<CinemachinePositionComposer>();
 
             CameraShakedEvent.AddListener(CameraShakedEventHandler);

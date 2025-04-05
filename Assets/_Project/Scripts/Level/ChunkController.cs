@@ -14,7 +14,6 @@ namespace Core.Level
         [SerializeField] private TileBase _debugTileBase;
 
         [SerializeField] private PositionEventBus _positionEventBus;
-        [SerializeField] private Tilemap _tilemapPrefab;
         [SerializeField] private int _chunkSize = 16;
         [SerializeField] private int _loadNearChunks = 1;
 
@@ -47,14 +46,16 @@ namespace Core.Level
 
         private void PositionChanged_EventHandler(Vector2 vector)
         {
+            Vector2Int pos = Vector2Int.RoundToInt(vector);
+
             if (_mapMetadata == null)
             {
                 return;
             }
 
             Vector2Int currChunk = new(
-                ToClosestLowerMultiple((int)vector.x, _chunkSize),
-                ToClosestLowerMultiple((int)vector.y, _chunkSize));
+                ToClosestLowerMultiple(pos.x, _chunkSize),
+                ToClosestLowerMultiple(pos.y, _chunkSize));
 
             Debug.Log($"{GetType()} - (Pos = {vector}, PosChunk = {currChunk})");
 
@@ -79,19 +80,19 @@ namespace Core.Level
 
             _chunksToRemove.Clear();
 
-            foreach (var pos in _tilemapOn)
+            foreach (var tilemapOn in _tilemapOn)
             {
-                if (!_chunkAnchors.Contains(pos))
+                if (!_chunkAnchors.Contains(tilemapOn))
                 {
-                    _chunksToRemove.Add(pos);
+                    _chunksToRemove.Add(tilemapOn);
                 }
             }
 
             // Unload and remove old chunks
-            foreach (var pos in _chunksToRemove)
+            foreach (var toRm in _chunksToRemove)
             {
-                UnsetTileChunk(pos);
-                _tilemapOn.Remove(pos);
+                UnsetTileChunk(toRm);
+                _tilemapOn.Remove(toRm);
             }
         }
 
