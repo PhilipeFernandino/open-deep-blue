@@ -28,12 +28,13 @@ namespace Core.Light
         [SerializeField] private Tilemap _wallTilemap;
         [SerializeField] private Material _lightOverlayMaterial;
         [SerializeField] private MeshRenderer _meshRenderer;
+        [SerializeField] private int _dimensions = 32;
+        [SerializeField] private FilterMode _filterMode;
 
         public int[,] _lightMap;
 
         private Material _lightMaterial;
         private Texture2D _lightTexture;
-        private int _dimensions = 32;
 
         List<LightSource> _activeSources = new List<LightSource>();
 
@@ -42,7 +43,7 @@ namespace Core.Light
         [Button]
         public void AddLightAt()
         {
-            AddLightSource(new Vector3Int(x, y), intensity);
+            AddLightSource(new Vector3Int(x, y, 0), intensity);
         }
 
         #endregion
@@ -78,15 +79,23 @@ namespace Core.Light
                 foreach (Vector3Int dir in directions)
                 { // Up, down, left, right
                     Vector3Int next = current + dir;
-                    if (IsOutOfBounds(next) || IsTileSolid(next))
+                    if (IsOutOfBounds(next))
                         continue;
 
                     int newLevel = currentLevel - 1;
                     if (newLevel > _lightMap[next.x, next.y])
                     {
-                        _lightMap[next.x, next.y] = newLevel;
-                        if (newLevel > 1)
-                            queue.Enqueue(next);
+                        if (!IsTileSolid(current))
+                        {
+
+                            _lightMap[next.x, next.y] = newLevel;
+                            if (newLevel > 1)
+                                queue.Enqueue(next);
+                        }
+                        else
+                        {
+                            _lightMap[next.x, next.y] += newLevel / 2;
+                        }
                     }
                 }
             }
@@ -138,7 +147,7 @@ namespace Core.Light
             _lightTexture = new Texture2D(_dimensions, _dimensions, TextureFormat.R8, false)
             {
                 wrapMode = TextureWrapMode.Clamp,
-                filterMode = FilterMode.Point
+                filterMode = _filterMode
             };
             _lightOverlayMaterial.SetTexture("_LightTex", _lightTexture);
         }
@@ -158,7 +167,7 @@ namespace Core.Light
         {
             float height = Camera.main.orthographicSize * 2;
             float width = height * Camera.main.aspect;
-            _meshRenderer.transform.localScale = new Vector3(width, height, 1);
+            //_meshRenderer.transform.localScale = new Vector3(width, height, 1);
         }
     }
 }
