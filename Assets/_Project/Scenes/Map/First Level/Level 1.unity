@@ -1786,7 +1786,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5100123393815294630, guid: 73e316bda44597049b0ee0682e75ca04, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 683176.56
+      value: 685607.56
       objectReference: {fileID: 0}
     - target: {fileID: 5166222320962546861, guid: 73e316bda44597049b0ee0682e75ca04, type: 3}
       propertyPath: m_AnchorMax.y
@@ -5372,21 +5372,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e73f14011114ff41a54868cdd7ddfc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _assertAwake: 0
-  _activateOnSpawn: 0
-  _deactivateOnDispose: 0
   _lightOverlayMaterial: {fileID: 2100000, guid: 6ee6e46abff02d7438f9139b92918451, type: 2}
   _positionEventBus: {fileID: 11400000, guid: c68c603d4a7cd8342a08d6678937d8f4, type: 2}
   _meshRendererPrefab: {fileID: 9051212038642682217, guid: c8170018d1e854b4aa86451396b5aae5, type: 3}
   _filterMode: 1
   _chunkSize: 32
   _loadNearChunks: 1
-  _baseIntensity: 2
-  _lightFallof: 0.2
+  _baseIntensity: 1.5
+  _lightFallof: 0.8
+  _tileOnLight: 0.2
   _offset: {x: -0.5, y: -0.5}
   x: 432
   y: 210
-  intensity: 25
+  intensity: 15
 --- !u!4 &2096296145
 Transform:
   m_ObjectHideFlags: 0

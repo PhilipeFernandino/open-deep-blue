@@ -11,7 +11,9 @@ using UnityEngine.UIElements;
 
 namespace Core.Light
 {
-    public class LightSystem : Actor, ILightService
+#pragma warning disable COIMBRA0106 // Concrete IService should not be a Component unless it inherit from Actor.
+    public class LightSystem : MonoBehaviour, ILightService
+#pragma warning restore COIMBRA0106 // Concrete IService should not be a Component unless it inherit from Actor.
     {
         [SerializeField] private Material _lightOverlayMaterial;
         [SerializeField] private PositionEventBus _positionEventBus;
@@ -20,14 +22,16 @@ namespace Core.Light
         [SerializeField] private FilterMode _filterMode;
         [SerializeField] private int _chunkSize = 16;
         [SerializeField] private int _loadNearChunks = 1;
-        [SerializeField] private int _baseIntensity;
+
+        [SerializeField] private float _baseIntensity;
         [SerializeField] private float _lightFallof;
+        [SerializeField] private float _tileOnLight;
         [SerializeField] private Vector2 _offset;
 
         private Vector2Int _origin;
-        private int _dimensions;
+        private int _lightMapDimensions;
 
-        private int[,] _lightMap;
+        private float[,] _lightMap;
 
         private IGridService _gridService;
 
@@ -77,19 +81,19 @@ namespace Core.Light
             {
                 Vector2Int overlayCurrentPos = _propagateLightQueue.Dequeue();
 
-                int currentLevel = _lightMap[overlayCurrentPos.x, overlayCurrentPos.y];
+                float currentLevel = _lightMap[overlayCurrentPos.x, overlayCurrentPos.y];
 
                 foreach (var dir in _neighboors)
                 {
                     Vector2Int nextWorldPos = overlayCurrentPos + _origin + dir;
                     Vector2Int nextOverlayPos = overlayCurrentPos + dir;
 
-                    if (!Util.Range.IsWithinBounds(nextOverlayPos, 0, _dimensions))
+                    if (!Util.Range.IsWithinBounds(nextOverlayPos, 0, _lightMapDimensions))
                     {
                         continue;
                     }
 
-                    int newLevel = currentLevel - 1;
+                    float newLevel = currentLevel - _lightFallof;
                     if (newLevel > _lightMap[nextOverlayPos.x, nextOverlayPos.y])
                     {
                         if (!_gridService.HasTileAt(nextWorldPos))
@@ -102,7 +106,7 @@ namespace Core.Light
                         }
                         else
                         {
-                            _lightMap[nextOverlayPos.x, nextOverlayPos.y] += (int)(newLevel * _lightFallof);
+                            _lightMap[nextOverlayPos.x, nextOverlayPos.y] += newLevel * _tileOnLight;
                         }
                     }
                 }
@@ -123,13 +127,13 @@ namespace Core.Light
             }
 
             // Remake texture
-            Color[] pixels = new Color[_dimensions * _dimensions];
-            for (int x = 0; x < _dimensions; x++)
+            Color[] pixels = new Color[_lightMapDimensions * _lightMapDimensions];
+            for (int x = 0; x < _lightMapDimensions; x++)
             {
-                for (int y = 0; y < _dimensions; y++)
+                for (int y = 0; y < _lightMapDimensions; y++)
                 {
                     float brightness = _lightMap[x, y] / 15f; // Normalize to 0-1
-                    pixels[y * _dimensions + x] = new Color(brightness, brightness, brightness, 1);
+                    pixels[y * _lightMapDimensions + x] = new Color(brightness, brightness, brightness, 1);
                 }
             }
 
@@ -138,26 +142,31 @@ namespace Core.Light
             _lightOverlayMaterial.SetTexture("_LightTex", _lightTexture);
         }
 
-        protected override void OnSpawn()
+        private void Awake()
+        {
+
+        }
+
+        private void Start()
         {
             Debug.Log($"Spawned");
 
             _gridService = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
-            _dimensions = _gridService.LoadedDimensions;
+            _lightMapDimensions = _gridService.LoadedDimensions;
 
             _chunkController = new(_chunkSize, _loadNearChunks);
 
-            _chunkController.TileChunkSetted += TileChunkSetted_EventHandler;
-            _chunkController.TileChunkUnsetted += TileChunkUnsetted_EventHandler;
-            _chunkController.TileChunksUpdated += TileChunksUpdated_EventHandler;
-
-            _chunkController.OriginSetted += OriginSetted_EventHandler;
-
-            _positionEventBus.PositionChanged += _chunkController.UpdatePosition;
 
             InitializeLightMap();
             InitializeLightTexture();
             InitializeMeshRenderer();
+
+            _chunkController.TileChunkSetted += TileChunkSetted_EventHandler;
+            _chunkController.TileChunkUnsetted += TileChunkUnsetted_EventHandler;
+            _chunkController.TileChunksUpdated += TileChunksUpdated_EventHandler;
+            _chunkController.OriginSetted += OriginSetted_EventHandler;
+
+            _positionEventBus.PositionChanged += _chunkController.UpdatePosition;
         }
 
         private void TileChunksUpdated_EventHandler(HashSet<Vector2Int> activeChunks)
@@ -168,15 +177,15 @@ namespace Core.Light
 
         private void InitializeLightMap()
         {
-            _lightMap = new int[_dimensions, _dimensions];
+            _lightMap = new float[_lightMapDimensions, _lightMapDimensions];
             SetLightmapGlobal(0);
         }
 
         private void SetLightmapGlobal(int value)
         {
-            for (int x = 0; x < _dimensions; x++)
+            for (int x = 0; x < _lightMapDimensions; x++)
             {
-                for (int y = 0; y < _dimensions; y++)
+                for (int y = 0; y < _lightMapDimensions; y++)
                 {
                     _lightMap[x, y] = _baseIntensity;
                 }
@@ -185,7 +194,7 @@ namespace Core.Light
 
         private void InitializeLightTexture()
         {
-            _lightTexture = new Texture2D(_dimensions, _dimensions, TextureFormat.R8, false)
+            _lightTexture = new Texture2D(_lightMapDimensions, _lightMapDimensions, TextureFormat.R8, false)
             {
                 wrapMode = TextureWrapMode.Clamp,
                 filterMode = _filterMode
@@ -239,6 +248,11 @@ namespace Core.Light
         {
             _positionEventBus.Position = new Vector2Int(x, y);
             _positionEventBus.Trigger();
+        }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
         }
         #endregion
     }
