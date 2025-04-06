@@ -21,6 +21,11 @@ namespace Core.EventBus
         }
 
         public Action<Vector2> PositionChanged;
+
+        public void Trigger()
+        {
+            PositionChanged?.Invoke(_position);
+        }
     }
 
 }

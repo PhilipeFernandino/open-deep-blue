@@ -1,4 +1,5 @@
-﻿using Core.EventBus;
+﻿using Coimbra;
+using Core.EventBus;
 using Core.Map;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -7,7 +8,7 @@ using static Core.Util.Range;
 namespace Core.Level
 {
     [System.Serializable]
-    public class TileChunkController : IChunkController
+    public class TileChunkController
     {
         private PositionEventBus _positionEventBus;
 
@@ -27,7 +28,10 @@ namespace Core.Level
         public TileChunkController(MapMetadata mapMetadata, Tilemap tilemap, Tilemap floorTilemap, int chunkSize, int loadNearChunks,
             PositionEventBus positionEventBus, TilesSettings tilesSettings)
         {
-            _chunkController = new(chunkSize, loadNearChunks, this);
+            _chunkController = new(chunkSize, loadNearChunks);
+
+            _chunkController.TileChunkSetted += SetTileChunk;
+            _chunkController.TileChunkUnsetted += UnsetTileChunk;
 
             _mapMetadata = mapMetadata;
             _tilemap = tilemap;
@@ -50,8 +54,11 @@ namespace Core.Level
             _chunkController.UpdatePosition(vector);
         }
 
-        public void SetTileChunk(BoundsInt area, Vector2Int anchor)
+        public void SetTileChunk((BoundsInt area, Vector2Int anchor) e)
         {
+            BoundsInt area = e.area;
+            Vector2Int anchor = e.anchor;
+
             TileBase[] tiles = new TileBase[ChunkSize * ChunkSize];
             TileBase[] floorTiles = new TileBase[ChunkSize * ChunkSize];
             Debug.Log($"{GetType()} - {area}");
@@ -79,14 +86,10 @@ namespace Core.Level
             Debug.Log($"{GetType()} - Tilemap added for: {anchor}");
         }
 
-        public void UnsetTileChunk(BoundsInt area, Vector2Int anchor)
+        public void UnsetTileChunk((BoundsInt area, Vector2Int anchor) e)
         {
-            _tilemap.SetTilesBlock(area, _emptyTiles);
-            _floorTilemap.SetTilesBlock(area, _emptyTiles);
-        }
-
-        public void SetOrigin(Vector2Int origin)
-        {
+            _tilemap.SetTilesBlock(e.area, _emptyTiles);
+            _floorTilemap.SetTilesBlock(e.area, _emptyTiles);
         }
     }
 }

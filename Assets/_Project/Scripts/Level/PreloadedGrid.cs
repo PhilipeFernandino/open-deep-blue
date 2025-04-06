@@ -9,17 +9,23 @@ namespace Core.Level
     public class PreloadedGrid : Actor, IGridService
     {
         [SerializeField] private Tilemap _tilemap;
+        [SerializeField] private Vector2Int _startAt;
 
-        public int ChunkSize => 100000;
+        public int ChunkSize => 100;
 
-        public int LoadedDimensions => 100000;
+        public int LoadedDimensions => 100;
 
-        public int MapDimensions => 100000;
+        public int MapDimensions => 100;
 
         protected override void OnInitialize()
         {
             base.OnInitialize();
             ServiceLocator.Set<IGridService>(this);
+        }
+
+        protected override void OnSpawn()
+        {
+
         }
 
         public bool HasTileAt(int x, int y)

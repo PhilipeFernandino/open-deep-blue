@@ -7,6 +7,6 @@ namespace Core.Level
     {
         public void SetTileChunk(BoundsInt area, Vector2Int anchor);
         public void UnsetTileChunk(BoundsInt area, Vector2Int anchor);
-        public void SetOrigin(Vector2Int origin);
+        public void OriginSetted_EventHandler(Vector2Int origin);
     }
 }

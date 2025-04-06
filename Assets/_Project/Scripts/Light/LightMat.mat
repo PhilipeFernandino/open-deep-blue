@@ -46,7 +46,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _EnableExternalAlpha: 0
-    - _FallofIntensity: 0.1
+    - _FallofIntensity: 0.2
     - _LightIntensity: 1
     - _Opacity: 0.915
     m_Colors:
@@ -56,6 +56,6 @@ Material:
     - _LightColor: {r: 1, g: 1, b: 1, a: 1}
     - _MapOffset: {r: 0, g: 0, b: 0, a: 0}
     - _MapSize: {r: 96, g: 96, b: 0, a: 0}
-    - _Origin: {r: 352, g: 128, b: 0, a: 0}
+    - _Origin: {r: 384, g: 160, b: 0, a: 0}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

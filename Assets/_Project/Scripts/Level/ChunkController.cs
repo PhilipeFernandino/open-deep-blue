@@ -1,4 +1,5 @@
 ﻿using Core.Util;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,11 +11,10 @@ namespace Core.Level
         public int ChunkSize => _chunkSize;
         public int LoadNearChunks => _loadNearChunks;
         public int LoadedDimensions => _chunkSize * (_loadNearChunks * 2 + 1);
+        public HashSet<Vector2Int> ActiveChunks => _loadedChunkAnchors;
 
         private int _chunkSize;
         private int _loadNearChunks;
-
-        private IChunkController _chunkController;
 
         private HashSet<Vector2Int> _loadedChunkAnchors = new();
 
@@ -22,11 +22,23 @@ namespace Core.Level
         private List<Vector2Int> _chunkAnchorsToRemove = new();
         private List<Vector2Int> _chunkAnchorsToAdd = new();
 
-        public ChunkController(int chunkSize, int loadNearChunks, IChunkController chunkController)
+        public event Action<Vector2Int> OriginSetted;
+        public event Action<(BoundsInt area, Vector2Int anchor)> TileChunkSetted;
+        public event Action<(BoundsInt area, Vector2Int anchor)> TileChunkUnsetted;
+        public event Action<HashSet<Vector2Int>> TileChunksUpdated;
+
+        public ChunkController(int chunkSize, int loadNearChunks)
         {
             _chunkSize = chunkSize;
             _loadNearChunks = loadNearChunks;
-            _chunkController = chunkController;
+        }
+
+
+        public Vector2Int ToChunk(Vector2Int pos)
+        {
+            return new(
+                Util.Range.ToClosestLowerMultiple(pos.x, ChunkSize),
+                Util.Range.ToClosestLowerMultiple(pos.y, ChunkSize));
         }
 
         public void UpdatePosition(Vector2 vector)
@@ -37,9 +49,7 @@ namespace Core.Level
 
             Vector2Int pos = Vector2Int.RoundToInt(vector);
 
-            Vector2Int currChunk = new(
-                Range.ToClosestLowerMultiple(pos.x, ChunkSize),
-                Range.ToClosestLowerMultiple(pos.y, ChunkSize));
+            Vector2Int currChunk = ToChunk(pos);
 
             for (int i = -_loadNearChunks; i <= _loadNearChunks; i++)
             {
@@ -50,7 +60,7 @@ namespace Core.Level
                 }
             }
 
-            _chunkController.SetOrigin(currChunk + new Vector2Int(-_loadNearChunks, -_loadNearChunks) * _chunkSize);
+            OriginSetted?.Invoke(currChunk + new Vector2Int(-_loadNearChunks, -_loadNearChunks) * _chunkSize);
 
             // Prepare to add and to remove lists
             foreach (var chunkAnchor in _updatedChunkAnchors)
@@ -77,7 +87,7 @@ namespace Core.Level
                     new(anchorTorRemove.x, anchorTorRemove.y, 0),
                     new(anchorTorRemove.x + ChunkSize, anchorTorRemove.y + ChunkSize, 1));
 
-                _chunkController.UnsetTileChunk(area, anchorTorRemove);
+                TileChunkUnsetted?.Invoke((area, anchorTorRemove));
                 _loadedChunkAnchors.Remove(anchorTorRemove);
             }
 
@@ -88,9 +98,11 @@ namespace Core.Level
                     new(anchorToAdd.x, anchorToAdd.y, 0),
                     new(anchorToAdd.x + ChunkSize, anchorToAdd.y + ChunkSize, 1));
 
-                _chunkController.SetTileChunk(area, anchorToAdd);
+                TileChunkSetted?.Invoke((area, anchorToAdd));
                 _loadedChunkAnchors.Add(anchorToAdd);
             }
+
+            TileChunksUpdated?.Invoke(ActiveChunks);
         }
     }
 }
