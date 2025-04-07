@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Core.EventBus
 {
-    [CreateAssetMenu(menuName = "Core/Event Bus")]
+    [CreateAssetMenu(menuName = "Core/EventBus/ObjectAddedEventBus")]
     public class PositionEventBus : ScriptableObject
     {
         private Vector2 _position;

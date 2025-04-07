@@ -5,7 +5,7 @@ using UnityEngine.Assertions.Must;
 
 namespace Core.HoldableSystem
 {
-    [CreateAssetMenu(menuName = "Core/Equipment")]
+    [CreateAssetMenu(menuName = "Core/Equipment/EquipmentAtts")]
     public class EquipmentAttributes : ScriptableObject
     {
         [Tooltip("How many times the equipment can be used per second")]

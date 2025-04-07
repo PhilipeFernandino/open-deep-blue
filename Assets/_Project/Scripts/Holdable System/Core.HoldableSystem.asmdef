@@ -13,7 +13,9 @@
         "PrimeTween.Runtime",
         "TNRD.SerializableInterface",
         "UniTask",
-        "Core.Level"
+        "Core.Level",
+        "Core.Light",
+        "Core.EventBus"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

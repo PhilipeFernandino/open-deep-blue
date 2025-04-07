@@ -11,12 +11,12 @@ using UnityEngine.UIElements;
 
 namespace Core.Light
 {
-#pragma warning disable COIMBRA0106 // Concrete IService should not be a Component unless it inherit from Actor.
-    public class LightSystem : MonoBehaviour, ILightService
-#pragma warning restore COIMBRA0106 // Concrete IService should not be a Component unless it inherit from Actor.
+    public class LightSystem : Actor, ILightService
     {
         [SerializeField] private Material _lightOverlayMaterial;
         [SerializeField] private PositionEventBus _positionEventBus;
+        [SerializeField] private ObjectAddedEventBus _objectAddedEventBus;
+
         [SerializeField] private MeshRenderer _meshRendererPrefab;
 
         [SerializeField] private FilterMode _filterMode;
@@ -27,6 +27,9 @@ namespace Core.Light
         [SerializeField] private float _lightFallof;
         [SerializeField] private float _tileOnLight;
         [SerializeField] private Vector2 _offset;
+
+        [SerializeField] private bool _use8Neighboors;
+        [SerializeField] private bool _useEuclideanFallof;
 
         private Vector2Int _origin;
         private int _lightMapDimensions;
@@ -60,10 +63,11 @@ namespace Core.Light
         private HashSet<Vector2Int> _activeChunks;
 
         private Vector2Int[] _neighboors = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+        private Vector2Int[] _8neighboors = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
 
-        public void AddLightSource(Vector2Int position, int intensity)
+        public void AddLightSource(LightSource lightSource)
         {
-            _activeSources.Add(new LightSource(position, intensity));
+            _activeSources.Add(lightSource);
             UpdateLightTexture();
         }
 
@@ -82,8 +86,9 @@ namespace Core.Light
                 Vector2Int overlayCurrentPos = _propagateLightQueue.Dequeue();
 
                 float currentLevel = _lightMap[overlayCurrentPos.x, overlayCurrentPos.y];
+                var neightbors = _use8Neighboors ? _8neighboors : _neighboors;
 
-                foreach (var dir in _neighboors)
+                foreach (var dir in neightbors)
                 {
                     Vector2Int nextWorldPos = overlayCurrentPos + _origin + dir;
                     Vector2Int nextOverlayPos = overlayCurrentPos + dir;
@@ -93,7 +98,15 @@ namespace Core.Light
                         continue;
                     }
 
-                    float newLevel = currentLevel - _lightFallof;
+                    float x = nextWorldPos.x - sourcePos.x;
+                    float xx = x * x;
+                    float y = nextWorldPos.y - sourcePos.y;
+                    float yy = y * y;
+
+                    float newLevel = _useEuclideanFallof
+                        ? Math.Max(0, source.Intensity - (float)Math.Sqrt(xx + yy))
+                        : currentLevel - _lightFallof;
+
                     if (newLevel > _lightMap[nextOverlayPos.x, nextOverlayPos.y])
                     {
                         if (!_gridService.HasTileAt(nextWorldPos))
@@ -142,12 +155,7 @@ namespace Core.Light
             _lightOverlayMaterial.SetTexture("_LightTex", _lightTexture);
         }
 
-        private void Awake()
-        {
-
-        }
-
-        private void Start()
+        protected override void OnSpawn()
         {
             Debug.Log($"Spawned");
 
@@ -167,6 +175,18 @@ namespace Core.Light
             _chunkController.OriginSetted += OriginSetted_EventHandler;
 
             _positionEventBus.PositionChanged += _chunkController.UpdatePosition;
+            _objectAddedEventBus.ObjectAdded += LightAdded_EventHandler;
+            _objectAddedEventBus.ObjectRemoved += LightRemoved_EventHandler;
+        }
+
+        private void LightAdded_EventHandler(object obj)
+        {
+            AddLightSource((LightSource)obj);
+        }
+
+        private void LightRemoved_EventHandler(object obj)
+        {
+            throw new NotImplementedException();
         }
 
         private void TileChunksUpdated_EventHandler(HashSet<Vector2Int> activeChunks)
@@ -234,13 +254,13 @@ namespace Core.Light
         [Button]
         public void AddLightAt()
         {
-            AddLightSource(new Vector2Int(x, y), intensity);
+            AddLightSource(new(new(x, y), intensity));
         }
 
         [Button]
         public void AddLightAtPos()
         {
-            AddLightSource(Vector2Int.RoundToInt(_positionEventBus.Position), intensity);
+            AddLightSource(new(Vector2Int.RoundToInt(_positionEventBus.Position), intensity));
         }
 
         [Button]
@@ -248,11 +268,6 @@ namespace Core.Light
         {
             _positionEventBus.Position = new Vector2Int(x, y);
             _positionEventBus.Trigger();
-        }
-
-        public void Dispose()
-        {
-            throw new NotImplementedException();
         }
         #endregion
     }
