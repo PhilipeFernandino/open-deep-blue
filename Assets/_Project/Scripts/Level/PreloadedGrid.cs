@@ -43,12 +43,22 @@ namespace Core.Level
             throw new System.NotImplementedException();
         }
 
-        public void SetTileAt(int x, int y, TileBase tileBase)
+        public bool TryGetTileAt(int x, int y, out TileInstance tile)
         {
             throw new System.NotImplementedException();
         }
 
-        public bool TryGetTileAt(int x, int y, out TileInstance tile)
+        public void LoadFloorTilesBlock(BoundsInt area, TileBase[] tiles)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void LoadTilesBlock(BoundsInt area, TileBase[] tiles)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void SetTileAt(int x, int y, Map.Tile Tile)
         {
             throw new System.NotImplementedException();
         }

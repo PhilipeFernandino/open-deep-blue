@@ -17,16 +17,13 @@ namespace Core.Level
         private int ChunkSize => _chunkController.ChunkSize;
         private int LoadNearChunks => _chunkController.LoadNearChunks;
 
+        private IGridService _gridService;
         private TilesSettings _tilesSettings;
-
-        private Tilemap _tilemap;
-        private Tilemap _floorTilemap;
-
         private MapMetadata _mapMetadata;
         TileBase[] _emptyTiles;
 
-        public TileChunkController(MapMetadata mapMetadata, Tilemap tilemap, Tilemap floorTilemap, int chunkSize, int loadNearChunks,
-            PositionEventBus positionEventBus, TilesSettings tilesSettings)
+        public TileChunkController(MapMetadata mapMetadata, int chunkSize, int loadNearChunks,
+            PositionEventBus positionEventBus, IGridService gridService, TilesSettings tilesSettings)
         {
             _chunkController = new(chunkSize, loadNearChunks);
 
@@ -34,11 +31,10 @@ namespace Core.Level
             _chunkController.TileChunkUnsetted += UnsetTileChunk;
 
             _mapMetadata = mapMetadata;
-            _tilemap = tilemap;
-            _floorTilemap = floorTilemap;
             _emptyTiles = new TileBase[chunkSize * chunkSize];
-            _tilesSettings = tilesSettings;
             _positionEventBus = positionEventBus;
+            _gridService = gridService;
+            _tilesSettings = tilesSettings;
 
             _positionEventBus.PositionChanged += PositionChanged_EventHandler;
             PositionChanged_EventHandler(_positionEventBus.Position);
@@ -61,35 +57,37 @@ namespace Core.Level
 
             TileBase[] tiles = new TileBase[ChunkSize * ChunkSize];
             TileBase[] floorTiles = new TileBase[ChunkSize * ChunkSize];
+
             Debug.Log($"{GetType()} - {area}");
 
             for (int w = anchor.y; w < anchor.y + ChunkSize; w++)
             {
                 for (int h = anchor.x; h < anchor.x + ChunkSize; h++)
                 {
-                    if (IsWithinBounds(w, h, 0, 0, _mapMetadata.Dimensions, _mapMetadata.Dimensions))
+                    if (IsWithinBounds(w, h, 0, _mapMetadata.Dimensions))
                     {
                         int ww = w - anchor.y;
                         int hh = h - anchor.x;
 
                         int index = ww * ChunkSize + hh;
 
+                        // get from grid tiles instead of mapmetad
                         tiles[index] = _tilesSettings.GetTileBase(_mapMetadata.Tiles[h, w]);
                         floorTiles[index] = _tilesSettings.GetFloorTileBase(_mapMetadata.BiomeTiles[h, w]);
                     }
                 }
             }
 
-            _tilemap.SetTilesBlock(area, tiles);
-            _floorTilemap.SetTilesBlock(area, floorTiles);
+            _gridService.LoadTilesBlock(area, tiles);
+            _gridService.LoadFloorTilesBlock(area, floorTiles);
 
             Debug.Log($"{GetType()} - Tilemap added for: {anchor}");
         }
 
         public void UnsetTileChunk((BoundsInt area, Vector2Int anchor) e)
         {
-            _tilemap.SetTilesBlock(e.area, _emptyTiles);
-            _floorTilemap.SetTilesBlock(e.area, _emptyTiles);
+            _gridService.LoadTilesBlock(e.area, _emptyTiles);
+            _gridService.LoadFloorTilesBlock(e.area, _emptyTiles);
         }
     }
 }

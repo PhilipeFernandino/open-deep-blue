@@ -15,6 +15,7 @@ namespace Core.Level
 
         private int _chunkSize;
         private int _loadNearChunks;
+        private bool _useLookahead;
 
         private HashSet<Vector2Int> _loadedChunkAnchors = new();
 
@@ -27,10 +28,13 @@ namespace Core.Level
         public event Action<(BoundsInt area, Vector2Int anchor)> TileChunkUnsetted;
         public event Action<HashSet<Vector2Int>> TileChunksUpdated;
 
-        public ChunkController(int chunkSize, int loadNearChunks)
+        private Vector2Int _previousChunk;
+
+        public ChunkController(int chunkSize, int loadNearChunks, bool useLookahead = false)
         {
             _chunkSize = chunkSize;
             _loadNearChunks = loadNearChunks;
+            _useLookahead = useLookahead;
         }
 
 
@@ -50,6 +54,11 @@ namespace Core.Level
             Vector2Int pos = Vector2Int.RoundToInt(vector);
 
             Vector2Int currChunk = ToChunk(pos);
+
+            if (_previousChunk == currChunk)
+            {
+                return;
+            }
 
             for (int i = -_loadNearChunks; i <= _loadNearChunks; i++)
             {
@@ -75,7 +84,10 @@ namespace Core.Level
             {
                 if (!_updatedChunkAnchors.Contains(loadedChunk))
                 {
-                    _chunkAnchorsToRemove.Add(loadedChunk);
+                    if (Vector2.Distance(loadedChunk, currChunk) >= _chunkSize * 3 || !_useLookahead)
+                    {
+                        _chunkAnchorsToRemove.Add(loadedChunk);
+                    }
                 }
             }
 
@@ -102,6 +114,7 @@ namespace Core.Level
                 _loadedChunkAnchors.Add(anchorToAdd);
             }
 
+            _previousChunk = currChunk;
             TileChunksUpdated?.Invoke(ActiveChunks);
         }
     }

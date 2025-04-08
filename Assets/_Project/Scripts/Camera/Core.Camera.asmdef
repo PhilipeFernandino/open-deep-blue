@@ -7,7 +7,10 @@
         "Coimbra.Services.Events",
         "PrimeTween.Runtime",
         "Unity.InputSystem",
-        "Unity.Cinemachine"
+        "Unity.Cinemachine",
+        "Core.EventBus",
+        "Core.Util",
+        "Core.Extensions"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

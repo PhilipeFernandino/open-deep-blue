@@ -128,7 +128,7 @@ namespace Core.Light
 
         private void UpdateLightTexture()
         {
-            SetLightmapGlobal(0);
+            SetLightmapToBase();
 
             foreach (var source in _activeSources)
             {
@@ -198,10 +198,10 @@ namespace Core.Light
         private void InitializeLightMap()
         {
             _lightMap = new float[_lightMapDimensions, _lightMapDimensions];
-            SetLightmapGlobal(0);
+            SetLightmapToBase();
         }
 
-        private void SetLightmapGlobal(int value)
+        private void SetLightmapToBase()
         {
             for (int x = 0; x < _lightMapDimensions; x++)
             {

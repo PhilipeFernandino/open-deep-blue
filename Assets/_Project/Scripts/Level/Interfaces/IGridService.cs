@@ -13,7 +13,9 @@ namespace Core.Level
         public int MapDimensions { get; }
 
         public bool HasTileAt(int x, int y);
-        public void SetTileAt(int x, int y, TileBase tileBase);
+        public void LoadTilesBlock(BoundsInt area, TileBase[] tiles);
+        public void LoadFloorTilesBlock(BoundsInt area, TileBase[] tiles);
+        public void SetTileAt(int x, int y, Map.Tile tile);
         public bool TryGetTileAt(int x, int y, out TileInstance tile);
         public void DamageTileAt(int x, int y, ushort damage);
         public bool IsTileLoaded(int x, int y);
@@ -26,10 +28,11 @@ namespace Core.Level
             return HasTileAt(pos.x, pos.y);
         }
 
-        public void SetTileAt(Vector2 v, TileBase tileBase)
+
+        public void SetTileAt(Vector2 v, Map.Tile tile)
         {
             var pos = ToGridPosition(v);
-            SetTileAt(pos.x, pos.y, tileBase);
+            SetTileAt(pos.x, pos.y, tile);
         }
 
         public bool TryGetTileAt(Vector2 v, out TileInstance tile)

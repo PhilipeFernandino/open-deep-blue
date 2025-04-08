@@ -12,6 +12,13 @@ namespace Core.Util
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int ToClosestLowerMultiple(float value, int multiplier)
+        {
+            int vf = Mathf.RoundToInt(value);
+            return vf - vf % multiplier;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsWithinBounds(float x, float y, float xMin, float yMin, float xMax, float yMax)
         {
             return x >= xMin && x < xMax && y >= yMin && y < yMax;

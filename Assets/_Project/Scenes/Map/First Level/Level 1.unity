@@ -1786,7 +1786,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5100123393815294630, guid: 73e316bda44597049b0ee0682e75ca04, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 689234.56
+      value: 688173.56
       objectReference: {fileID: 0}
     - target: {fileID: 5166222320962546861, guid: 73e316bda44597049b0ee0682e75ca04, type: 3}
       propertyPath: m_AnchorMax.y
@@ -4790,6 +4790,7 @@ GameObject:
   - component: {fileID: 1855592623}
   - component: {fileID: 1855592622}
   - component: {fileID: 1855592621}
+  - component: {fileID: 1855592625}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -4947,6 +4948,19 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &1855592625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1855592619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1529a324961a90d41ad0f3af8f7d3196, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _positionEventBus: {fileID: 11400000, guid: fbf1ef933efcaae44bb075c89e84f52a, type: 2}
 --- !u!1 &1895911274
 GameObject:
   m_ObjectHideFlags: 0
@@ -5376,11 +5390,11 @@ MonoBehaviour:
   _activateOnSpawn: 0
   _deactivateOnDispose: 0
   _lightOverlayMaterial: {fileID: 2100000, guid: 6ee6e46abff02d7438f9139b92918451, type: 2}
-  _positionEventBus: {fileID: 11400000, guid: c68c603d4a7cd8342a08d6678937d8f4, type: 2}
+  _positionEventBus: {fileID: 11400000, guid: fbf1ef933efcaae44bb075c89e84f52a, type: 2}
   _objectAddedEventBus: {fileID: 11400000, guid: 718160f4442ddd64e8244221b756f603, type: 2}
   _meshRendererPrefab: {fileID: 9051212038642682217, guid: c8170018d1e854b4aa86451396b5aae5, type: 3}
   _filterMode: 1
-  _chunkSize: 32
+  _chunkSize: 20
   _loadNearChunks: 1
   _baseIntensity: 1.5
   _lightFallof: 0.8

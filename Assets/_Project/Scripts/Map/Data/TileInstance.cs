@@ -15,6 +15,13 @@ namespace Core.Map
             CurrentHitPoints = currentHitPoints;
         }
 
+        public TileInstance(TileInstance copy)
+        {
+            TileType = copy.TileType;
+            CurrentHitPoints = copy.CurrentHitPoints;
+        }
+
+
         public static explicit operator TileInstance(TileDefinition tile)
         {
             return new TileInstance(tile.TileType, tile.MaxHitPoints);

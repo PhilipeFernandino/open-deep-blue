@@ -6,8 +6,10 @@ using Core.Map;
 using NaughtyAttributes;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
+using UnityEngine.WSA;
 using static Core.Util.Range;
 
 namespace Core.Level
@@ -41,6 +43,16 @@ namespace Core.Level
         public int ChunkSize => _chunkSize;
         public int LoadedDimensions => _chunkSize * (_loadNearChunks * 2 + 1);
         public int MapDimensions => _mapMetadata.Dimensions;
+
+        public void Update()
+        {
+            var mousePos = Mouse.current.position.ReadValue();
+            var pos = Camera.main.ScreenToWorldPoint(mousePos);
+            pos.z = 0f;
+
+            DrawInGrid(pos, new Vector2Int(1, 1));
+
+        }
 
         public void DrawInGrid(Vector2 position, in Vector2Int size)
         {
@@ -89,6 +101,7 @@ namespace Core.Level
             }
 
             tile = _grid[x, y];
+            Debug.Log($"{_grid[x, y]}, {_mapMetadata.Tiles[x, y]}");
             return true;
         }
 
@@ -98,7 +111,7 @@ namespace Core.Level
             int currentHitPoints = Mathf.Max(0, (int)_grid[x, y].CurrentHitPoints - (int)damage);
             if (currentHitPoints <= 0)
             {
-                SetTileAt(x, y, null);
+                SetTileAt(x, y, Map.Tile.None);
             }
         }
 
@@ -112,8 +125,12 @@ namespace Core.Level
             return IsWithinBounds(x, y, 0, _mapMetadata.Dimensions); // load from chunk
         }
 
-        public void SetTileAt(int x, int y, TileBase tileBase)
+        public void SetTileAt(int x, int y, Core.Map.Tile tile)
         {
+            var tileInstance = (TileInstance)_tilesSettings.GetDefinition(tile);
+            var tileBase = _tilesSettings.GetTileBase(tile);
+
+            _grid[x, y] = tileInstance;
             _tilemap.SetTile(new Vector3Int(x, y, 0), tileBase);
         }
 
@@ -134,14 +151,20 @@ namespace Core.Level
             InitializeDrawGridSprites();
             _isInitialized = true;
             _mapMetadata = e.MapMetadata;
-            _chunkController = new(_mapMetadata, _tilemap, _floorTilemap,
-                _chunkSize, _loadNearChunks, _positionEventBus, _tilesSettings);
+            _chunkController = new(
+                _mapMetadata,
+                _chunkSize,
+                _loadNearChunks,
+                _positionEventBus,
+                this,
+                _tilesSettings);
         }
 
         private void InitializeGrid(MapMetadata mapMetadata)
         {
             _gridSize = mapMetadata.Dimensions;
             _grid = new TileInstance[_gridSize, _gridSize];
+
 
             for (int i = 0; i < mapMetadata.Dimensions; i++)
             {
@@ -161,6 +184,16 @@ namespace Core.Level
                 _gridSprites.Add(Instantiate(_gridSpriteRendererPrefab, transform));
                 _gridSprites[i].enabled = false;
             }
+        }
+
+        public void LoadTilesBlock(BoundsInt area, TileBase[] tiles)
+        {
+            _tilemap.SetTilesBlock(area, tiles);
+        }
+
+        public void LoadFloorTilesBlock(BoundsInt area, TileBase[] tiles)
+        {
+            _floorTilemap.SetTilesBlock(area, tiles);
         }
 
         [Header("Debug")]
