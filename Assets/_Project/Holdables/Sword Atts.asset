@@ -9,16 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e3428b66e5c2654d908dda550547b3c, type: 3}
-  m_Name: Pickaxe SO
+  m_Script: {fileID: 11500000, guid: 7a9aa5d30029ef24aa618203a7c0adf8, type: 3}
+  m_Name: Sword Atts
   m_EditorClassIdentifier: 
-  <UsesPerSecond>k__BackingField: 5
-  <AngleOffset>k__BackingField: 0
+  <UsesPerSecond>k__BackingField: 2
+  <AngleOffset>k__BackingField: 50
   <DisableSRDelaySeconds>k__BackingField: 0.1
   <TimeScaleOnBlink>k__BackingField: 0.5
   <BlinkSeconds>k__BackingField: 0.2
   <UseEffect>k__BackingField:
-    <LockDuration>k__BackingField: 0
+    <LockDuration>k__BackingField: 0.3
     <AddedImpulseSpeed>k__BackingField: 0
     <AddedImpulseDuration>k__BackingField: 0
   <ShakeSettings>k__BackingField:
@@ -45,7 +45,7 @@ MonoBehaviour:
     startValue: {x: 0, y: 0, z: 0}
     endValue: {x: 0, y: 0, z: 0}
     settings:
-      duration: 1
+      duration: 0.5
       ease: 0
       customEase:
         serializedVersion: 2
@@ -59,4 +59,6 @@ MonoBehaviour:
       endDelay: 0
       useUnscaledTime: 0
       useFixedUpdate: 0
-  <MiningStrength>k__BackingField: 100
+  <Damage>k__BackingField:
+    Min: 150
+    Max: 300

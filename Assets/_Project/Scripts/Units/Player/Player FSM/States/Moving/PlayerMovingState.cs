@@ -16,10 +16,6 @@ namespace Core.Player
             _fsmAgent.PlayerMovement.ResetMovement();
         }
 
-        public override void Update()
-        {
-        }
-
         public override void UseEquipmentInput(Vector2 input) => _fsmAgent.StateResolver.UseEquipmentInput(input, this);
 
         public override void MoveInput(Vector2 input)

@@ -189,12 +189,6 @@ namespace Core.Light
             throw new NotImplementedException();
         }
 
-        private void TileChunksUpdated_EventHandler(HashSet<Vector2Int> activeChunks)
-        {
-            _activeChunks = activeChunks;
-            UpdateLightTexture();
-        }
-
         private void InitializeLightMap()
         {
             _lightMap = new float[_lightMapDimensions, _lightMapDimensions];
@@ -235,6 +229,12 @@ namespace Core.Light
             MeshRenderer.transform.position = new Vector3Int(origin.x + _chunkController.LoadedDimensions / 2, origin.y + _chunkController.LoadedDimensions / 2, 0);
             _lightOverlayMaterial.SetVector("_Origin", new Vector4(origin.x + _offset.x, y: origin.y + _offset.y, 0, 0));
             _origin = origin;
+        }
+
+        private void TileChunksUpdated_EventHandler(HashSet<Vector2Int> activeChunks)
+        {
+            _activeChunks = activeChunks;
+            UpdateLightTexture();
         }
 
         public void TileChunkSetted_EventHandler((BoundsInt area, Vector2Int anchor) e)

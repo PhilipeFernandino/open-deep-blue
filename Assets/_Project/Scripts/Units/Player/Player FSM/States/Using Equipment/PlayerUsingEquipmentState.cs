@@ -19,13 +19,5 @@ namespace Core.Player
             await UniTask.Delay(TimeSpan.FromSeconds(_enterStateData.UseEffect.LockDuration));
             _fsmAgent.TransferState(PlayerState.Idle, null, this);
         }
-
-        public override void Exit()
-        {
-        }
-
-        public override void Update()
-        {
-        }
     }
 }

@@ -10,7 +10,7 @@ namespace Systems.Item_System
 
         public void HotbarNavigation(InputAction.CallbackContext context)
         {
-            if (int.TryParse(context.control.name, out int value))
+            if (context.performed && int.TryParse(context.control.name, out int value))
             {
                 if (value == 0)
                 {

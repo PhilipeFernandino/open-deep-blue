@@ -20,7 +20,7 @@ namespace Core.HoldableSystem
         {
             if (_holdable != null)
             {
-                _holdable.Dispose(true);
+                _holdable.gameObject.Dispose(true);
             }
 
             _holdable = Instantiate((Holdable)holdable, _equipmentParent);

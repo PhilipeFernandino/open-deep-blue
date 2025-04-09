@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Core.Player
 {
-    public class PlayerMovement2D : MonoBehaviour
+    public class Movement2D : MonoBehaviour
     {
         [SerializeField] private Rigidbody2D _rb2D;
 

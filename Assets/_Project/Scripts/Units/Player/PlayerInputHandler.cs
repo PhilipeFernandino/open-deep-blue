@@ -16,7 +16,10 @@ namespace Core.Player
 
         public void UseCurrentItemInput(InputAction.CallbackContext context)
         {
-            _player.UseEquipmentInput(To2DWorldPosition(Mouse.current.position.ReadValue()));
+            if (context.performed)
+            {
+                _player.UseEquipmentInput(To2DWorldPosition(Mouse.current.position.ReadValue()));
+            }
         }
 
         public void InteractInput(InputAction.CallbackContext context)

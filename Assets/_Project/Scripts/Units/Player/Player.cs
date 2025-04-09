@@ -1,5 +1,4 @@
 ﻿using Coimbra;
-using Core.EventBus;
 using Core.FSM;
 using Core.HealthSystem;
 using Core.HoldableSystem;
@@ -12,7 +11,7 @@ namespace Core.Player
 
     [RequireComponent(typeof(HoldableController))]
     [RequireComponent(typeof(PlayerAnimator))]
-    [RequireComponent(typeof(PlayerMovement2D))]
+    [RequireComponent(typeof(Movement2D))]
     [RequireComponent(typeof(BoxCollider2D))]
 
     public class Player : Actor, IFSMAgent<PlayerState>
@@ -23,11 +22,9 @@ namespace Core.Player
         [SerializeField] private float _dashSpeed;
         [SerializeField] private float _dashDuration;
 
-        [SerializeField] private PositionEventBus _positionEventBus;
-
         private HoldableController _playerHold;
         private PlayerAnimator _playerAnimator;
-        private PlayerMovement2D _playerMovement;
+        private Movement2D _playerMovement;
         private BoxCollider2D _boxCollider;
 
         private PlayerStateResolver _playerStateResolver;
@@ -35,7 +32,7 @@ namespace Core.Player
         private FSM<PlayerState> _fsm;
 
         internal PlayerAnimator PlayerAnimator => _playerAnimator;
-        internal PlayerMovement2D PlayerMovement => _playerMovement;
+        internal Movement2D PlayerMovement => _playerMovement;
         internal HoldableController PlayerHold => _playerHold;
         internal PlayerStateResolver StateResolver => _playerStateResolver;
         internal BoxCollider2D BoxCollider => _boxCollider;
@@ -80,7 +77,6 @@ namespace Core.Player
         private void Update()
         {
             _fsm.Update();
-            _positionEventBus.Position = _playerMovement.Position;
         }
 
         private void FixedUpdate()
@@ -93,7 +89,7 @@ namespace Core.Player
             base.OnSpawn();
             _playerAnimator = GetComponent<PlayerAnimator>();
             _playerHold = GetComponent<HoldableController>();
-            _playerMovement = GetComponent<PlayerMovement2D>();
+            _playerMovement = GetComponent<Movement2D>();
             _boxCollider = GetComponent<BoxCollider2D>();
 
             _playerStateResolver = new();

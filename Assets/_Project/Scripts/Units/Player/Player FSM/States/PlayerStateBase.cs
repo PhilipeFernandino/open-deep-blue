@@ -7,10 +7,10 @@ namespace Core.Player
     {
         protected Player _fsmAgent;
 
-        public abstract void Enter(IEnterStateData enterStateData);
-        public abstract void Update();
-        public abstract void Exit();
-        public void FixedUpdate() { }
+        public virtual void Enter(IEnterStateData enterStateData) { }
+        public virtual void Update() { }
+        public virtual void Exit() { }
+        public virtual void FixedUpdate() { }
 
         public virtual void MoveInput(Vector2 input) { }
         public virtual void UseEquipmentInput(Vector2 input) { }

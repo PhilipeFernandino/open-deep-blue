@@ -18,15 +18,5 @@ namespace Core.Player
 
             _fsmAgent.AddIFrames(_enterStateData.DashDuration);
         }
-
-        public override void Update()
-        {
-
-        }
-
-        public override void Exit()
-        {
-        }
-
     }
 }

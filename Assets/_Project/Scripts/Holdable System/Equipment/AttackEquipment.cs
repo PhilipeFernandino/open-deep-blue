@@ -8,6 +8,8 @@ namespace Core.HoldableSystem
 {
     public class AttackEquipment : Equipment
     {
+        public AttackEquipmentAttributes Attributes => (AttackEquipmentAttributes)_attributes;
+
         protected override void UseBehavior(Vector2 position)
         {
 
@@ -34,7 +36,9 @@ namespace Core.HoldableSystem
         {
             if (gameObject.TryGetComponent(out HealthCollider healthCollider))
             {
-                if (healthCollider.Health.TryHurt(new Attack(50f, AttackType.Damage)))
+                int damage = UnityEngine.Random.Range(Attributes.Damage.Min, Attributes.Damage.Max);
+
+                if (healthCollider.Health.TryHurt(new Attack(damage, AttackType.Damage)))
                 {
                     BlinkTime();
                     _cameraService.ShakeCamera(_attributes.ShakeSettings);
