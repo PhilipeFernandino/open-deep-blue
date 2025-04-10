@@ -27,7 +27,7 @@ namespace Core.Units
 
         private void TargetPositionChanged_EventHandler(Vector2 vector)
         {
-            if (Vector2.Distance(_fsmAgent.Position, vector) < 5)
+            if (Vector2.Distance(_fsmAgent.Position, vector) < 20)
             {
                 _fsmAgent.TransferState(AntState.Moving, null, this);
             }

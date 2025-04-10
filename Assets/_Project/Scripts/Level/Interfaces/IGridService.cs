@@ -12,6 +12,7 @@ namespace Core.Level
         public int LoadedDimensions { get; }
         public int MapDimensions { get; }
 
+        public void DrawInGrid(Vector2 position, in Vector2Int size) { }
         public bool HasTileAt(int x, int y);
         public void LoadTilesBlock(BoundsInt area, TileBase[] tiles);
         public void LoadFloorTilesBlock(BoundsInt area, TileBase[] tiles);

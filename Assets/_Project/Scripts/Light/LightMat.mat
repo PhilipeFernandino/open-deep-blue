@@ -56,6 +56,6 @@ Material:
     - _LightColor: {r: 1, g: 1, b: 1, a: 1}
     - _MapOffset: {r: 0, g: 0, b: 0, a: 0}
     - _MapSize: {r: 96, g: 96, b: 0, a: 0}
-    - _Origin: {r: 439.5, g: 159.5, b: 0, a: 0}
+    - _Origin: {r: 359.5, g: 99.5, b: 0, a: 0}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

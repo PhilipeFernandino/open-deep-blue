@@ -3,7 +3,6 @@
     "rootNamespace": "Core.Units",
     "references": [
         "Asset.AutoGetComponent",
-        "Cinemachine",
         "Coimbra",
         "Coimbra.Listeners",
         "Coimbra.Services",
@@ -20,7 +19,8 @@
         "TNRD.SerializableInterface",
         "UniTask",
         "Unity.InputSystem",
-        "Core.EventBus"
+        "Core",
+        "Core.Level"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

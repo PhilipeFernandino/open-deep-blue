@@ -2,7 +2,9 @@
 using Core.EventBus;
 using Core.FSM;
 using Core.HealthSystem;
+using Core.Level;
 using Core.Player;
+using Core.Util;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,6 +17,8 @@ namespace Core.Units
         [SerializeField] private HealthComponent _healthComponent;
         [SerializeField] private PositionEventBus _targetPositionEventBus;
         [SerializeField] private float _movementSpeed;
+        [SerializeField] private float _attackDistance;
+        [SerializeField] private float _attackDamage;
 
         private FSM<AntState> _fsm;
         private Movement2D _movementController;
@@ -23,6 +27,11 @@ namespace Core.Units
         internal Movement2D MovementController => _movementController;
         internal BoxCollider2D BoxCollider => _boxCollider;
         internal PositionEventBus PositionEventBus => _targetPositionEventBus;
+        internal float AttackDistance => _attackDistance;
+        internal float AttackDamage => _attackDamage;
+
+        internal IPathService PathService { get; private set; }
+        internal IGridService GridService { get; private set; }
 
         public Vector2 Position => transform.position.XY();
 
@@ -65,6 +74,9 @@ namespace Core.Units
                 { AntState.Idle, new AntIdleState() },
                 { AntState.Moving, new AntMovingState() },
             }, this);
+
+            GridService = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
+            PathService = ServiceLocatorUtilities.GetServiceAssert<IPathService>();
 
             TransferState(AntState.Idle, null, null);
         }

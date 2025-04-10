@@ -15,7 +15,7 @@
         "UniTask",
         "Core.Level",
         "Core.Light",
-        "Core.EventBus"
+        "Core"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
