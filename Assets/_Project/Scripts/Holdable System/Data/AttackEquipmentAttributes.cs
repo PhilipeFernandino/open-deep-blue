@@ -6,6 +6,6 @@ namespace Core.HoldableSystem
     [CreateAssetMenu(menuName = "Core/Equipment/AttackEquipmentAtts")]
     public class AttackEquipmentAttributes : EquipmentAttributes
     {
-        [field: SerializeField] public AttributeRange Damage { get; private set; }
+        [field: SerializeField] public UShortRangeAttribute Damage { get; private set; }
     }
 }

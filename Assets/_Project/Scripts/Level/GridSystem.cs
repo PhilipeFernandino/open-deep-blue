@@ -122,6 +122,11 @@ namespace Core.Level
 
         public bool IsTileLoaded(int x, int y)
         {
+            if (_mapMetadata == null)
+            {
+                return false;
+            }
+
             return IsWithinBounds(x, y, 0, _mapMetadata.Dimensions); // load from chunk
         }
 

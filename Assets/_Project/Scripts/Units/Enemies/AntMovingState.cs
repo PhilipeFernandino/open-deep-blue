@@ -10,66 +10,94 @@ namespace Core.Units
     public class AntMovingState : IFSMState<AntState>
     {
         private AntEnemy _fsmAgent;
-        private LinkedList<Vector2Int> _path;
+        private List<Vector2Int> _path = new(25);
+        private PositionEventBus _targetPositionEventBus;
+
+        private int _pathIndex;
+
+        private Vector2 _currentTrackPos;
 
         public Vector2 Position => _fsmAgent.Position;
         public Vector2 TargetPosition => _fsmAgent.PositionEventBus.Position;
 
         public void Enter(IEnterStateData enterStateData)
         {
+            _targetPositionEventBus.PositionChanged += TargetPositionChanged_EventHandler;
         }
 
         public void Exit()
         {
+            _targetPositionEventBus.PositionChanged -= TargetPositionChanged_EventHandler;
         }
 
         public void Initialize(IFSMAgent<AntState> fsmAgent)
         {
             _fsmAgent = (AntEnemy)fsmAgent;
+            _targetPositionEventBus = _fsmAgent.PositionEventBus;
         }
 
         public void Update()
         {
-            if (_path == null)
+            if (_path.Count == 0)
             {
-                if (_fsmAgent.PathService.TryFindPath(Position, TargetPosition, out var foundPath))
-                {
-                    _path = new LinkedList<Vector2Int>(foundPath);
 
-                    StringBuilder sb = new("Found path: \n");
-                    foreach (var path in _path)
-                    {
-                        sb.AppendLine(path.ToString());
-                    }
-                    _fsmAgent.Log(sb.ToString());
+                if (_fsmAgent.PathService.TryFindPath(Position, TargetPosition, in _path, 500))
+                {
+                    //StringBuilder sb = new("Found path: \n");
+                    //foreach (var path in _path)
+                    //{
+                    //    sb.AppendLine(path.ToString());
+                    //}
+                    //_fsmAgent.Log(sb.ToString());
+
+                    _currentTrackPos = TargetPosition;
+                    WalkPath();
                 }
             }
             else
             {
-                var distance = Vector2.Distance(Position, TargetPosition);
+                WalkPath();
+            }
+        }
 
-                if (distance < _fsmAgent.AttackDistance)
-                {
-                    _fsmAgent.MovementController.ResetMovement();
-                    return;
-                }
+        private void WalkPath()
+        {
+            var distance = Vector2.Distance(Position, TargetPosition);
 
-                if (_path.Count > 0)
-                {
-                    var moveDir = (_path.First.Value - Position).normalized;
-                    _fsmAgent.Log($"Ant move to {moveDir}");
-                    _fsmAgent.MovementController.TryToMove(moveDir);
+            if (distance < _fsmAgent.AttackDistance)
+            {
+                _fsmAgent.MovementController.ResetMovement();
+                return;
+            }
 
-                    var distanceToNode = Vector2.Distance(Position, _path.First.Value);
-                    if (distanceToNode < 1)
-                    {
-                        _path.RemoveFirst();
-                    }
-                }
-                else
+            if (_pathIndex < _path.Count)
+            {
+                var moveDir = (_path[_pathIndex] - Position).normalized;
+                _fsmAgent.MovementController.TryToMove(moveDir);
+
+                var distanceToNode = Vector2.Distance(Position, _path[_pathIndex]);
+                if (distanceToNode < 1)
                 {
-                    _path = null;
+                    _pathIndex++;
                 }
+            }
+            else
+            {
+                ResetPath();
+            }
+        }
+
+        private void ResetPath()
+        {
+            _path?.Clear();
+            _pathIndex = 0;
+        }
+
+        private void TargetPositionChanged_EventHandler(Vector2 vector)
+        {
+            if (_currentTrackPos.ManhattanDistance(vector) > 2)
+            {
+                ResetPath();
             }
         }
     }

@@ -5,6 +5,8 @@ using Core.HealthSystem;
 using Core.Level;
 using Core.Player;
 using Core.Util;
+using Cysharp.Threading.Tasks;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,9 +18,13 @@ namespace Core.Units
     {
         [SerializeField] private HealthComponent _healthComponent;
         [SerializeField] private PositionEventBus _targetPositionEventBus;
-        [SerializeField] private float _movementSpeed;
+        [SerializeField] private FloatRange _movementSpeedRange;
+        [SerializeField] private FloatRange _aggroDistanceRange;
         [SerializeField] private float _attackDistance;
         [SerializeField] private float _attackDamage;
+
+        private float _movementSpeed;
+        private float _aggroDistance;
 
         private FSM<AntState> _fsm;
         private Movement2D _movementController;
@@ -29,6 +35,7 @@ namespace Core.Units
         internal PositionEventBus PositionEventBus => _targetPositionEventBus;
         internal float AttackDistance => _attackDistance;
         internal float AttackDamage => _attackDamage;
+        internal float AggroDistance => _aggroDistance;
 
         internal IPathService PathService { get; private set; }
         internal IGridService GridService { get; private set; }
@@ -67,6 +74,10 @@ namespace Core.Units
         protected override void OnSpawn()
         {
             base.OnInitialize();
+
+            _movementSpeed = _movementSpeedRange.RandomValue;
+            _aggroDistance = _aggroDistanceRange.RandomValue;
+
             _movementController.Setup(_movementSpeed);
 
             _fsm = new(new()

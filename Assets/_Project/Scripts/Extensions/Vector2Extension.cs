@@ -35,4 +35,12 @@ public static class Vector2Extension
     }
 
     public static Vector2 NormalizeExcess(this Vector2 vector) => vector.sqrMagnitude > 1 ? vector.normalized : vector;
+
+    public static int ManhattanDistance(this Vector2 a, Vector2 b)
+    {
+        var ai = Vector2Int.RoundToInt(a);
+        var bi = Vector2Int.RoundToInt(b);
+
+        return Mathf.Abs(ai.x - bi.x) + Mathf.Abs(ai.y - bi.y);
+    }
 }

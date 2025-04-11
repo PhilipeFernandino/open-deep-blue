@@ -12,6 +12,7 @@ namespace Core.Units
         public void Enter(IEnterStateData enterStateData)
         {
             _targetPositionEventBus.PositionChanged += TargetPositionChanged_EventHandler;
+            TargetPositionChanged_EventHandler(_fsmAgent.PositionEventBus.Position);
         }
 
         public void Exit()
@@ -27,7 +28,7 @@ namespace Core.Units
 
         private void TargetPositionChanged_EventHandler(Vector2 vector)
         {
-            if (Vector2.Distance(_fsmAgent.Position, vector) < 20)
+            if (Vector2.Distance(_fsmAgent.Position, vector) < _fsmAgent.AggroDistance)
             {
                 _fsmAgent.TransferState(AntState.Moving, null, this);
             }

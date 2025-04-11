@@ -15,8 +15,8 @@ MonoBehaviour:
   <UsesPerSecond>k__BackingField: 2
   <AngleOffset>k__BackingField: 50
   <DisableSRDelaySeconds>k__BackingField: 0.1
-  <TimeScaleOnBlink>k__BackingField: 0.5
-  <BlinkSeconds>k__BackingField: 0.2
+  <TimeScaleOnBlink>k__BackingField: 1
+  <BlinkSeconds>k__BackingField: 0
   <UseEffect>k__BackingField:
     <LockDuration>k__BackingField: 0.3
     <AddedImpulseSpeed>k__BackingField: 0

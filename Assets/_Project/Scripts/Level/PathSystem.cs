@@ -12,6 +12,12 @@ namespace Core.Level
     {
         private IGridService _gridService;
 
+        private PriorityQueue<Vector2Int, float> _open = new();
+        private HashSet<Vector2Int> _closed = new();
+
+        Dictionary<Vector2Int, float> _gCost = new();
+        Dictionary<Vector2Int, Vector2Int> _parent = new();
+
         private readonly Vector2Int[] _neighboors = new Vector2Int[]
         {
             Vector2Int.down,
@@ -24,55 +30,83 @@ namespace Core.Level
             new(1, -1),
         };
 
-        public bool TryFindPath(Vector2 from, Vector2 to, out List<Vector2Int> path)
+        public bool TryFindPath(Vector2 from, Vector2 to, in List<Vector2Int> path, int maxIterations = int.MaxValue)
         {
             Vector2Int start = Vector2Int.RoundToInt(from);
             Vector2Int end = Vector2Int.RoundToInt(to);
 
-            var toVisit = new PriorityQueue<Vector2Int, float>();
-            var visited = new HashSet<Vector2Int>();
+            _open.Clear();
+            _closed.Clear();
+            _gCost.Clear();
+            _parent.Clear();
 
-            Dictionary<Vector2Int, float> gCost = new();
-            Dictionary<Vector2Int, Vector2Int> parent = new();
+            _gCost[start] = 0;
+            _open.Enqueue(start, Heuristic(start, end));
+            int iterations = 0;
 
-            gCost[start] = 0;
-            toVisit.Enqueue(start, Vector2Int.Distance(start, end));
+            float bestValue = 0;
+            Vector2Int bestFound = start;
 
-            while (toVisit.Count > 0)
+            while (_open.Count > 0)
             {
-                var current = toVisit.Dequeue();
+                iterations++;
+                var current = _open.Dequeue();
 
-                if (current == end)
+                if (current == end || iterations == maxIterations)
                 {
-                    path = new();
-                    while (parent.TryGetValue(current, out var pr))
+                    if (iterations == maxIterations)
                     {
+                        current = bestFound;
+                    }
 
+                    while (_parent.TryGetValue(current, out var pr))
+                    {
                         path.Add(current);
                         current = pr;
                     }
-                    path.Reverse();
-                    return true;
+
+                    if (path.Count > 0)
+                    {
+                        path.Reverse();
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
 
-                visited.Add(current);
+                _closed.Add(current);
 
                 foreach (var nb in GeneratePermutations(current))
                 {
-                    float currG = gCost[current] + Vector2Int.Distance(current, nb);
+                    float currG = _gCost[current] + Heuristic(current, nb);
 
-                    if (!visited.Contains(nb) || currG < gCost.GetValueOrDefault(nb, int.MaxValue))
+                    if (!_closed.Contains(nb) || currG < _gCost.GetValueOrDefault(nb, int.MaxValue))
                     {
-                        parent[nb] = current;
-                        gCost[nb] = currG;
-                        float est = currG + Vector2Int.Distance(nb, end);
-                        toVisit.Enqueue(nb, est);
+                        _parent[nb] = current;
+                        _gCost[nb] = currG;
+                        float est = currG + Heuristic(nb, end);
+
+                        if (currG > bestValue)
+                        {
+                            bestValue = currG;
+                            bestFound = nb;
+                        }
+
+                        _open.Enqueue(nb, est);
                     }
                 }
             }
 
-            path = null;
             return false;
+        }
+
+        private float Heuristic(Vector2Int a, Vector2Int b)
+        {
+            int dx = Math.Abs(a.x - b.x);
+            int dy = Math.Abs(a.y - b.y);
+            return Math.Max(dx, dy); // Chebyshev for 8-direction grids
         }
 
         private List<Vector2Int> GeneratePermutations(Vector2Int node)
@@ -107,6 +141,6 @@ namespace Core.Level
     [DynamicService]
     public interface IPathService : IService
     {
-        public bool TryFindPath(Vector2 start, Vector2 end, out List<Vector2Int> path);
+        public bool TryFindPath(Vector2 start, Vector2 end, in List<Vector2Int> path, int maxIterations = int.MaxValue);
     }
 }
