@@ -4,12 +4,10 @@ using Coimbra.Services.Events;
 using Core.EventBus;
 using Core.Map;
 using NaughtyAttributes;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
-using UnityEngine.WSA;
 using static Core.Util.Range;
 
 namespace Core.Level
@@ -28,15 +26,15 @@ namespace Core.Level
         [SerializeField] private int _loadNearChunks;
         [SerializeField] private PositionEventBus _positionEventBus;
 
-        private List<SpriteRenderer> _gridSprites;
-
         private TileInstance[,] _grid;
         private TileChunkController _chunkController;
         private TilesSettings _tilesSettings;
+        private GridDrawer _gridDrawer;
 
         private int _gridSize;
         private int _lastGridDrawSize = 0;
         private bool _isInitialized = false;
+
 
         private MapMetadata _mapMetadata;
 
@@ -44,52 +42,17 @@ namespace Core.Level
         public int LoadedDimensions => _chunkSize * (_loadNearChunks * 2 + 1);
         public int MapDimensions => _mapMetadata.Dimensions;
 
+        public void ClearDrawAt(Vector2 position) => _gridDrawer.ClearAt(position);
+        public void DrawInGrid(Vector2 position, Color color) => _gridDrawer.DrawInGrid(position, color);
+        public void DrawInGrid(Vector2 position, in Vector2Int size, Color color) => _gridDrawer.DrawInGrid(position, size, color);
+
         public void Update()
         {
             var mousePos = Mouse.current.position.ReadValue();
             var pos = Camera.main.ScreenToWorldPoint(mousePos);
             pos.z = 0f;
 
-            DrawInGrid(pos, new Vector2Int(1, 1));
-
-        }
-
-        public void DrawInGrid(Vector2 position, in Vector2Int size)
-        {
-            if (!_isInitialized)
-                return;
-
-            var rounded = new Vector2Int(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y));
-
-            for (int i = 0; i < size.x; i++)
-            {
-                for (int j = 0; j < size.y; j++)
-                {
-                    int x = rounded.x + i;
-                    int y = rounded.y + j;
-
-                    int index = j + i * size.y;
-
-                    _gridSprites[index].transform.position = new Vector2(x, y);
-
-                    if (TryGetTileAt(x, y, out TileInstance tile))
-                    {
-                        _gridSprites[index].color = Color.blue;
-                    }
-                    else
-                    {
-                        _gridSprites[index].color = Color.red;
-                    }
-
-                    _gridSprites[index].enabled = true;
-                }
-            }
-
-            int gridDrawSize = size.x * size.y;
-            for (int i = gridDrawSize; i < _lastGridDrawSize; i++)
-            {
-                _gridSprites[i].enabled = false;
-            }
+            _gridDrawer.DrawInGrid(pos, Color.white);
         }
 
         public bool TryGetTileAt(int x, int y, out TileInstance tile)
@@ -142,6 +105,7 @@ namespace Core.Level
         protected override void OnInitialize()
         {
             ServiceLocator.Set<IGridService>(this);
+            _gridDrawer = new(this, _gridSpriteRendererPrefab);
         }
 
         protected override void OnSpawn()
@@ -153,7 +117,6 @@ namespace Core.Level
         private void MapLoaded_EventHandler(ref EventContext context, in MapMetadataGeneratedEvent e)
         {
             InitializeGrid(e.MapMetadata);
-            InitializeDrawGridSprites();
             _isInitialized = true;
             _mapMetadata = e.MapMetadata;
             _chunkController = new(
@@ -180,17 +143,6 @@ namespace Core.Level
             }
         }
 
-        private void InitializeDrawGridSprites()
-        {
-            _gridSprites = new(_spritesPoolSize);
-
-            for (int i = 0; i < _spritesPoolSize; i++)
-            {
-                _gridSprites.Add(Instantiate(_gridSpriteRendererPrefab, transform));
-                _gridSprites[i].enabled = false;
-            }
-        }
-
         public void LoadTilesBlock(BoundsInt area, TileBase[] tiles)
         {
             _tilemap.SetTilesBlock(area, tiles);
@@ -199,6 +151,11 @@ namespace Core.Level
         public void LoadFloorTilesBlock(BoundsInt area, TileBase[] tiles)
         {
             _floorTilemap.SetTilesBlock(area, tiles);
+        }
+
+        public void LateUpdate()
+        {
+            _gridDrawer.Clear();
         }
 
         [Header("Debug")]

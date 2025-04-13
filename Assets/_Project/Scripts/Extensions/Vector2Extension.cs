@@ -36,11 +36,27 @@ public static class Vector2Extension
 
     public static Vector2 NormalizeExcess(this Vector2 vector) => vector.sqrMagnitude > 1 ? vector.normalized : vector;
 
+    public static float Distance(this Vector2 a, Vector2 b)
+    {
+        return Vector2.Distance(a, b);
+    }
+
     public static int ManhattanDistance(this Vector2 a, Vector2 b)
     {
         var ai = Vector2Int.RoundToInt(a);
         var bi = Vector2Int.RoundToInt(b);
 
         return Mathf.Abs(ai.x - bi.x) + Mathf.Abs(ai.y - bi.y);
+    }
+
+    public static float OctileDistance(this Vector2 a, Vector2 b)
+    {
+        var ai = Vector2Int.RoundToInt(a);
+        var bi = Vector2Int.RoundToInt(b);
+        int dx = Mathf.Abs(ai.x - bi.x);
+        int dy = Mathf.Abs(ai.y - bi.y);
+        int minD = Mathf.Min(dx, dy);
+        int maxD = Mathf.Max(dx, dy);
+        return maxD + (minD * 0.4142f);
     }
 }

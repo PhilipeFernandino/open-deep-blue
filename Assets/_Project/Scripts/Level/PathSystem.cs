@@ -10,6 +10,8 @@ namespace Core.Level
 {
     public class PathSystem : Actor, IPathService
     {
+        private bool _debug;
+
         private IGridService _gridService;
 
         private PriorityQueue<Vector2Int, float> _open = new();
@@ -27,7 +29,7 @@ namespace Core.Level
             new(-1, -1),
             new(-1, 1),
             new(1, -1),
-            new(1, -1),
+            new(1, 1),
         };
 
         public bool TryFindPath(Vector2 from, Vector2 to, in List<Vector2Int> path, int maxIterations = int.MaxValue)
@@ -44,24 +46,26 @@ namespace Core.Level
             _open.Enqueue(start, Heuristic(start, end));
             int iterations = 0;
 
-            float bestValue = 0;
-            Vector2Int bestFound = start;
-
             while (_open.Count > 0)
             {
                 iterations++;
+
+                if (iterations > maxIterations)
+                {
+                    return false;
+                }
+
                 var current = _open.Dequeue();
 
-                if (current == end || iterations == maxIterations)
-                {
-                    if (iterations == maxIterations)
-                    {
-                        current = bestFound;
-                    }
+                _gridService.ClearDrawAt(current);
+                DebugDraw(current, new Color(255, 0, 0, 0.3f), true);
 
+                if (current == end)
+                {
                     while (_parent.TryGetValue(current, out var pr))
                     {
                         path.Add(current);
+                        DebugDraw(current, Color.green, true);
                         current = pr;
                     }
 
@@ -78,23 +82,19 @@ namespace Core.Level
 
                 _closed.Add(current);
 
-                foreach (var nb in GeneratePermutations(current))
+                foreach (var perm in GeneratePermutations(current))
                 {
-                    float currG = _gCost[current] + Heuristic(current, nb);
+                    float currG = _gCost[current] + GCost(current, perm);
 
-                    if (!_closed.Contains(nb) || currG < _gCost.GetValueOrDefault(nb, int.MaxValue))
+                    if (!_closed.Contains(perm) || currG < _gCost.GetValueOrDefault(perm, int.MaxValue))
                     {
-                        _parent[nb] = current;
-                        _gCost[nb] = currG;
-                        float est = currG + Heuristic(nb, end);
+                        DebugDraw(current, new Color(0, 0, 255, 0.3f));
 
-                        if (currG > bestValue)
-                        {
-                            bestValue = currG;
-                            bestFound = nb;
-                        }
+                        _parent[perm] = current;
+                        _gCost[perm] = currG;
+                        float est = currG + Heuristic(perm, end);
 
-                        _open.Enqueue(nb, est);
+                        _open.Enqueue(perm, est);
                     }
                 }
             }
@@ -102,11 +102,20 @@ namespace Core.Level
             return false;
         }
 
+        private float GCost(Vector2Int a, Vector2Int b)
+        {
+            Vector2Int delta = a - b;
+            bool isDiagonal = Math.Abs(delta.x) == 1 && Math.Abs(delta.y) == 1;
+            return isDiagonal ? 1.4142f : 1f;
+        }
+
         private float Heuristic(Vector2Int a, Vector2Int b)
         {
             int dx = Math.Abs(a.x - b.x);
             int dy = Math.Abs(a.y - b.y);
-            return Math.Max(dx, dy); // Chebyshev for 8-direction grids
+            int minD = Math.Min(dx, dy);
+            int maxD = Math.Max(dx, dy);
+            return maxD + (minD * 0.4142f);
         }
 
         private List<Vector2Int> GeneratePermutations(Vector2Int node)
@@ -116,7 +125,9 @@ namespace Core.Level
             for (int i = 0; i < _neighboors.Length; i++)
             {
                 Vector2Int pos = node + _neighboors[i];
-                if (_gridService.IsTileLoaded(pos) && !_gridService.HasTileAt(pos))
+                if (_gridService.IsTileLoaded(pos)
+                    && !_gridService.HasTileAt(pos.x, node.y)
+                    && !_gridService.HasTileAt(node.x, pos.y))
                 {
                     perms.Add(pos);
                 }
@@ -135,6 +146,18 @@ namespace Core.Level
         {
             base.OnSpawn();
             _gridService = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
+        }
+
+        private void DebugDraw(Vector2Int pos, Color color, bool clear = false)
+        {
+            if (_debug)
+            {
+                if (clear)
+                {
+                    _gridService.ClearDrawAt(pos);
+                }
+                _gridService.DrawInGrid(pos, color);
+            }
         }
     }
 

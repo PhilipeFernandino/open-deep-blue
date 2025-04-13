@@ -1,7 +1,10 @@
 ﻿using Core.EventBus;
 using Core.FSM;
+using Cysharp.Threading.Tasks;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using UnityEngine;
 
 namespace Core.Units
@@ -17,12 +20,15 @@ namespace Core.Units
 
         private Vector2 _currentTrackPos;
 
-        public Vector2 Position => _fsmAgent.Position;
-        public Vector2 TargetPosition => _fsmAgent.PositionEventBus.Position;
+        private Vector2 Position => _fsmAgent.Position;
+        private Vector2 TargetPosition => _fsmAgent.PositionEventBus.Position;
+
+        private CancellationTokenSource _findPathCTS;
 
         public void Enter(IEnterStateData enterStateData)
         {
             _targetPositionEventBus.PositionChanged += TargetPositionChanged_EventHandler;
+            FindPathTask().Forget();
         }
 
         public void Exit()
@@ -38,25 +44,37 @@ namespace Core.Units
 
         public void Update()
         {
-            if (_path.Count == 0)
+            if (_path.Count > 0)
             {
+                WalkPath();
+            }
+        }
 
-                if (_fsmAgent.PathService.TryFindPath(Position, TargetPosition, in _path, 500))
-                {
-                    //StringBuilder sb = new("Found path: \n");
-                    //foreach (var path in _path)
-                    //{
-                    //    sb.AppendLine(path.ToString());
-                    //}
-                    //_fsmAgent.Log(sb.ToString());
+        private async UniTask FindPathTask()
+        {
+            _findPathCTS = new();
 
-                    _currentTrackPos = TargetPosition;
-                    WalkPath();
-                }
+            if (_fsmAgent.PathService.TryFindPath(Position, TargetPosition, in _path, 100))
+            {
+                //StringBuilder sb = new("Found path: \n");
+                //foreach (var path in _path)
+                //{
+                //    sb.AppendLine(path.ToString());
+                //}
+                //_fsmAgent.Log(sb.ToString());
+
+                _currentTrackPos = TargetPosition;
+                WalkPath();
             }
             else
             {
-                WalkPath();
+                await UniTask.Delay(TimeSpan.FromSeconds(5), cancellationToken: _findPathCTS.Token)
+                    .SuppressCancellationThrow();
+
+                if (!_findPathCTS.IsCancellationRequested)
+                {
+                    FindPathTask().Forget();
+                }
             }
         }
 
@@ -66,7 +84,7 @@ namespace Core.Units
 
             if (distance < _fsmAgent.AttackDistance)
             {
-                _fsmAgent.MovementController.ResetMovement();
+                _fsmAgent.MovementController.ResetMovement(); // go to attack state
                 return;
             }
 
@@ -91,11 +109,15 @@ namespace Core.Units
         {
             _path?.Clear();
             _pathIndex = 0;
+            FindPathTask().Forget();
         }
 
         private void TargetPositionChanged_EventHandler(Vector2 vector)
         {
-            if (_currentTrackPos.ManhattanDistance(vector) > 2)
+            float moveDist = _currentTrackPos.Distance(vector);
+            float targetDist = Position.Distance(TargetPosition);
+
+            if (moveDist > targetDist / 2)
             {
                 ResetPath();
             }

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a9aa5d30029ef24aa618203a7c0adf8, type: 3}
   m_Name: Sword Atts
   m_EditorClassIdentifier: 
-  <UsesPerSecond>k__BackingField: 2
+  <UsesPerSecond>k__BackingField: 3
   <AngleOffset>k__BackingField: 50
   <DisableSRDelaySeconds>k__BackingField: 0.1
   <TimeScaleOnBlink>k__BackingField: 1
@@ -45,7 +45,7 @@ MonoBehaviour:
     startValue: {x: 0, y: 0, z: 0}
     endValue: {x: 0, y: 0, z: 0}
     settings:
-      duration: 0.5
+      duration: 0.3
       ease: 0
       customEase:
         serializedVersion: 2
