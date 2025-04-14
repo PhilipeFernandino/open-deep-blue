@@ -26,13 +26,13 @@ namespace Core.HealthSystem.UI
         private void AttackedEventHandler(AttackedData e)
         {
             var uiHit = _uiHitPool.Get();
-            uiHit.transform.position = e.Position;
+            uiHit.transform.position = e.Attack.SourcePosition;
 
-            Vector3 position = e.Position + _hitUIPositionOffset;
+            Vector2 position = e.Attack.SourcePosition + _hitUIPositionOffset.XY();
 
             uiHit.Setup(
                 position,
-                _hitColorData.GetColor(e.AttackType),
+                _hitColorData.GetColor(e.Attack.AttackType),
                 Mathf.Abs(e.HealthDifference),
                 () => _uiHitPool.Release(uiHit));
         }

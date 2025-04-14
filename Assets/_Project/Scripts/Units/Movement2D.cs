@@ -8,6 +8,9 @@ namespace Core.Player
     {
         [SerializeField] private Rigidbody2D _rb2D;
 
+        [SerializeField] private float _timeKnRate = 0.02f;
+        [SerializeField] float _forceKnRate = 0.1f;
+
         public Vector2 Position => _rb2D.position;
 
         private float _speed;
@@ -15,6 +18,7 @@ namespace Core.Player
         // Let's keep this here so the rigidbody doesn't get touched by multiple components at the same time 
         // or to not need to control who is controlling the rb at any given moment
         private bool _isDashing = false;
+        private bool _isKnockbackApplied = false;
         private float _dashDuration;
         private Vector2 _dashVelocity;
 
@@ -43,6 +47,18 @@ namespace Core.Player
             EndDashTask(callback);
         }
 
+        public async void AddKnockback(Vector2 force)
+        {
+            Debug.Log($"{GetType()} - {this.name}: Added knockback: {force}");
+
+            _rb2D.velocity = force * _forceKnRate;
+            _isKnockbackApplied = true;
+            float magnitude = force.magnitude;
+            await UniTask.Delay(TimeSpan.FromSeconds(magnitude * _timeKnRate));
+            _isKnockbackApplied = false;
+            _rb2D.velocity = Vector2.zero;
+        }
+
         private async void EndDashTask(Action callback)
         {
             await UniTask.Delay(TimeSpan.FromSeconds(_dashDuration));
@@ -57,6 +73,11 @@ namespace Core.Player
 
         private void FixedUpdate()
         {
+            if (_isKnockbackApplied)
+            {
+                return;
+            }
+
             if (_isDashing)
             {
                 var motion = (_dashVelocity.y * transform.up + _dashVelocity.x * transform.right) * Time.fixedDeltaTime;

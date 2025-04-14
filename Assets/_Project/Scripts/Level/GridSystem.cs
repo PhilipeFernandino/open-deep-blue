@@ -32,7 +32,6 @@ namespace Core.Level
         private GridDrawer _gridDrawer;
 
         private int _gridSize;
-        private int _lastGridDrawSize = 0;
         private bool _isInitialized = false;
 
 

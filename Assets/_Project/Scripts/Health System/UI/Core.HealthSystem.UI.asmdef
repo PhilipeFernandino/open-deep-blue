@@ -9,7 +9,8 @@
         "UniTask",
         "UniTask.DOTween",
         "Unity.TextMeshPro",
-        "UnityEngine.UI"
+        "UnityEngine.UI",
+        "Core"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -5,14 +5,17 @@ namespace Core.HealthSystem
     public readonly struct AttackedData
     {
         public readonly float HealthDifference;
-        public readonly AttackType AttackType;
-        public readonly Vector3 Position;
+        public readonly Attack Attack;
 
-        public AttackedData(float healthDifference, AttackType attackType, Vector3 position)
+        public AttackedData(float healthDifference, Attack attack)
         {
             HealthDifference = healthDifference;
-            AttackType = attackType;
-            Position = position;
+            Attack = attack;
+        }
+
+        public override string ToString()
+        {
+            return $"({nameof(HealthDifference)} = {HealthDifference}, {nameof(Attack)} = {Attack})";
         }
     }
 }

@@ -39,7 +39,8 @@ namespace Core.Units.Bosses.Ant
             Debug.Log(other);
             if (other.gameObject.TryGetComponent(out HealthCollider healthCollider))
             {
-                healthCollider.Health.TryHurt(new Attack(500f, AttackType.Damage));
+                healthCollider.Health.TryHurt(
+                    new Attack(500f, AttackType.Damage, 5f, transform.position));
             }
         }
     }

@@ -37,8 +37,13 @@ namespace Core.HoldableSystem
             if (gameObject.TryGetComponent(out HealthCollider healthCollider))
             {
                 int damage = UnityEngine.Random.Range(Attributes.Damage.Min, Attributes.Damage.Max);
+                var attack = new Attack(
+                        damage,
+                        AttackType.Damage,
+                        Attributes.KnockbackForce.Random,
+                        transform.position);
 
-                if (healthCollider.Health.TryHurt(new Attack(damage, AttackType.Damage)))
+                if (healthCollider.Health.TryHurt(attack))
                 {
                     BlinkTime();
                     _cameraService.ShakeCamera(_attributes.ShakeSettings);

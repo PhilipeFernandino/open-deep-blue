@@ -11,6 +11,8 @@
     {
         public ushort Min;
         public ushort Max;
+
+        public ushort Random => (ushort)UnityEngine.Random.Range(Min, Max);
     }
 
     [System.Serializable]
@@ -18,5 +20,7 @@
     {
         public float Min;
         public float Max;
+
+        public float Random => UnityEngine.Random.Range(Min, Max);
     }
 }

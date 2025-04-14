@@ -7,5 +7,7 @@ namespace Core.HoldableSystem
     public class AttackEquipmentAttributes : EquipmentAttributes
     {
         [field: SerializeField] public UShortRangeAttribute Damage { get; private set; }
+        [field: SerializeField] public FloatRangeAttribute KnockbackForce { get; private set; }
+
     }
 }

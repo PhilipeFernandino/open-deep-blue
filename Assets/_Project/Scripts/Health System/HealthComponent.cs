@@ -57,7 +57,7 @@ namespace Core.HealthSystem
             float currentHealth = Health;
 
             Health -= attackData.Damage;
-            Attacked?.Invoke(new AttackedData(Health - currentHealth, AttackType.Damage, transform.position));
+            Attacked?.Invoke(new AttackedData(Health - currentHealth, attackData));
             return true;
         }
 

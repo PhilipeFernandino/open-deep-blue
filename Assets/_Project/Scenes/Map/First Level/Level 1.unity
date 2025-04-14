@@ -454,6 +454,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rb2D: {fileID: 118704275}
+  _timeKnRate: 0.02
+  _forceKnRate: 0.1
 --- !u!212 &118704278
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -700,6 +702,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rb2D: {fileID: 143133178}
+  _timeKnRate: 0.02
+  _forceKnRate: 0.1
 --- !u!212 &143133181
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2653,7 +2657,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5100123393815294630, guid: 73e316bda44597049b0ee0682e75ca04, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 789283.06
+      value: 790990.06
       objectReference: {fileID: 0}
     - target: {fileID: 5166222320962546861, guid: 73e316bda44597049b0ee0682e75ca04, type: 3}
       propertyPath: m_AnchorMax.y
@@ -3019,8 +3023,8 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
+  m_Mass: 50
+  m_LinearDrag: 2
   m_AngularDrag: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
@@ -3092,6 +3096,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rb2D: {fileID: 708176791}
+  _timeKnRate: 0.02
+  _forceKnRate: 0.1
 --- !u!114 &708176794
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3456,6 +3462,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rb2D: {fileID: 912319293}
+  _timeKnRate: 0.02
+  _forceKnRate: 0.1
 --- !u!114 &912319288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3920,6 +3928,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rb2D: {fileID: 979736876}
+  _timeKnRate: 0.02
+  _forceKnRate: 0.1
 --- !u!212 &979736879
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4203,6 +4213,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rb2D: {fileID: 1025348897}
+  _timeKnRate: 0.02
+  _forceKnRate: 0.1
 --- !u!212 &1025348900
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4514,6 +4526,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rb2D: {fileID: 1096881999}
+  _timeKnRate: 0.02
+  _forceKnRate: 0.1
 --- !u!212 &1096882002
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4718,7 +4732,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1128484542
 Transform:
   m_ObjectHideFlags: 0
@@ -5282,6 +5296,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rb2D: {fileID: 1306773375}
+  _timeKnRate: 0.02
+  _forceKnRate: 0.1
 --- !u!212 &1306773378
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -5481,6 +5497,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rb2D: {fileID: 1335485918}
+  _timeKnRate: 0.02
+  _forceKnRate: 0.1
 --- !u!212 &1335485921
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -8024,6 +8042,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rb2D: {fileID: 1635382765}
+  _timeKnRate: 0.02
+  _forceKnRate: 0.1
 --- !u!212 &1635382768
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -8266,6 +8286,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rb2D: {fileID: 1792005911}
+  _timeKnRate: 0.02
+  _forceKnRate: 0.1
 --- !u!212 &1792005914
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -9036,7 +9058,7 @@ MonoBehaviour:
   _filterMode: 1
   _chunkSize: 20
   _loadNearChunks: 1
-  _baseIntensity: 1
+  _baseIntensity: 15
   _lightFallof: 0.8
   _tileOnLight: 0.2
   _offset: {x: -0.5, y: -0.5}

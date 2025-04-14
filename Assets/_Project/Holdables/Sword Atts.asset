@@ -62,3 +62,6 @@ MonoBehaviour:
   <Damage>k__BackingField:
     Min: 150
     Max: 300
+  <KnockbackForce>k__BackingField:
+    Min: 25
+    Max: 50

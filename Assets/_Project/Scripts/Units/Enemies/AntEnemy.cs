@@ -69,6 +69,14 @@ namespace Core.Units
             base.OnSpawn();
             _movementController = GetComponent<Movement2D>();
             _boxCollider = GetComponent<BoxCollider2D>();
+            _healthComponent.Attacked += Attacked_EventHandler;
+        }
+
+        private void Attacked_EventHandler(AttackedData data)
+        {
+            var knockbackForce = (Position - data.Attack.SourcePosition).normalized * data.Attack.Knockback;
+            Debug.Log($"Attacked data: {data}, {knockbackForce}, {Position}");
+            _movementController.AddKnockback(knockbackForce);
         }
 
         protected override void OnSpawn()
