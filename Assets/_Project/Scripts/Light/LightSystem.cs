@@ -254,13 +254,13 @@ namespace Core.Light
         [Button]
         public void AddLightAt()
         {
-            AddLightSource(new(new(x, y), intensity));
+            AddLightSource(new(new(x, y), (uint)intensity));
         }
 
         [Button]
         public void AddLightAtPos()
         {
-            AddLightSource(new(Vector2Int.RoundToInt(_positionEventBus.Position), intensity));
+            AddLightSource(new(Vector2Int.RoundToInt(_positionEventBus.Position), (uint)intensity));
         }
 
         [Button]

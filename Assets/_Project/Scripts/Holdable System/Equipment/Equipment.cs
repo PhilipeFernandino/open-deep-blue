@@ -28,7 +28,7 @@ namespace Core.HoldableSystem
 
         protected TimeSpan ReloadInterval => TimeSpan.FromSeconds(1f / _attributes.UsesPerSecond);
 
-        protected abstract void UseBehavior(Vector2 position);
+        protected abstract void UseBehavior(Vector2 worldPosition);
 
         public override (bool success, HoldableUseEffect effect) TryUse(Vector2 worldPosition)
         {

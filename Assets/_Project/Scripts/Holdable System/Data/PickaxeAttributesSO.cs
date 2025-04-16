@@ -2,9 +2,9 @@
 
 namespace Core.HoldableSystem
 {
-    [CreateAssetMenu(menuName = "Core/Equipment/PickaxeAtts")]
+    [CreateAssetMenu(menuName = "Core/Equipment/Pickaxe Attributes")]
     public class PickaxeAttributesSO : EquipmentAttributes
     {
-        [field: SerializeField] public ushort MiningStrength { get; private set; }
+        [field: SerializeField] public uint MiningStrength { get; private set; }
     }
 }

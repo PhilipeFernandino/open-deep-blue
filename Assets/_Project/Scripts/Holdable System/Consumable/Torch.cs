@@ -8,7 +8,7 @@ namespace Core.HoldableSystem
     {
         [SerializeField] private ObjectAddedEventBus _addLightEventBus;
 
-        public LightSourceEquipmentAttributesSO Attributes => (LightSourceEquipmentAttributesSO)_attributes;
+        public LightSourceAttributesSO Attributes => (LightSourceAttributesSO)_attributes;
 
         protected override void UseBehavior(Vector2 position)
         {

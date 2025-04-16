@@ -22,7 +22,7 @@ namespace Core.Level
         public void LoadFloorTilesBlock(BoundsInt area, TileBase[] tiles);
         public void SetTileAt(int x, int y, Map.Tile tile);
         public bool TryGetTileAt(int x, int y, out TileInstance tile);
-        public void DamageTileAt(int x, int y, ushort damage);
+        public void DamageTileAt(int x, int y, int damage);
         public bool IsTileLoaded(int x, int y);
 
 
@@ -46,7 +46,7 @@ namespace Core.Level
             return TryGetTileAt(pos.x, pos.y, out tile);
         }
 
-        public void DamageTileAt(Vector2 v, ushort damage)
+        public void DamageTileAt(Vector2 v, int damage)
         {
             var pos = ToGridPosition(v);
             DamageTileAt(pos.x, pos.y, damage);

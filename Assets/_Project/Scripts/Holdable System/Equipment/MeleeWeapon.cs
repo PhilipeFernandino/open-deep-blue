@@ -6,9 +6,9 @@ using UnityEngine;
 
 namespace Core.HoldableSystem
 {
-    public class AttackEquipment : Equipment
+    public class MeleeWeapon : Equipment
     {
-        public AttackEquipmentAttributes Attributes => (AttackEquipmentAttributes)_attributes;
+        public WeaponAttributes Attributes => (WeaponAttributes)_attributes;
 
         protected override void UseBehavior(Vector2 position)
         {
@@ -36,11 +36,11 @@ namespace Core.HoldableSystem
         {
             if (gameObject.TryGetComponent(out HealthCollider healthCollider))
             {
-                int damage = UnityEngine.Random.Range(Attributes.Damage.Min, Attributes.Damage.Max);
+                int damage = Attributes.Damage;
                 var attack = new Attack(
                         damage,
                         AttackType.Damage,
-                        Attributes.KnockbackForce.Random,
+                        Attributes.Knockback,
                         transform.position);
 
                 if (healthCollider.Health.TryHurt(attack))

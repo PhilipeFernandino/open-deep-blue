@@ -59,13 +59,9 @@ namespace Core.HoldableSystem
             return _holdable.TryUse(worldPosition);
         }
 
-        private void Awake()
-        {
-            _holdableDb = ScriptableSettings.GetOrFind<HoldableDatabase>();
-        }
-
         private void Start()
         {
+            _holdableDb = ScriptableSettings.GetOrFind<HoldableDatabase>();
             _hotbarService = ServiceLocatorUtilities.GetServiceAssert<IHotbarService>();
             _hotbarService.ItemSelected += HotbarItemSelected;
         }

@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using System;
+using System.Threading;
 using UnityEngine;
 
 namespace Core.Player
@@ -26,6 +27,8 @@ namespace Core.Player
 
         public Vector2 LastMovementInput { get; private set; }
 
+        private CancellationTokenSource _knockback_CTS;
+
         public void Setup(float speed)
         {
             _speed = speed;
@@ -51,12 +54,25 @@ namespace Core.Player
         {
             Debug.Log($"{GetType()} - {this.name}: Added knockback: {force}");
 
+            _knockback_CTS?.Cancel();
+            _knockback_CTS = new();
+
             _rb2D.velocity = force * _forceKnRate;
             _isKnockbackApplied = true;
             float magnitude = force.magnitude;
-            await UniTask.Delay(TimeSpan.FromSeconds(magnitude * _timeKnRate));
-            _isKnockbackApplied = false;
-            _rb2D.velocity = Vector2.zero;
+
+            var token = _knockback_CTS.Token;
+
+            await UniTask.Delay(
+                TimeSpan.FromSeconds(magnitude * _timeKnRate),
+                cancellationToken: token)
+                .SuppressCancellationThrow();
+
+            if (!token.IsCancellationRequested)
+            {
+                _isKnockbackApplied = false;
+                _rb2D.velocity = Vector2.zero;
+            }
         }
 
         private async void EndDashTask(Action callback)

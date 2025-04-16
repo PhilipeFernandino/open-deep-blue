@@ -52,7 +52,10 @@ namespace Core.Units
 
         private async UniTask FindPathTask()
         {
+            _findPathCTS?.Cancel();
             _findPathCTS = new();
+
+            var token = _findPathCTS.Token;
 
             if (_fsmAgent.PathService.TryFindPath(Position, TargetPosition, in _path, 100))
             {
@@ -68,10 +71,10 @@ namespace Core.Units
             }
             else
             {
-                await UniTask.Delay(TimeSpan.FromSeconds(5), cancellationToken: _findPathCTS.Token)
+                await UniTask.Delay(TimeSpan.FromSeconds(5), cancellationToken: token)
                     .SuppressCancellationThrow();
 
-                if (!_findPathCTS.IsCancellationRequested)
+                if (!token.IsCancellationRequested)
                 {
                     FindPathTask().Forget();
                 }

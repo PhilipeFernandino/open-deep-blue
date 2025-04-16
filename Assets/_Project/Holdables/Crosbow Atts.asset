@@ -9,22 +9,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a9aa5d30029ef24aa618203a7c0adf8, type: 3}
-  m_Name: Sword Atts
+  m_Script: {fileID: 11500000, guid: c80d4a2be23e78c47914b247e9b0320f, type: 3}
+  m_Name: Crosbow Atts
   m_EditorClassIdentifier: 
-  <UsesPerSecond>k__BackingField: 3
-  <AngleOffset>k__BackingField: 50
+  <UsesPerSecond>k__BackingField: 1
+  <AngleOffset>k__BackingField: 0
   <DisableSRDelaySeconds>k__BackingField: 0.1
-  <TimeScaleOnBlink>k__BackingField: 1
-  <BlinkSeconds>k__BackingField: 0
+  <TimeScaleOnBlink>k__BackingField: 0.5
+  <BlinkSeconds>k__BackingField: 0.2
   <UseEffect>k__BackingField:
-    <LockDuration>k__BackingField: 0.3
+    <LockDuration>k__BackingField: 0
     <AddedImpulseSpeed>k__BackingField: 0
     <AddedImpulseDuration>k__BackingField: 0
   <ShakeSettings>k__BackingField:
     strength: {x: 0, y: 0, z: 0}
-    duration: 1
-    frequency: 10
+    duration: 0
+    frequency: 0
     enableFalloff: 0
     falloffEase: 0
     strengthOverTime:
@@ -35,7 +35,7 @@ MonoBehaviour:
       m_RotationOrder: 4
     asymmetry: 0
     easeBetweenShakes: 0
-    cycles: 1
+    cycles: 0
     startDelay: 0
     endDelay: 0
     useUnscaledTime: 0
@@ -45,7 +45,7 @@ MonoBehaviour:
     startValue: {x: 0, y: 0, z: 0}
     endValue: {x: 0, y: 0, z: 0}
     settings:
-      duration: 0.3
+      duration: 0
       ease: 0
       customEase:
         serializedVersion: 2
@@ -53,15 +53,13 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      cycles: 1
+      cycles: 0
       cycleMode: 0
       startDelay: 0
       endDelay: 0
       useUnscaledTime: 0
       useFixedUpdate: 0
-  <Damage>k__BackingField:
-    Min: 150
-    Max: 300
-  <KnockbackForce>k__BackingField:
-    Min: 25
-    Max: 25
+  <Damage>k__BackingField: 15
+  <Knockback>k__BackingField: 5
+  <CriticalChance>k__BackingField: 0
+  <Speed>k__BackingField: 5

@@ -41,9 +41,9 @@ namespace Core.Level
         public int LoadedDimensions => _chunkSize * (_loadNearChunks * 2 + 1);
         public int MapDimensions => _mapMetadata.Dimensions;
 
-        public void ClearDrawAt(Vector2 position) => _gridDrawer.ClearAt(position);
-        public void DrawInGrid(Vector2 position, Color color) => _gridDrawer.DrawInGrid(position, color);
-        public void DrawInGrid(Vector2 position, in Vector2Int size, Color color) => _gridDrawer.DrawInGrid(position, size, color);
+        public void ClearDrawAt(Vector2 position) => _gridDrawer?.ClearAt(position);
+        public void DrawInGrid(Vector2 position, Color color) => _gridDrawer?.DrawInGrid(position, color);
+        public void DrawInGrid(Vector2 position, in Vector2Int size, Color color) => _gridDrawer?.DrawInGrid(position, size, color);
 
         public void Update()
         {
@@ -67,7 +67,7 @@ namespace Core.Level
             return true;
         }
 
-        public void DamageTileAt(int x, int y, ushort damage)
+        public void DamageTileAt(int x, int y, int damage)
         {
             Debug.Log($"{GetType()} - DamageTileAt - {x}, {y}, {damage}");
             int currentHitPoints = Mathf.Max(0, (int)_grid[x, y].CurrentHitPoints - (int)damage);

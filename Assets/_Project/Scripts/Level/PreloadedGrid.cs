@@ -38,7 +38,7 @@ namespace Core.Level
             return x >= 0 && y >= 0;
         }
 
-        public void DamageTileAt(int x, int y, ushort damage)
+        public void DamageTileAt(int x, int y, int damage)
         {
             throw new System.NotImplementedException();
         }

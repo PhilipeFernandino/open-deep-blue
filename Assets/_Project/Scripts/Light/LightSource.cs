@@ -6,10 +6,10 @@ namespace Core.Light
     public readonly struct LightSource
     {
         public readonly Vector2Int Position;
-        public readonly int Intensity;
+        public readonly uint Intensity;
         public readonly Color Color;
 
-        public LightSource(Vector2Int pos, int intensity, Color color = default)
+        public LightSource(Vector2Int pos, uint intensity, Color color = default)
         {
             Position = pos;
             Intensity = intensity;
