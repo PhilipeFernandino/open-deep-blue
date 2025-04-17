@@ -15,37 +15,36 @@ MonoBehaviour:
   _preload: 1
   _type: 2
   _holdables:
-    _serializedList:
-    - Key: {fileID: 11400000, guid: 6f60b1eac4b034a49acfc6ee479d6ed5, type: 2}
-      Value:
-        mode: 0
-        unityReference: {fileID: 4752944851739773525, guid: 052c7cacb86c06b44a6c6ff1b9de24f9, type: 3}
-        rawReference:
-          rid: -2
-    - Key: {fileID: 11400000, guid: b650557738e53de47a124c8326cf79a4, type: 2}
-      Value:
-        mode: 0
-        unityReference: {fileID: -6105849096808340680, guid: 1cea8df2077d2a2488256dde0d899d74, type: 3}
-        rawReference:
-          rid: -2
-    - Key: {fileID: 11400000, guid: 82c9ad98d46722e408709f72d3b57b63, type: 2}
-      Value:
-        mode: 0
-        unityReference: {fileID: -1978122993120643415, guid: 78c2594336996e74b85115b6584bbe7e, type: 3}
-        rawReference:
-          rid: -2
-    - Key: {fileID: 11400000, guid: c27d0b7ebab089440a0312cc1964a6d2, type: 2}
-      Value:
-        mode: 0
-        unityReference: {fileID: 3580641103466260029, guid: 0b5cbca2e60e7374bbaf1391e8d3bbb0, type: 3}
-        rawReference:
-          rid: -2
-    - Key: {fileID: 11400000, guid: 70406118837e27d4090253c4184b5864, type: 2}
-      Value:
-        mode: 0
-        unityReference: {fileID: 9206541709950824132, guid: 0b5cbca2e60e7374bbaf1391e8d3bbb0, type: 3}
-        rawReference:
-          rid: -2
+  - <ItemSO>k__BackingField: {fileID: 11400000, guid: 82c9ad98d46722e408709f72d3b57b63, type: 2}
+    <Holdable>k__BackingField:
+      mode: 0
+      unityReference: {fileID: -1978122993120643415, guid: 78c2594336996e74b85115b6584bbe7e, type: 3}
+      rawReference:
+        rid: -2
+  - <ItemSO>k__BackingField: {fileID: 11400000, guid: b650557738e53de47a124c8326cf79a4, type: 2}
+    <Holdable>k__BackingField:
+      mode: 0
+      unityReference: {fileID: -6105849096808340680, guid: 1cea8df2077d2a2488256dde0d899d74, type: 3}
+      rawReference:
+        rid: -2
+  - <ItemSO>k__BackingField: {fileID: 11400000, guid: c27d0b7ebab089440a0312cc1964a6d2, type: 2}
+    <Holdable>k__BackingField:
+      mode: 0
+      unityReference: {fileID: 3580641103466260029, guid: 0b5cbca2e60e7374bbaf1391e8d3bbb0, type: 3}
+      rawReference:
+        rid: -2
+  - <ItemSO>k__BackingField: {fileID: 11400000, guid: 6f60b1eac4b034a49acfc6ee479d6ed5, type: 2}
+    <Holdable>k__BackingField:
+      mode: 0
+      unityReference: {fileID: 4752944851739773525, guid: 052c7cacb86c06b44a6c6ff1b9de24f9, type: 3}
+      rawReference:
+        rid: -2
+  - <ItemSO>k__BackingField: {fileID: 11400000, guid: 70406118837e27d4090253c4184b5864, type: 2}
+    <Holdable>k__BackingField:
+      mode: 0
+      unityReference: {fileID: -1978122993120643415, guid: 78c2594336996e74b85115b6584bbe7e, type: 3}
+      rawReference:
+        rid: -2
   references:
     version: 2
     RefIds:

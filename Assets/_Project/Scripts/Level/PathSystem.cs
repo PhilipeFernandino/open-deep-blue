@@ -10,7 +10,7 @@ namespace Core.Level
 {
     public class PathSystem : Actor, IPathService
     {
-        private bool _debug;
+        [SerializeField] private bool _debug = false;
 
         private IGridService _gridService;
 
@@ -57,7 +57,6 @@ namespace Core.Level
 
                 var current = _open.Dequeue();
 
-                _gridService.ClearDrawAt(current);
                 DebugDraw(current, new Color(255, 0, 0, 0.3f), true);
 
                 if (current == end)

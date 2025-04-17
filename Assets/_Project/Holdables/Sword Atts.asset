@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <UsesPerSecond>k__BackingField: 3
   <AngleOffset>k__BackingField: 50
-  <DisableSRDelaySeconds>k__BackingField: 0.1
+  <DisableSRDelaySeconds>k__BackingField: 0.4
   <TimeScaleOnBlink>k__BackingField: 1
   <BlinkSeconds>k__BackingField: 0
   <UseEffect>k__BackingField:
@@ -59,9 +59,6 @@ MonoBehaviour:
       endDelay: 0
       useUnscaledTime: 0
       useFixedUpdate: 0
-  <Damage>k__BackingField:
-    Min: 150
-    Max: 300
-  <KnockbackForce>k__BackingField:
-    Min: 25
-    Max: 25
+  <Damage>k__BackingField: 0
+  <Knockback>k__BackingField: 0
+  <CriticalChance>k__BackingField: 0

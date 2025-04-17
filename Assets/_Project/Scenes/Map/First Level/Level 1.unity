@@ -818,6 +818,7 @@ MonoBehaviour:
   _assertAwake: 0
   _activateOnSpawn: 0
   _deactivateOnDispose: 0
+  _debug: 0
 --- !u!4 &138858323
 Transform:
   m_ObjectHideFlags: 0
@@ -2413,7 +2414,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3793254190692224981, guid: 73e316bda44597049b0ee0682e75ca04, type: 3}
       propertyPath: _items.Array.size
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3793254190692224981, guid: 73e316bda44597049b0ee0682e75ca04, type: 3}
       propertyPath: _addDefinedOnStart
@@ -2450,7 +2451,7 @@ PrefabInstance:
     - target: {fileID: 3793254190692224981, guid: 73e316bda44597049b0ee0682e75ca04, type: 3}
       propertyPath: _items.Array.data[4]
       value: 
-      objectReference: {fileID: 11400000, guid: d5e56b91c574d6d45861104e3f52b59a, type: 2}
+      objectReference: {fileID: 11400000, guid: 70406118837e27d4090253c4184b5864, type: 2}
     - target: {fileID: 3793254190692224981, guid: 73e316bda44597049b0ee0682e75ca04, type: 3}
       propertyPath: _items.Array.data[5]
       value: 
@@ -2485,7 +2486,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5100123393815294630, guid: 73e316bda44597049b0ee0682e75ca04, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 813886.56
+      value: 816288.56
       objectReference: {fileID: 0}
     - target: {fileID: 5166222320962546861, guid: 73e316bda44597049b0ee0682e75ca04, type: 3}
       propertyPath: m_AnchorMax.y
@@ -9295,7 +9296,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2096296144
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9303,7 +9304,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2096296143}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9e73f14011114ff41a54868cdd7ddfc8, type: 3}
   m_Name: 
@@ -9318,7 +9319,7 @@ MonoBehaviour:
   _filterMode: 1
   _chunkSize: 20
   _loadNearChunks: 1
-  _baseIntensity: 15
+  _baseIntensity: 1
   _lightFallof: 0.8
   _tileOnLight: 0.2
   _offset: {x: -0.5, y: -0.5}

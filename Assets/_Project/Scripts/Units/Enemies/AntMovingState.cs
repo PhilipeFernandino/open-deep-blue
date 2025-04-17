@@ -23,7 +23,7 @@ namespace Core.Units
         private Vector2 Position => _fsmAgent.Position;
         private Vector2 TargetPosition => _fsmAgent.PositionEventBus.Position;
 
-        private CancellationTokenSource _findPathCTS;
+        private CancellationTokenSource _findPathCts;
 
         public void Enter(IEnterStateData enterStateData)
         {
@@ -52,11 +52,6 @@ namespace Core.Units
 
         private async UniTask FindPathTask()
         {
-            _findPathCTS?.Cancel();
-            _findPathCTS = new();
-
-            var token = _findPathCTS.Token;
-
             if (_fsmAgent.PathService.TryFindPath(Position, TargetPosition, in _path, 100))
             {
                 //StringBuilder sb = new("Found path: \n");
@@ -71,10 +66,16 @@ namespace Core.Units
             }
             else
             {
-                await UniTask.Delay(TimeSpan.FromSeconds(5), cancellationToken: token)
+                _findPathCts?.Cancel();
+                _findPathCts?.Dispose();
+                _findPathCts = new();
+
+                var token = _findPathCts.Token;
+
+                bool wasCancelled = await UniTask.Delay(TimeSpan.FromSeconds(5), cancellationToken: token)
                     .SuppressCancellationThrow();
 
-                if (!token.IsCancellationRequested)
+                if (!wasCancelled)
                 {
                     FindPathTask().Forget();
                 }

@@ -27,7 +27,7 @@ namespace Core.Player
 
         public Vector2 LastMovementInput { get; private set; }
 
-        private CancellationTokenSource _knockback_CTS;
+        private CancellationTokenSource _knockbackCts;
 
         public void Setup(float speed)
         {
@@ -54,21 +54,23 @@ namespace Core.Player
         {
             Debug.Log($"{GetType()} - {this.name}: Added knockback: {force}");
 
-            _knockback_CTS?.Cancel();
-            _knockback_CTS = new();
-
             _rb2D.velocity = force * _forceKnRate;
             _isKnockbackApplied = true;
             float magnitude = force.magnitude;
 
-            var token = _knockback_CTS.Token;
 
-            await UniTask.Delay(
+            _knockbackCts?.Cancel();
+            _knockbackCts?.Dispose();
+            _knockbackCts = new();
+
+            var token = _knockbackCts.Token;
+
+            bool wasCancelled = await UniTask.Delay(
                 TimeSpan.FromSeconds(magnitude * _timeKnRate),
                 cancellationToken: token)
                 .SuppressCancellationThrow();
 
-            if (!token.IsCancellationRequested)
+            if (!wasCancelled)
             {
                 _isKnockbackApplied = false;
                 _rb2D.velocity = Vector2.zero;

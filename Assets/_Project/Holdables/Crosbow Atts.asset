@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c80d4a2be23e78c47914b247e9b0320f, type: 3}
   m_Name: Crosbow Atts
   m_EditorClassIdentifier: 
-  <UsesPerSecond>k__BackingField: 1
+  <UsesPerSecond>k__BackingField: 10
   <AngleOffset>k__BackingField: 0
   <DisableSRDelaySeconds>k__BackingField: 0.1
   <TimeScaleOnBlink>k__BackingField: 0.5

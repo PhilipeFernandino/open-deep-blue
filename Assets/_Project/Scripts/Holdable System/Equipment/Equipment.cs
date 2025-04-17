@@ -21,7 +21,7 @@ namespace Core.HoldableSystem
         protected bool _canUse = true;
 
         protected TimeSpan _disableSRDelay;
-        protected CancellationTokenSource _disableSR_Cts;
+        protected CancellationTokenSource _disableSRCts;
 
         protected ICameraService _cameraService;
         protected IGridService _gridService;
@@ -52,7 +52,7 @@ namespace Core.HoldableSystem
             _canUse = true;
         }
 
-        protected void Awake()
+        protected virtual void Awake()
         {
             _collider = GetComponent<Collider2D>();
             _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
@@ -61,7 +61,7 @@ namespace Core.HoldableSystem
             _spriteRenderer.enabled = false;
         }
 
-        protected void Start()
+        protected virtual void Start()
         {
             _cameraService = ServiceLocatorUtilities.GetServiceAssert<ICameraService>();
             _gridService = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
@@ -69,9 +69,6 @@ namespace Core.HoldableSystem
 
         protected async UniTask Use(Vector2 worldPosition)
         {
-            _disableSR_Cts?.Cancel();
-            _disableSR_Cts = new CancellationTokenSource();
-
             _spriteRenderer.enabled = true;
             _collider.enabled = true;
 
@@ -98,22 +95,30 @@ namespace Core.HoldableSystem
 
             transform.parent.eulerAngles = rotTweenSettings.startValue;
 
-            await Tween.EulerAngles(
+            // FIX
+            bool wasDestroyed = await Tween.EulerAngles(
                 transform.parent,
-                rotTweenSettings);
+                rotTweenSettings).ToUniTask(cancellationToken: destroyCancellationToken).SuppressCancellationThrow();
 
-            _collider.enabled = false;
-
-            DisableSpriteRendererTask().Forget();
+            if (!wasDestroyed)
+            {
+                _collider.enabled = false;
+                DisableSpriteRendererTask().Forget();
+            }
         }
 
         protected async UniTask DisableSpriteRendererTask()
         {
-            CancellationToken token = _disableSR_Cts.Token;
-            await UniTask.Delay(_disableSRDelay, cancellationToken: token).SuppressCancellationThrow();
+            _disableSRCts?.Cancel();
+            _disableSRCts?.Dispose();
+            _disableSRCts = new();
 
-            if (!token.IsCancellationRequested)
+            var token = _disableSRCts.Token;
+            bool wasCancelled = await UniTask.Delay(_disableSRDelay, cancellationToken: token).SuppressCancellationThrow();
+
+            if (!wasCancelled)
             {
+                Debug.LogWarning("something went wrong");
                 _spriteRenderer.enabled = false;
             }
         }
