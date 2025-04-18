@@ -15,7 +15,8 @@
         "UniTask",
         "Core.Level",
         "Core.Light",
-        "Core"
+        "Core",
+        "Core.Map"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

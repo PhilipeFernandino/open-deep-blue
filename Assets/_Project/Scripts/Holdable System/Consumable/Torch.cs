@@ -12,7 +12,10 @@ namespace Core.HoldableSystem
 
         protected override void UseBehavior(Vector2 position)
         {
-            _addLightEventBus.AddObject(new LightSource(Vector2Int.RoundToInt(position), Attributes.Intensity));
+            if (_gridService.TrySetTileAt(position, Map.Tile.Torch))
+            {
+                _addLightEventBus.AddObject(new LightSource(Vector2Int.RoundToInt(position), Attributes.Intensity));
+            }
         }
     }
 }

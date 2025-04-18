@@ -73,7 +73,7 @@ namespace Core.Level
             int currentHitPoints = Mathf.Max(0, (int)_grid[x, y].CurrentHitPoints - (int)damage);
             if (currentHitPoints <= 0)
             {
-                SetTileAt(x, y, Map.Tile.None);
+                TrySetTileAt(x, y, Map.Tile.None);
             }
         }
 
@@ -92,13 +92,20 @@ namespace Core.Level
             return IsWithinBounds(x, y, 0, _mapMetadata.Dimensions); // load from chunk
         }
 
-        public void SetTileAt(int x, int y, Core.Map.Tile tile)
+        public bool TrySetTileAt(int x, int y, Core.Map.Tile tile, bool overrideTile = false)
         {
+            if (!overrideTile && HasTileAt(x, y))
+            {
+                return false;
+            }
+
             var tileInstance = (TileInstance)_tilesSettings.GetDefinition(tile);
             var tileBase = _tilesSettings.GetTileBase(tile);
 
             _grid[x, y] = tileInstance;
             _tilemap.SetTile(new Vector3Int(x, y, 0), tileBase);
+
+            return true;
         }
 
         protected override void OnInitialize()

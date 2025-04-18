@@ -54,12 +54,7 @@ namespace Core.Units
         {
             if (_fsmAgent.PathService.TryFindPath(Position, TargetPosition, in _path, 100))
             {
-                //StringBuilder sb = new("Found path: \n");
-                //foreach (var path in _path)
-                //{
-                //    sb.AppendLine(path.ToString());
-                //}
-                //_fsmAgent.Log(sb.ToString());
+                //LogPath();
 
                 _currentTrackPos = TargetPosition;
                 WalkPath();
@@ -125,6 +120,16 @@ namespace Core.Units
             {
                 ResetPath();
             }
+        }
+
+        private void LogPath()
+        {
+            StringBuilder sb = new("Found path: \n");
+            foreach (var path in _path)
+            {
+                sb.AppendLine(path.ToString());
+            }
+            _fsmAgent.Log(sb.ToString());
         }
     }
 }

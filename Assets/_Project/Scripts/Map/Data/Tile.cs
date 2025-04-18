@@ -12,8 +12,12 @@
         MoonStone = 5,
         Amazonita = 6,
 
-        // Interactive 
+        // Interactive --
+        // Chests
         Chest = 1001,
+
+        // Light Sources
+        Torch = 1111,
 
         // Boss mark tiles
         AntQueenSpawn = 2001,

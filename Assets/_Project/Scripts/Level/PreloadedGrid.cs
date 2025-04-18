@@ -58,7 +58,7 @@ namespace Core.Level
             throw new System.NotImplementedException();
         }
 
-        public void SetTileAt(int x, int y, Map.Tile Tile)
+        public bool TrySetTileAt(int x, int y, Map.Tile Tile, bool overrideTile = false)
         {
             throw new System.NotImplementedException();
         }

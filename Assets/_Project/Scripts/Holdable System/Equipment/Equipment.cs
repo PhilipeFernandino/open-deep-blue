@@ -69,6 +69,10 @@ namespace Core.HoldableSystem
 
         protected async UniTask Use(Vector2 worldPosition)
         {
+            _disableSRCts?.Cancel();
+            _disableSRCts?.Dispose();
+            _disableSRCts = new();
+
             _spriteRenderer.enabled = true;
             _collider.enabled = true;
 
@@ -109,16 +113,11 @@ namespace Core.HoldableSystem
 
         protected async UniTask DisableSpriteRendererTask()
         {
-            _disableSRCts?.Cancel();
-            _disableSRCts?.Dispose();
-            _disableSRCts = new();
-
             var token = _disableSRCts.Token;
             bool wasCancelled = await UniTask.Delay(_disableSRDelay, cancellationToken: token).SuppressCancellationThrow();
 
             if (!wasCancelled)
             {
-                Debug.LogWarning("something went wrong");
                 _spriteRenderer.enabled = false;
             }
         }

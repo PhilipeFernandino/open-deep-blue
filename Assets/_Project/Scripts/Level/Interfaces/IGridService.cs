@@ -20,7 +20,7 @@ namespace Core.Level
         public bool HasTileAt(int x, int y);
         public void LoadTilesBlock(BoundsInt area, TileBase[] tiles);
         public void LoadFloorTilesBlock(BoundsInt area, TileBase[] tiles);
-        public void SetTileAt(int x, int y, Map.Tile tile);
+        public bool TrySetTileAt(int x, int y, Map.Tile tile, bool overrideTile = false);
         public bool TryGetTileAt(int x, int y, out TileInstance tile);
         public void DamageTileAt(int x, int y, int damage);
         public bool IsTileLoaded(int x, int y);
@@ -34,10 +34,10 @@ namespace Core.Level
         }
 
 
-        public void SetTileAt(Vector2 v, Map.Tile tile)
+        public bool TrySetTileAt(Vector2 v, Map.Tile tile, bool overrideTile = false)
         {
             var pos = ToGridPosition(v);
-            SetTileAt(pos.x, pos.y, tile);
+            return TrySetTileAt(pos.x, pos.y, tile, overrideTile);
         }
 
         public bool TryGetTileAt(Vector2 v, out TileInstance tile)
