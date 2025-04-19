@@ -36,7 +36,7 @@ namespace Core.HoldableSystem
             return false;
         }
 
-        protected override void OnValidate()
+        protected override void OnLoaded()
         {
             _holdablesDict.Clear();
 
