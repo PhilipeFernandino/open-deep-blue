@@ -50,7 +50,7 @@ TagManager:
   - name: Equipment
     uniqueID: 906048743
     locked: 0
-  - name: Unit
+  - name: Foreground
     uniqueID: 2689193507
     locked: 0
   - name: Top
