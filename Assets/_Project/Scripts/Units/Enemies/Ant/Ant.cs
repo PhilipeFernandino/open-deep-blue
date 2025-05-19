@@ -5,7 +5,6 @@ using Core.HealthSystem;
 using Core.Level;
 using Core.Player;
 using Core.Util;
-using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,7 +13,7 @@ namespace Core.Units
 {
     [RequireComponent(typeof(Movement2D))]
     [RequireComponent(typeof(BoxCollider2D))]
-    public class AntEnemy : Actor, IFSMAgent<AntState>
+    public class Ant : Actor, IFSMAgent<AntState>
     {
         [SerializeField] private HealthComponent _healthComponent;
         [SerializeField] private PositionEventBus _targetPositionEventBus;
@@ -30,6 +29,11 @@ namespace Core.Units
         private Movement2D _movementController;
         private BoxCollider2D _boxCollider;
 
+        private AntVisionSensor _visionSensor;
+        private AntBodySensor _bodySensor;
+
+        internal AntBlackboard Blackboard { get; private set; }
+
         internal Movement2D MovementController => _movementController;
         internal BoxCollider2D BoxCollider => _boxCollider;
         internal PositionEventBus PositionEventBus => _targetPositionEventBus;
@@ -39,6 +43,7 @@ namespace Core.Units
 
         internal IPathService PathService { get; private set; }
         internal IGridService GridService { get; private set; }
+        internal IPheromoneService PheromoneGrid { get; private set; }
 
         public Vector2 Position => transform.position.XY();
 
@@ -57,6 +62,9 @@ namespace Core.Units
         private void Update()
         {
             _fsm.Update();
+
+            _bodySensor.Sense();
+            _visionSensor.Sense();
         }
 
         private void FixedUpdate()
@@ -67,9 +75,14 @@ namespace Core.Units
         protected override void OnInitialize()
         {
             base.OnSpawn();
+            Blackboard = new();
+
             _movementController = GetComponent<Movement2D>();
             _boxCollider = GetComponent<BoxCollider2D>();
             _healthComponent.Attacked += Attacked_EventHandler;
+
+            _bodySensor = new(this);
+            _visionSensor = new(this);
         }
 
         private void Attacked_EventHandler(AttackedData data)
@@ -96,6 +109,7 @@ namespace Core.Units
 
             GridService = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
             PathService = ServiceLocatorUtilities.GetServiceAssert<IPathService>();
+            PheromoneGrid = ServiceLocatorUtilities.GetServiceAssert<IPheromoneService>();
 
             TransferState(AntState.Idle, null, null);
         }

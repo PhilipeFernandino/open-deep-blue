@@ -48,6 +48,7 @@ namespace Core.Map
 
         #region Debug
         [SerializeField] private bool _debug;
+        [SerializeField] private bool _visualize;
         [SerializeField] private bool _generateOnAwake;
 
 
@@ -73,7 +74,7 @@ namespace Core.Map
 
             if (map != null)
             {
-                if (_debug)
+                if (_visualize)
                 {
                     VisualizeColored(map.Tiles, _dimensions);
                 }

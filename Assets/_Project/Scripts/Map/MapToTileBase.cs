@@ -10,7 +10,7 @@ namespace Core.Map
 {
     public class MapToTileBase : Actor, IMapToTileBaseService
     {
-        private TilesSettings _tilesSettings; // get
+        private TilesSettings _tilesSettings;
 
         protected override void OnInitialize()
         {
@@ -21,13 +21,12 @@ namespace Core.Map
 
         protected override void OnSpawn()
         {
+            _tilesSettings = ScriptableSettings.GetOrFind<TilesSettings>();
             base.OnSpawn();
         }
 
-        public async UniTask<Map> GenerateTilemap(Map map)
+        public async UniTask<Map> GenerateTilemap(MapMetadata mapMetadata)
         {
-            var mapMetadata = map.Metadata;
-
             int dimensions = mapMetadata.Dimensions;
             TileBase[] tiles = new TileBase[dimensions * dimensions];
             TileBase[] floorTiles = new TileBase[dimensions * dimensions];

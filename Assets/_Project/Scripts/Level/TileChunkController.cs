@@ -40,7 +40,7 @@ namespace Core.Level
             PositionChanged_EventHandler(_positionEventBus.Position);
         }
 
-        private void PositionChanged_EventHandler(Vector2 vector)
+        public void UpdatePosition(Vector2 vector)
         {
             if (_mapMetadata == null)
             {
@@ -48,6 +48,11 @@ namespace Core.Level
             }
 
             _chunkController.UpdatePosition(vector);
+        }
+
+        private void PositionChanged_EventHandler(Vector2 vector)
+        {
+            UpdatePosition(vector);
         }
 
         public void SetTileChunk((BoundsInt area, Vector2Int anchor) e)

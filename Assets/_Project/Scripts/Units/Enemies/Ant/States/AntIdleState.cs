@@ -1,12 +1,12 @@
-﻿using Core.EventBus;
-using Core.FSM;
+﻿using Core.FSM;
+using Core.EventBus;
 using UnityEngine;
 
 namespace Core.Units
 {
     public class AntIdleState : IFSMState<AntState>
     {
-        private AntEnemy _fsmAgent;
+        private Ant _fsmAgent;
         private PositionEventBus _targetPositionEventBus;
 
         public void Enter(IEnterStateData enterStateData)
@@ -22,7 +22,7 @@ namespace Core.Units
 
         public void Initialize(IFSMAgent<AntState> fsmAgent)
         {
-            _fsmAgent = (AntEnemy)fsmAgent;
+            _fsmAgent = (Ant)fsmAgent;
             _targetPositionEventBus = _fsmAgent.PositionEventBus;
         }
 

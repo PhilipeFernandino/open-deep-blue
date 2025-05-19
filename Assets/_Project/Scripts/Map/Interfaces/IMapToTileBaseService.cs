@@ -7,6 +7,6 @@ namespace Core.Map
     [DynamicService]
     public interface IMapToTileBaseService : IService
     {
-        public async UniTask<Map> GenerateTilemap() { throw new NotImplementedException(); }
+        public async UniTask<Map> GenerateTilemap(MapMetadata map) { throw new NotImplementedException(); }
     }
 }

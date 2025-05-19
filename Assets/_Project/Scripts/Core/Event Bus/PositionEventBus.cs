@@ -6,7 +6,7 @@ namespace Core.EventBus
     [CreateAssetMenu(menuName = "Core/EventBus/ObjectAddedEventBus")]
     public class PositionEventBus : ScriptableObject
     {
-        private Vector2 _position;
+        private Vector2 _position = Vector2.zero;
 
         public Vector2 Position
         {

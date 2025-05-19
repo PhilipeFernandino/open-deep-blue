@@ -1,6 +1,11 @@
 ﻿using Coimbra;
 using Coimbra.Services;
+using Coimbra.Services.Events;
+using Core.EventBus;
 using Core.Map;
+using Core.Util;
+using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -11,21 +16,47 @@ namespace Core.Level
         [SerializeField] private Tilemap _tilemap;
         [SerializeField] private Vector2Int _startAt;
 
-        public int ChunkSize => 100;
+        private IMapToTileBaseService _mapToTileBase;
+        private int _mapDimensions = 0;
 
-        public int LoadedDimensions => 100;
+        public int ChunkSize => _mapDimensions;
 
-        public int MapDimensions => 100;
+        public int LoadedDimensions => _mapDimensions;
+
+        public int MapDimensions => _mapDimensions;
+
 
         protected override void OnInitialize()
         {
             base.OnInitialize();
             ServiceLocator.Set<IGridService>(this);
+
         }
 
         protected override void OnSpawn()
         {
+            MapMetadataGeneratedEvent.AddListener(MapLoaded_EventHandler);
+            _mapToTileBase = ServiceLocatorUtilities.GetServiceAssert<IMapToTileBaseService>();
 
+        }
+
+        private void MapLoaded_EventHandler(ref EventContext context, in MapMetadataGeneratedEvent e)
+        {
+            LoadMapTask(e).Forget();
+        }
+
+        private async UniTask LoadMapTask(MapMetadataGeneratedEvent e)
+        {
+            var mapMeta = e.MapMetadata;
+            var map = await _mapToTileBase.GenerateTilemap(mapMeta);
+            _mapDimensions = mapMeta.Dimensions;
+
+            BoundsInt area = new();
+            area.SetMinMax(
+                Vector3Int.zero,
+                new(_mapDimensions, _mapDimensions, 1));
+
+            _tilemap.SetTilesBlock(area, map.TileBases);
         }
 
         public bool HasTileAt(int x, int y)

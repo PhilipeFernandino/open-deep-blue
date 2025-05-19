@@ -20,6 +20,7 @@ namespace Core.Level
         [SerializeField] private Tilemap _floorTilemap;
         [SerializeField] private MapSystem _mapSystem;
         [SerializeField] private SpriteRenderer _gridSpriteRendererPrefab;
+        [SerializeField] private bool _loadOnStart;
 
         [Header("Chunk Control")]
         [SerializeField] private int _chunkSize;
@@ -132,6 +133,12 @@ namespace Core.Level
                 _positionEventBus,
                 this,
                 _tilesSettings);
+
+
+            if (_loadOnStart)
+            {
+                _chunkController.UpdatePosition(_positionEventBus.Position);
+            }
         }
 
         private void InitializeGrid(MapMetadata mapMetadata)

@@ -1,10 +1,10 @@
-﻿using Core.EventBus;
-using Core.FSM;
-using Cysharp.Threading.Tasks;
+﻿using Core.FSM;
+using Core.EventBus;
 using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Core.Units
@@ -12,7 +12,7 @@ namespace Core.Units
     [System.Serializable]
     public class AntMovingState : IFSMState<AntState>
     {
-        private AntEnemy _fsmAgent;
+        private Ant _fsmAgent;
         private List<Vector2Int> _path = new(25);
         private PositionEventBus _targetPositionEventBus;
 
@@ -38,7 +38,7 @@ namespace Core.Units
 
         public void Initialize(IFSMAgent<AntState> fsmAgent)
         {
-            _fsmAgent = (AntEnemy)fsmAgent;
+            _fsmAgent = (Ant)fsmAgent;
             _targetPositionEventBus = _fsmAgent.PositionEventBus;
         }
 
