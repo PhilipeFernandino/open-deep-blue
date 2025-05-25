@@ -8,9 +8,7 @@
         "PrimeTween.Runtime",
         "Unity.InputSystem",
         "Unity.Cinemachine",
-        "Core.EventBus",
-        "Core.Util",
-        "Core.Extensions"
+        "Core.Util"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

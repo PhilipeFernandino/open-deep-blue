@@ -8,7 +8,7 @@ namespace Core.Units
         public Blackboard<AntPheromone> PheromoneLevel;
         public Blackboard<AntBlackboardKeys> Internal;
 
-        public int GetPheromoneLevel(AntPheromone key)
+        public int Get(AntPheromone key)
         {
             if (PheromoneLevel.TryGet(key, out int value))
             {
@@ -17,12 +17,12 @@ namespace Core.Units
             return default;
         }
 
-        public void SetPheromoneLevel(AntPheromone key, int value)
+        public void Set(AntPheromone key, int value)
         {
             PheromoneLevel.Set(key, value);
         }
 
-        public T GetInternal<T>(AntBlackboardKeys key)
+        public T Get<T>(AntBlackboardKeys key)
         {
             if (Internal.TryGet(key, out object value))
             {
@@ -31,7 +31,7 @@ namespace Core.Units
             return default;
         }
 
-        public void SetInternal<T>(AntBlackboardKeys key, T value)
+        public void Set<T>(AntBlackboardKeys key, T value)
         {
             Internal.Set(key, value);
         }

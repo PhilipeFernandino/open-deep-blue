@@ -5,8 +5,8 @@ namespace Core.Units
     {
         public float Score(AntBlackboard blackboard)
         {
-            float nutrition = blackboard.GetInternal<float>(AntBlackboardKeys.Nutrition);
-            float hungerTolerance = blackboard.GetInternal<float>(AntBlackboardKeys.HungerTolerance);
+            float nutrition = blackboard.Get<float>(AntBlackboardKeys.Nutrition);
+            float hungerTolerance = blackboard.Get<float>(AntBlackboardKeys.HungerTolerance);
 
             float distanceToFood = 0;
 
