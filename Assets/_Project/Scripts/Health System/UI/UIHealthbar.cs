@@ -16,8 +16,8 @@ namespace Core.HealthSystem
         private bool _updatePosition = false;
         private bool _healthHasZeroed = false;
 
-        public void Setup(IHealth health, Transform targetTransform, Vector3 offset,
-            bool updatePosition, Action healthZeroedCallback, bool startDisabled = true)
+        public void Setup(IHealth health, Transform targetTransform = null, Vector3 offset = default,
+            bool updatePosition = false, Action healthZeroedCallback = null, bool startDisabled = true)
         {
             if (startDisabled)
             {
@@ -28,16 +28,20 @@ namespace Core.HealthSystem
 
             _healthbar.fillAmount = 1f;
 
-            _health = health;
-            _offset = offset;
-            _targetTranform = targetTransform;
-            _updatePosition = updatePosition;
-            _releaseCallback = healthZeroedCallback;
-
-            transform.position = _targetTranform.position + _offset;
-
             health.HealthZeroed += HealthZeroedEventHandler;
             health.HealthChanged += HealthChangedEventHandler;
+
+            _updatePosition = updatePosition;
+
+            if (updatePosition)
+            {
+                _health = health;
+                _offset = offset;
+                _targetTranform = targetTransform;
+                _releaseCallback = healthZeroedCallback;
+
+                transform.position = _targetTranform.position + _offset;
+            }
         }
 
         private void HealthZeroedEventHandler()
@@ -49,9 +53,6 @@ namespace Core.HealthSystem
 
         private void HealthChangedEventHandler(HealthChangedData e)
         {
-
-            Debug.Log($"{GetType()} - {e.HealthNewValue} / {_health.MaxHealth}");
-
             _healthbar.fillAmount = e.HealthNewValue / _health.MaxHealth;
 
             if (!_healthHasZeroed && !gameObject.activeSelf)
