@@ -54,7 +54,7 @@ namespace Core.Player
         {
             Debug.Log($"{GetType()} - {this.name}: Added knockback: {force}");
 
-            _rb2D.velocity = force * _forceKnRate;
+            _rb2D.linearVelocity = force * _forceKnRate;
             _isKnockbackApplied = true;
             float magnitude = force.magnitude;
 
@@ -73,7 +73,7 @@ namespace Core.Player
             if (!wasCancelled)
             {
                 _isKnockbackApplied = false;
-                _rb2D.velocity = Vector2.zero;
+                _rb2D.linearVelocity = Vector2.zero;
             }
         }
 

@@ -19,7 +19,7 @@ namespace Core.Scene
         {
             var currentScene = SceneManager.GetActiveScene();
 
-            await SceneManager.LoadSceneAsync((int)GameScene.Load);
+            await SceneManager.LoadSceneAsync((int)GameScene.Load).ToUniTask();
             var loadScene = SceneManager.GetSceneByBuildIndex((int)GameScene.Load);
             SceneManager.SetActiveScene(loadScene);
 
@@ -42,7 +42,7 @@ namespace Core.Scene
             }
 
             asyncOp.allowSceneActivation = true;
-            await asyncOp;
+            await asyncOp.ToUniTask();
         }
 
         public void Dispose()

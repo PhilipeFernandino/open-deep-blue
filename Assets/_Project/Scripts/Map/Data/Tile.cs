@@ -12,9 +12,14 @@
         MoonStone = 5,
         Amazonita = 6,
 
+        GreenGrass = 101,
+        Fluffy = 102,
+
+        TreeRoot = 151,
         // Interactive --
         // Chests
         Chest = 1001,
+        Bed = 1002,
 
         // Light Sources
         Torch = 1111,
