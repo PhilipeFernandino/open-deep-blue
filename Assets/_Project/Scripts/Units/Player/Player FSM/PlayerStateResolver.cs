@@ -40,7 +40,7 @@ namespace Core.Player
 
         public void DashInput(IFSMState<PlayerState> actor)
         {
-            Vector2 direction = _player.PlayerMovementDirection;
+            Vector2 direction = _player.MovementDirection;
 
             _player.TransferState(
                 PlayerState.Dashing,

@@ -43,8 +43,8 @@ namespace Core.Player
         #region FSM Delegation
         Dictionary<PlayerState, PlayerFSMState> IFSMAgent<PlayerState>.States => _fsm.States;
 
-        public Vector2 PlayerMovementDirection => PlayerMovement.LastMovementInput;
-
+        public Vector2 MovementDirection => PlayerMovement.LastMovementInput;
+        public Vector2 FacingDirection => PlayerMovement.LastMovementInput;
         public Vector2 Position => transform.position.XY();
 
         public IPlayerFSMState State => ((IPlayerFSMState)_fsm.State);

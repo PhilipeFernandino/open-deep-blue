@@ -1,4 +1,5 @@
 ﻿using Coimbra;
+using Core.Interaction;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,17 +9,22 @@ using UnityEngine.Tilemaps;
 
 namespace Core.Map
 {
+
+
+
     [ProjectSettings("Game Settings/Map")]
     public class TilesSettings : ScriptableSettings
     {
         [field: SerializeField] public TileToTileBase[] TileToTileBase { get; private set; }
         [field: SerializeField] public TileToTileBase[] TileToFloorTileBase { get; private set; }
         [field: SerializeField] public TileDefinition[] TileDefinitions { get; private set; }
+        [field: SerializeField] public InteractableTile[] InteractableTiles { get; private set; }
 
 
         private TileDefinition[] _tileDefinitionLookup;
         private TileBase[] _tileToTileBaseLookup;
         private TileBase[] _tileToFloorTileBaseLookup;
+        private IInteractable[] _interactableTilesLookup;
 
         protected override void OnLoaded()
         {
@@ -65,7 +71,16 @@ namespace Core.Map
             }
         }
 
+        private void SetInteractableTiles()
+        {
+            int maxTileType = Enum.GetValues(typeof(Tile)).Cast<ushort>().Max();
+            _interactableTilesLookup = new IInteractable[maxTileType + 1];
 
+            foreach (var def in InteractableTiles)
+            {
+                _interactableTilesLookup[(int)def.TileType] = def.Interactable;
+            }
+        }
 
         public ref readonly TileDefinition GetDefinition(Tile tile)
         {
@@ -80,6 +95,11 @@ namespace Core.Map
         public TileBase GetFloorTileBase(Tile tile)
         {
             return _tileToFloorTileBaseLookup[(int)tile];
+        }
+
+        public IInteractable GetInteractable(Tile tile)
+        {
+            return _interactableTilesLookup[(int)tile];
         }
     }
 }

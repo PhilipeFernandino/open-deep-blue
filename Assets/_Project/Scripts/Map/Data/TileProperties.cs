@@ -12,5 +12,6 @@ namespace Core.Map
         IsLootDropable = 1 << 2,
         IsBossSpawn = 1 << 3,
         IsChest = 1 << 4,
+        IsInteractable = 1 << 5,
     }
 }

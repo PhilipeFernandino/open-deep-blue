@@ -35,6 +35,8 @@ namespace Core.Level
         private int _gridSize;
         private bool _isInitialized = false;
 
+        private TileInstance[,] _underworld;
+        private TileInstance[,] _overworld;
 
         private MapMetadata _mapMetadata;
 

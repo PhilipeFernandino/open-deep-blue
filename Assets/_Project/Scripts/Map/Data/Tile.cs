@@ -16,17 +16,20 @@
         Fluffy = 102,
 
         TreeRoot = 151,
+
+        // Light Sources
+        Torch = 501,
+
         // Interactive --
         // Chests
         Chest = 1001,
         Bed = 1002,
 
-        // Light Sources
-        Torch = 1111,
+        // 
+        BurrowHole = 1211,
 
         // Boss mark tiles
         AntQueenSpawn = 2001,
         AntQueenRoomTile = 2002,
-
     }
 }

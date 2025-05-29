@@ -179,7 +179,7 @@ namespace Core.Map
             }
 
             MakeQueenLair(tiles);
-            SpawnChests(tiles, _basePass);
+            SpawnOnRooms(tiles, _basePass, Tile.BurrowHole);
             MakeMapLimits(tiles);
 
             if (_debug)
@@ -219,7 +219,7 @@ namespace Core.Map
             }
         }
 
-        private void SpawnChests(Tile[,] map, WormPass cavePass)
+        private void SpawnOnRooms(Tile[,] map, WormPass cavePass, Tile tile)
         {
             List<Vector2Int> rooms = cavePass.Rooms;
 
@@ -233,7 +233,7 @@ namespace Core.Map
 
                     if (IsWithinMapCoordinates(x, y))
                     {
-                        map[x, y] = Tile.Chest;
+                        map[x, y] = tile;
                     }
                 }
             }

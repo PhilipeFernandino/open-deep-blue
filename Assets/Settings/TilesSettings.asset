@@ -33,12 +33,18 @@ MonoBehaviour:
     <TileBase>k__BackingField: {fileID: 11400000, guid: 0740d841b11f6b846855f9a8c8f6144d, type: 2}
   - <TileType>k__BackingField: 2001
     <TileBase>k__BackingField: {fileID: 11400000, guid: 0740d841b11f6b846855f9a8c8f6144d, type: 2}
+  - <TileType>k__BackingField: 151
+    <TileBase>k__BackingField: {fileID: 11400000, guid: 68a0cf4e54aeab6489bcc9b70433602a, type: 2}
   - <TileType>k__BackingField: 1001
-    <TileBase>k__BackingField: {fileID: 11400000, guid: 0740d841b11f6b846855f9a8c8f6144d, type: 2}
-  - <TileType>k__BackingField: 1001
-    <TileBase>k__BackingField: {fileID: 11400000, guid: 0740d841b11f6b846855f9a8c8f6144d, type: 2}
-  - <TileType>k__BackingField: 1111
+    <TileBase>k__BackingField: {fileID: 11400000, guid: 338b12a87377feb48980417039441600, type: 2}
+  - <TileType>k__BackingField: 501
     <TileBase>k__BackingField: {fileID: 11400000, guid: 07c2592daae58074ca45764b2fac52d1, type: 2}
+  - <TileType>k__BackingField: 1211
+    <TileBase>k__BackingField: {fileID: 11400000, guid: be0b6d87cd647ea4f8413e397369a0a3, type: 2}
+  - <TileType>k__BackingField: 101
+    <TileBase>k__BackingField: {fileID: 11400000, guid: 066b0690a7a246843bd0502a00ede077, type: 2}
+  - <TileType>k__BackingField: 102
+    <TileBase>k__BackingField: {fileID: 11400000, guid: 715d35da015b1fb4da7ce31616f8a1cd, type: 2}
   <TileToFloorTileBase>k__BackingField:
   - <TileType>k__BackingField: 1
     <TileBase>k__BackingField: {fileID: 11400000, guid: 8f0de23d773965942bf4c621fce7bb34, type: 2}
@@ -69,11 +75,17 @@ MonoBehaviour:
     TileProperties: 7
     MaxHitPoints: 50
   - TileType: 1001
-    TileProperties: 23
+    TileProperties: 39
     MaxHitPoints: 100
   - TileType: 2001
     TileProperties: 0
     MaxHitPoints: 0
   - TileType: 2002
     TileProperties: 0
+    MaxHitPoints: 0
+  - TileType: 1211
+    TileProperties: 32
+    MaxHitPoints: 0
+  - TileType: 1211
+    TileProperties: 32
     MaxHitPoints: 0
