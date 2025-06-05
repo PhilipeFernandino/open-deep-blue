@@ -1,0 +1,42 @@
+{
+    "name": "root",
+    "metadata": {
+        "timer_format_version": "0.1.0",
+        "start_time_seconds": "1749088992",
+        "python_version": "3.10.12 | packaged by Anaconda, Inc. | (main, Jul  5 2023, 19:01:18) [MSC v.1916 64 bit (AMD64)]",
+        "command_line_arguments": "C:\\Users\\phili\\Documentos\\Desenvolvimento\\ml-agents\\python-envs\\penv\\Scripts\\mlagents-learn ant-config.yaml --run-id=exp1 --force",
+        "mlagents_version": "1.2.0.dev0",
+        "mlagents_envs_version": "1.2.0.dev0",
+        "communication_protocol_version": "1.5.0",
+        "pytorch_version": "2.2.2+cu121",
+        "numpy_version": "1.23.5",
+        "end_time_seconds": "1749089056"
+    },
+    "total": 63.76911939999991,
+    "count": 1,
+    "self": 0.009308900000178255,
+    "children": {
+        "run_training.setup": {
+            "total": 0.13488720000168541,
+            "count": 1,
+            "self": 0.13488720000168541
+        },
+        "TrainerController.start_learning": {
+            "total": 63.624923299998045,
+            "count": 1,
+            "self": 0.00012269999569980428,
+            "children": {
+                "TrainerController._reset_env": {
+                    "total": 63.62477960000251,
+                    "count": 1,
+                    "self": 63.62477960000251
+                },
+                "TrainerController._save_models": {
+                    "total": 2.099999983329326e-05,
+                    "count": 1,
+                    "self": 2.099999983329326e-05
+                }
+            }
+        }
+    }
+}

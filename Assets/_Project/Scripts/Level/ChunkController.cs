@@ -47,6 +47,7 @@ namespace Core.Level
 
         public void UpdatePosition(Vector2 vector)
         {
+            Debug.Log($"{GetType()} - UpdatePosition {vector}");
             _chunkAnchorsToRemove.Clear();
             _chunkAnchorsToAdd.Clear();
             _updatedChunkAnchors.Clear();

@@ -93,5 +93,10 @@ namespace Core.Level
         {
             throw new System.NotImplementedException();
         }
+
+        public void LoadGridBlock(int dimensions, Map.Tile[,] tiles)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

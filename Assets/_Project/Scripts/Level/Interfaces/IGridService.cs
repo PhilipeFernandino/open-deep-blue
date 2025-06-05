@@ -20,6 +20,7 @@ namespace Core.Level
         public bool HasTileAt(int x, int y);
         public void LoadTilesBlock(BoundsInt area, TileBase[] tiles);
         public void LoadFloorTilesBlock(BoundsInt area, TileBase[] tiles);
+        public void LoadGridBlock(int dimensions, Map.Tile[,] tiles);
         public bool TrySetTileAt(int x, int y, Map.Tile tile, bool overrideTile = false);
         public bool TryGetTileAt(int x, int y, out TileInstance tile);
         public void DamageTileAt(int x, int y, int damage);
