@@ -11,7 +11,7 @@ namespace Core.Units
         {
             Blackboard.Set(AntBlackboardKeys.CloseAnts, 5);
             Blackboard.Set(AntBlackboardKeys.PlayerPosition, Vector3.zero);
-            PheromoneGrid.Drop(_ant.Position, AntPheromone.Scout, 5);
+            PheromoneGrid.Drop(_ant.Position, AntPheromone.Explore, 5);
         }
     }
 }

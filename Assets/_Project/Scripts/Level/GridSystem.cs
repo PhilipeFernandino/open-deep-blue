@@ -165,7 +165,6 @@ namespace Core.Level
             _grid = new TileInstance[_gridSize, _gridSize];
 
 
-            StringBuilder sb = new StringBuilder();
             for (int i = 0; i < mapMetadata.Dimensions; i++)
             {
                 for (int j = 0; j < mapMetadata.Dimensions; j++)
@@ -173,15 +172,8 @@ namespace Core.Level
                     var td = _tilesSettings.GetDefinition(mapMetadata.Tiles[i, j]);
                     var ti = (TileInstance)td;
                     _grid[i, j] = ti;
-                    if (_grid[i, j].TileType == Map.Tile.None && mapMetadata.Tiles[i, j] != Map.Tile.None)
-                    {
-                        throw new System.Exception($"{td} and ${ti}");
-
-                    }
-                    sb.Append($"({i}, {j}, {mapMetadata.Tiles[i, j]}, {_grid[i, j].TileType})");
                 }
             }
-            Debug.Log(sb);
         }
 
         public void LoadGridBlock(int dimensions, Core.Map.Tile[,] tiles)

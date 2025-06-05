@@ -59,9 +59,23 @@ namespace Core.Map
                 throw new System.Exception();
             }
 
+            ClearTiles();
             var map = new MapMetadata(tiles, biomeTiles, new List<PointOfInterest>(), _dimensions);
             new MapMetadataGeneratedEvent(map).Invoke(this);
         }
+
+        private void ClearTiles()
+        {
+            for (int i = 0; i < _dimensions; i++)
+            {
+                for (int j = 0; j <= _dimensions; j++)
+                {
+
+                    _tilemap.SetTile(new Vector3Int(i, j, 0), null);
+                }
+            }
+        }
     }
+
 
 }

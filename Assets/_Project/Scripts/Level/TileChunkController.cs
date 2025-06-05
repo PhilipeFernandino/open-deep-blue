@@ -44,6 +44,7 @@ namespace Core.Level
         {
             if (_mapMetadata == null)
             {
+                Debug.LogWarning($"{GetType()} - {nameof(UpdatePosition)} Map metadata is null");
                 return;
             }
 

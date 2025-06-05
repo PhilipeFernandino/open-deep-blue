@@ -13,9 +13,10 @@ namespace Core.Level
         public int LoadedDimensions => _chunkSize * (_loadNearChunks * 2 + 1);
         public HashSet<Vector2Int> ActiveChunks => _loadedChunkAnchors;
 
-        private int _chunkSize;
-        private int _loadNearChunks;
-        private bool _useLookahead;
+        [SerializeField] private int _chunkSize;
+        [SerializeField] private int _loadNearChunks;
+        [SerializeField] private bool _useLookahead;
+        [SerializeField] private Vector2Int _previousChunk;
 
         private HashSet<Vector2Int> _loadedChunkAnchors = new();
 
@@ -28,13 +29,13 @@ namespace Core.Level
         public event Action<(BoundsInt area, Vector2Int anchor)> TileChunkUnsetted;
         public event Action<HashSet<Vector2Int>> TileChunksUpdated;
 
-        private Vector2Int _previousChunk;
 
         public ChunkController(int chunkSize, int loadNearChunks, bool useLookahead = false)
         {
             _chunkSize = chunkSize;
             _loadNearChunks = loadNearChunks;
             _useLookahead = useLookahead;
+            _previousChunk = new Vector2Int(int.MinValue, int.MinValue);
         }
 
 
@@ -58,6 +59,7 @@ namespace Core.Level
 
             if (_previousChunk == currChunk)
             {
+                Debug.Log($"{GetType()} - previous chunk eq currChunk. Skipping ({_previousChunk} = {currChunk})");
                 return;
             }
 

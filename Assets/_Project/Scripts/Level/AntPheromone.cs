@@ -2,10 +2,9 @@
 {
     public enum AntPheromone
     {
-        FoodFound,
+        Food,
         Return,
         Threat,
-        Combat,
-        Scout,
+        Explore,
     }
 }
