@@ -2,7 +2,10 @@
 using Core.EventBus;
 using Core.FSM;
 using Core.HealthSystem;
+using Core.Interaction;
+using Core.ItemSystem;
 using Core.Level;
+using Core.Map;
 using Core.Player;
 using Core.Util;
 using System;
@@ -15,15 +18,12 @@ namespace Core.Units
     [RequireComponent(typeof(BoxCollider2D))]
     public class Ant : Actor, IFSMAgent<AntState>
     {
+        [SerializeField] private AntAgent _agent;
         [SerializeField] private HealthComponent _healthComponent;
-        [SerializeField] private PositionEventBus _targetPositionEventBus;
-        [SerializeField] private FloatRange _movementSpeedRange;
-        [SerializeField] private FloatRange _aggroDistanceRange;
+        [SerializeField] private float _movementSpeed;
+        [SerializeField] private float _aggroDistance;
         [SerializeField] private float _attackDistance;
         [SerializeField] private float _attackDamage;
-
-        private float _movementSpeed;
-        private float _aggroDistance;
 
         private FSM<AntState> _fsm;
         private Movement2D _movementController;
@@ -34,9 +34,9 @@ namespace Core.Units
 
         internal AntBlackboard Blackboard { get; private set; }
 
+        internal AntAgent Agent => _agent;
         internal Movement2D MovementController => _movementController;
         internal BoxCollider2D BoxCollider => _boxCollider;
-        internal PositionEventBus PositionEventBus => _targetPositionEventBus;
         internal float AttackDistance => _attackDistance;
         internal float AttackDamage => _attackDamage;
         internal float AggroDistance => _aggroDistance;
@@ -44,6 +44,8 @@ namespace Core.Units
         internal IPathService PathService { get; private set; }
         internal IGridService GridService { get; private set; }
         internal IPheromoneService PheromoneGrid { get; private set; }
+        internal IInteractionService InteractionService { get; private set; }
+
 
         public Vector2 Position => transform.position.XY();
 
@@ -57,6 +59,23 @@ namespace Core.Units
         public void Log(string message)
         {
             Debug.Log(message);
+        }
+
+        public bool CanInteract()
+        {
+            Vector2 interactPosition = Position + _movementController.LastMovementInput * 0.5f;
+            return InteractionService.CanInteract(interactPosition);
+        }
+
+        public void TryToInteract()
+        {
+            Vector2 interactPosition = Position + _movementController.LastMovementInput * 0.5f;
+            InteractionService.Interact(interactPosition, this);
+        }
+
+        public void Give(Item item)
+        {
+            Blackboard.CarryingItem = item;
         }
 
         private void Update()
@@ -75,7 +94,14 @@ namespace Core.Units
         protected override void OnInitialize()
         {
             base.OnSpawn();
-            Blackboard = new();
+
+            Blackboard = new()
+            {
+                CarryingItem = ItemSystem.Item.None,
+                AggroDistance = _aggroDistance,
+                MovementSpeed = _movementSpeed,
+                MovingDirection = Vector3.zero
+            };
 
             _movementController = GetComponent<Movement2D>();
             _boxCollider = GetComponent<BoxCollider2D>();
@@ -96,9 +122,6 @@ namespace Core.Units
         {
             base.OnInitialize();
 
-            _movementSpeed = _movementSpeedRange.RandomValue;
-            _aggroDistance = _aggroDistanceRange.RandomValue;
-
             _movementController.Setup(_movementSpeed);
 
             _fsm = new(new()
@@ -111,7 +134,7 @@ namespace Core.Units
             PathService = ServiceLocatorUtilities.GetServiceAssert<IPathService>();
             PheromoneGrid = ServiceLocatorUtilities.GetServiceAssert<IPheromoneService>();
 
-            TransferState(AntState.Idle, null, null);
+            TransferState(AntState.Moving, null, null);
         }
     }
 

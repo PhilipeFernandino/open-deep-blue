@@ -1,5 +1,5 @@
-﻿using Core.FSM;
-using Core.EventBus;
+﻿using Core.EventBus;
+using Core.FSM;
 using UnityEngine;
 
 namespace Core.Units
@@ -12,7 +12,6 @@ namespace Core.Units
         public void Enter(IEnterStateData enterStateData)
         {
             _targetPositionEventBus.PositionChanged += TargetPositionChanged_EventHandler;
-            TargetPositionChanged_EventHandler(_fsmAgent.PositionEventBus.Position);
         }
 
         public void Exit()
@@ -23,7 +22,6 @@ namespace Core.Units
         public void Initialize(IFSMAgent<AntState> fsmAgent)
         {
             _fsmAgent = (Ant)fsmAgent;
-            _targetPositionEventBus = _fsmAgent.PositionEventBus;
         }
 
         private void TargetPositionChanged_EventHandler(Vector2 vector)

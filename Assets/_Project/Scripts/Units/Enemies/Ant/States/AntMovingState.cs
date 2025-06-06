@@ -1,10 +1,5 @@
-﻿using Core.FSM;
-using Core.EventBus;
-using System;
-using System.Text;
-using System.Threading;
-using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
+﻿using Core.EventBus;
+using Core.FSM;
 using UnityEngine;
 
 namespace Core.Units
@@ -12,124 +7,29 @@ namespace Core.Units
     [System.Serializable]
     public class AntMovingState : IFSMState<AntState>
     {
-        private Ant _fsmAgent;
-        private List<Vector2Int> _path = new(25);
+        private Ant _fsm;
         private PositionEventBus _targetPositionEventBus;
 
-        private int _pathIndex;
 
-        private Vector2 _currentTrackPos;
+        private Vector2 Position => _fsm.Position;
 
-        private Vector2 Position => _fsmAgent.Position;
-        private Vector2 TargetPosition => _fsmAgent.PositionEventBus.Position;
-
-        private CancellationTokenSource _findPathCts;
 
         public void Enter(IEnterStateData enterStateData)
         {
-            _targetPositionEventBus.PositionChanged += TargetPositionChanged_EventHandler;
-            FindPathTask().Forget();
         }
 
         public void Exit()
         {
-            _targetPositionEventBus.PositionChanged -= TargetPositionChanged_EventHandler;
         }
 
         public void Initialize(IFSMAgent<AntState> fsmAgent)
         {
-            _fsmAgent = (Ant)fsmAgent;
-            _targetPositionEventBus = _fsmAgent.PositionEventBus;
+            _fsm = (Ant)fsmAgent;
         }
 
-        public void Update()
+        public void FixedUpdate()
         {
-            if (_path.Count > 0)
-            {
-                WalkPath();
-            }
-        }
-
-        private async UniTask FindPathTask()
-        {
-            if (_fsmAgent.PathService.TryFindPath(Position, TargetPosition, in _path, 100))
-            {
-                //LogPath();
-
-                _currentTrackPos = TargetPosition;
-                WalkPath();
-            }
-            else
-            {
-                _findPathCts?.Cancel();
-                _findPathCts?.Dispose();
-                _findPathCts = new();
-
-                var token = _findPathCts.Token;
-
-                bool wasCancelled = await UniTask.Delay(TimeSpan.FromSeconds(5), cancellationToken: token)
-                    .SuppressCancellationThrow();
-
-                if (!wasCancelled)
-                {
-                    FindPathTask().Forget();
-                }
-            }
-        }
-
-        private void WalkPath()
-        {
-            var distance = Vector2.Distance(Position, TargetPosition);
-
-            if (distance < _fsmAgent.AttackDistance)
-            {
-                _fsmAgent.MovementController.ResetMovement(); // go to attack state
-                return;
-            }
-
-            if (_pathIndex < _path.Count)
-            {
-                var moveDir = (_path[_pathIndex] - Position).normalized;
-                _fsmAgent.MovementController.TryToMove(moveDir);
-
-                var distanceToNode = Vector2.Distance(Position, _path[_pathIndex]);
-                if (distanceToNode < 1)
-                {
-                    _pathIndex++;
-                }
-            }
-            else
-            {
-                ResetPath();
-            }
-        }
-
-        private void ResetPath()
-        {
-            _path?.Clear();
-            _pathIndex = 0;
-            FindPathTask().Forget();
-        }
-
-        private void TargetPositionChanged_EventHandler(Vector2 vector)
-        {
-            float moveDist = _currentTrackPos.Distance(vector);
-            float targetDist = Position.Distance(TargetPosition);
-
-            if (moveDist > targetDist / 2)
-            {
-                ResetPath();
-            }
-        }
-
-        private void LogPath()
-        {
-            StringBuilder sb = new("Found path: \n");
-            foreach (var path in _path)
-            {
-                sb.AppendLine(path.ToString());
-            }
-            _fsmAgent.Log(sb.ToString());
+            _fsm.MovementController.TryToMove(_fsm.Blackboard.MovingDirection);
         }
     }
 }

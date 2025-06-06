@@ -1,39 +1,21 @@
-﻿using Core.Level;
+﻿using Core.ItemSystem;
+using Core.Level;
+using Core.Map;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Core.Units
 {
-    public class AntBlackboard : MonoBehaviour
+    public class AntBlackboard
     {
-        public Blackboard<AntPheromone> PheromoneLevel;
-        public Blackboard<AntBlackboardKeys> Internal;
+        public Vector2 MovingDirection;
+        public float MovementSpeed;
+        public float AggroDistance;
 
-        public int Get(AntPheromone key)
-        {
-            if (PheromoneLevel.TryGet(key, out int value))
-            {
-                return value;
-            }
-            return default;
-        }
+        public Item CarryingItem;
+        public TileInstance TileAhead;
 
-        public void Set(AntPheromone key, int value)
-        {
-            PheromoneLevel.Set(key, value);
-        }
-
-        public T Get<T>(AntBlackboardKeys key)
-        {
-            if (Internal.TryGet(key, out object value))
-            {
-                return (T)value;
-            }
-            return default;
-        }
-
-        public void Set<T>(AntBlackboardKeys key, T value)
-        {
-            Internal.Set(key, value);
-        }
+        public Dictionary<AntPheromone, float[]> Pheromone;
     }
 }

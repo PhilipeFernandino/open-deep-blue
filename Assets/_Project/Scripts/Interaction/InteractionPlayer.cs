@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Core.Interaction
 {
-    public class InteractionController : MonoBehaviour
+    public class InteractionPlayer : MonoBehaviour
     {
         [SerializeField] private PositionEventBus _positionEventBus;
 

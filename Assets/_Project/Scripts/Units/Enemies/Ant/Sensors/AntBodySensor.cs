@@ -6,8 +6,6 @@
 
         public override void Sense()
         {
-            float hunger = _ant.Blackboard.Get<float>(AntBlackboardKeys.Nutrition);
-            _ant.Blackboard.Set<float>(AntBlackboardKeys.Nutrition, hunger - 0.2f);
         }
     }
 }

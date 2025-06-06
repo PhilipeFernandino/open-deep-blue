@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Core.ItemSystem
 {
+
     [CreateAssetMenu(menuName = "Core/Item")]
     public class ItemSO : ScriptableObject, IEquatable<ItemSO>
     {

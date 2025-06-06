@@ -9,8 +9,6 @@ namespace Core.Units
 
         public override void Sense()
         {
-            Blackboard.Set(AntBlackboardKeys.CloseAnts, 5);
-            Blackboard.Set(AntBlackboardKeys.PlayerPosition, Vector3.zero);
             PheromoneGrid.Drop(_ant.Position, AntPheromone.Explore, 5);
         }
     }

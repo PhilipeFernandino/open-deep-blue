@@ -13,6 +13,8 @@ namespace Core.Player
         [SerializeField] float _forceKnRate = 0.1f;
 
         public Vector2 Position => _rb2D.position;
+        public Vector2 LastMovementInput { get; private set; }
+
 
         private float _speed;
 
@@ -25,13 +27,17 @@ namespace Core.Player
 
         private Vector2 _movementInput;
 
-        public Vector2 LastMovementInput { get; private set; }
 
         private CancellationTokenSource _knockbackCts;
 
         public void Setup(float speed)
         {
             _speed = speed;
+        }
+
+        public void Teleport(Vector2 position)
+        {
+            _rb2D.position = position;
         }
 
         public void TryToMove(Vector2 direction)
