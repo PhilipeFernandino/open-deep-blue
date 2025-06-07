@@ -93,11 +93,9 @@ namespace Core.Units
 
         protected override void OnInitialize()
         {
-            base.OnSpawn();
-
             Blackboard = new()
             {
-                CarryingItem = ItemSystem.Item.None,
+                CarryingItem = Item.None,
                 AggroDistance = _aggroDistance,
                 MovementSpeed = _movementSpeed,
                 MovingDirection = Vector3.zero
@@ -109,6 +107,8 @@ namespace Core.Units
 
             _bodySensor = new(this);
             _visionSensor = new(this);
+
+            _agent.Setup(this);
         }
 
         private void Attacked_EventHandler(AttackedData data)
@@ -120,8 +120,6 @@ namespace Core.Units
 
         protected override void OnSpawn()
         {
-            base.OnInitialize();
-
             _movementController.Setup(_movementSpeed);
 
             _fsm = new(new()
@@ -133,6 +131,7 @@ namespace Core.Units
             GridService = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
             PathService = ServiceLocatorUtilities.GetServiceAssert<IPathService>();
             PheromoneGrid = ServiceLocatorUtilities.GetServiceAssert<IPheromoneService>();
+            InteractionService = ServiceLocatorUtilities.GetServiceAssert<IInteractionService>();
 
             TransferState(AntState.Moving, null, null);
         }

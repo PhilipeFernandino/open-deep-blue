@@ -6,11 +6,11 @@ using UnityEngine;
 
 namespace Core.Level
 {
-    public class PheromoneGrid : Actor
+    public class PheromoneGrid : Actor, IPheromoneService
     {
         [SerializeField] private int _dimensions;
 
-        private Dictionary<AntPheromone, PheromoneMap> _pheromoneGrid;
+        private Dictionary<AntPheromone, PheromoneMap> _pheromoneGrid = new();
 
         public object this[AntPheromone i]
         {
@@ -37,11 +37,16 @@ namespace Core.Level
             _pheromoneGrid[antPheromone].Set(x, y, 0);
         }
 
+        protected override void OnSpawn()
+        {
+            ServiceLocator.Set<IPheromoneService>(this);
+        }
+
         protected override void OnInitialize()
         {
             foreach (var x in Enum.GetValues(typeof(AntPheromone)))
             {
-                _pheromoneGrid[(AntPheromone)x] = new(_dimensions);
+                _pheromoneGrid.Add((AntPheromone)x, new(_dimensions));
             }
         }
     }

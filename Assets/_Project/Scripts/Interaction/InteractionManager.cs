@@ -1,16 +1,14 @@
 ﻿using Coimbra;
 using Coimbra.Services;
-using Core.Interaction;
-using Core.ItemSystem;
 using Core.Level;
 using Core.Map;
+using Core.Util;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Core.Interaction
 {
-
     [Serializable]
     public class TileInteractionEffect { public Tile Tile; public List<InteractionEffectSO> InteractionEffects; }
 
@@ -66,6 +64,12 @@ namespace Core.Interaction
             }
 
             ServiceLocator.Set<IInteractionService>(this);
+        }
+
+        protected override void OnSpawn()
+        {
+            _grid = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
+            _tilesSettings = ScriptableSettings.GetOrFind<TilesSettings>();
         }
     }
 

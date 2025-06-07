@@ -9,6 +9,8 @@ namespace Core.Units
 
         public override void Sense()
         {
+            return;
+
             PheromoneGrid.Drop(_ant.Position, AntPheromone.Explore, 5);
         }
     }

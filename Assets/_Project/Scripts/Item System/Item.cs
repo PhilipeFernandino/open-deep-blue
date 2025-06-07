@@ -3,11 +3,8 @@
     public enum Item
     {
         None,
-
         Leaf,
-        StartSword,
-        Axe,
-
+        Fungus,
         Last,
     }
 }

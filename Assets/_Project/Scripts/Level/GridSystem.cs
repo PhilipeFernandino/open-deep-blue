@@ -60,7 +60,7 @@ namespace Core.Level
 
             Vector3Int v3 = new((int)pos.x, (int)pos.y, (int)pos.z);
 
-            Debug.Log($"Tile at {pos} - {GetTileAt(pos).TileType} - {_tilemap.GetTile(v3)}");
+            //Debug.Log($"Tile at {pos} - {GetTileAt(pos).TileType} - {_tilemap.GetTile(v3)}");
         }
 
         public Map.TileInstance GetTileAt(Vector3 pos)

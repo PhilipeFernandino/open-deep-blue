@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Core.Interaction
 {
+    [CreateAssetMenu(menuName = "Core/Interactions/Green Grass")]
     public class GreenGrassInteractionEffectSO : InteractionEffectSO
     {
         public override void Execute(MonoBehaviour interactor, Vector2 worldPosition)

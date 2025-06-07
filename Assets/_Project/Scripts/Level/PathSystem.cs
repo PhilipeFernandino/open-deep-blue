@@ -137,13 +137,11 @@ namespace Core.Level
 
         protected override void OnInitialize()
         {
-            base.OnInitialize();
             ServiceLocator.Set<IPathService>(this);
         }
 
         protected override void OnSpawn()
         {
-            base.OnSpawn();
             _gridService = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
         }
 
