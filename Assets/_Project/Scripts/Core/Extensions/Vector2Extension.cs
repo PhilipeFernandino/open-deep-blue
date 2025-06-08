@@ -60,13 +60,13 @@ public static class Vector2Extension
         return maxD + (minD * 0.4142f);
     }
 
-    public static (int x, int y) DiscreteTuple(this Vector2 v)
+    public static (int x, int y) RoundToIntTuple(this Vector2 v)
     {
         Vector2Int v2 = new(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y));
         return (v2.x, v2.y);
     }
 
-    public static Vector2Int Discrete(this Vector2 v)
+    public static Vector2Int RoundToInt(this Vector2 v)
     {
         Vector2Int v2 = new(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y));
         return v2;

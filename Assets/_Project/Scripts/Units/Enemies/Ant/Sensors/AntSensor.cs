@@ -7,7 +7,7 @@ namespace Core.Units
         protected Ant _ant;
 
         public AntBlackboard Blackboard => _ant.Blackboard;
-        public IPheromoneService PheromoneGrid => _ant.PheromoneGrid;
+        public IChemicalGridService PheromoneGrid => _ant.ChemicalGrid;
 
         public AntSensor(Ant ant)
         {

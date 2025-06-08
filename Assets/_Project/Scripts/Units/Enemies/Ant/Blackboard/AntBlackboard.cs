@@ -27,7 +27,7 @@ namespace Core.Units
         }
         public TileInstance TileAhead;
 
-        public Dictionary<AntPheromone, float[]> Pheromone;
+        public Dictionary<Chemical, float[]> Pheromone;
 
         public event Action<Item> CarryingItemChanged;
     }

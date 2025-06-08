@@ -16,6 +16,7 @@ namespace Core.Units
 {
     [RequireComponent(typeof(Movement2D))]
     [RequireComponent(typeof(BoxCollider2D))]
+    [RequireComponent(typeof(AntTilemapCollision))]
     public class Ant : Actor, IFSMAgent<AntState>
     {
         [SerializeField] private AntAgent _agent;
@@ -31,10 +32,12 @@ namespace Core.Units
 
         private AntVisionSensor _visionSensor;
         private AntBodySensor _bodySensor;
+        private AntTilemapCollision _tilemapCollision;
 
         internal AntBlackboard Blackboard { get; private set; }
 
         internal AntAgent Agent => _agent;
+        internal AntTilemapCollision TilemapCollision => _tilemapCollision;
         internal Movement2D MovementController => _movementController;
         internal BoxCollider2D BoxCollider => _boxCollider;
         internal float AttackDistance => _attackDistance;
@@ -42,8 +45,8 @@ namespace Core.Units
         internal float AggroDistance => _aggroDistance;
 
         internal IPathService PathService { get; private set; }
-        internal IGridService GridService { get; private set; }
-        internal IPheromoneService PheromoneGrid { get; private set; }
+        internal IGridService TileGrid { get; private set; }
+        internal IChemicalGridService ChemicalGrid { get; private set; }
         internal IInteractionService InteractionService { get; private set; }
 
 
@@ -104,11 +107,10 @@ namespace Core.Units
             _movementController = GetComponent<Movement2D>();
             _boxCollider = GetComponent<BoxCollider2D>();
             _healthComponent.Attacked += Attacked_EventHandler;
+            _tilemapCollision = GetComponent<AntTilemapCollision>();
 
             _bodySensor = new(this);
             _visionSensor = new(this);
-
-            _agent.Setup(this);
         }
 
         private void Attacked_EventHandler(AttackedData data)
@@ -128,10 +130,12 @@ namespace Core.Units
                 { AntState.Moving, new AntMovingState() },
             }, this);
 
-            GridService = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
+            TileGrid = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
             PathService = ServiceLocatorUtilities.GetServiceAssert<IPathService>();
-            PheromoneGrid = ServiceLocatorUtilities.GetServiceAssert<IPheromoneService>();
+            ChemicalGrid = ServiceLocatorUtilities.GetServiceAssert<IChemicalGridService>();
             InteractionService = ServiceLocatorUtilities.GetServiceAssert<IInteractionService>();
+
+            _agent.Setup(this);
 
             TransferState(AntState.Moving, null, null);
         }

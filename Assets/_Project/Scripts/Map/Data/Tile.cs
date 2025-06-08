@@ -28,6 +28,8 @@
         // 
         BurrowHole = 1211,
 
+        Fungus = 1301,
+
         // Boss mark tiles
         AntQueenSpawn = 2001,
         AntQueenRoomTile = 2002,

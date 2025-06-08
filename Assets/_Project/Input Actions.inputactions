@@ -572,6 +572,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Debug",
+            "id": "f1796095-8b2c-4a44-ae8b-9ea4db9e7094",
+            "actions": [
+                {
+                    "name": "Toggle Debugger",
+                    "type": "Button",
+                    "id": "b9d228de-63e5-4937-a83a-51d408da34a2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "dba7b4ee-466e-48f2-a33b-2680c2cbe0ba",
+                    "path": "<Keyboard>/f3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Toggle Debugger",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [

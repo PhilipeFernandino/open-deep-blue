@@ -1,26 +1,4 @@
 {
-    "Ant": {
-        "checkpoints": [
-            {
-                "steps": 768,
-                "file_path": "results\\exp1\\Ant\\Ant-768.onnx",
-                "reward": null,
-                "creation_time": 1749270689.7345338,
-                "auxillary_file_paths": [
-                    "results\\exp1\\Ant\\Ant-768.pt"
-                ]
-            }
-        ],
-        "final_checkpoint": {
-            "steps": 768,
-            "file_path": "results\\exp1\\Ant.onnx",
-            "reward": null,
-            "creation_time": 1749270689.7345338,
-            "auxillary_file_paths": [
-                "results\\exp1\\Ant\\Ant-768.pt"
-            ]
-        }
-    },
     "metadata": {
         "stats_format_version": "0.3.0",
         "mlagents_version": "1.2.0.dev0",

@@ -1,5 +1,4 @@
 ﻿using Coimbra.Services.Events;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,11 +17,6 @@ namespace Core.Level
             UnloadedChunks = unloadedChunks;
             ChunkSize = chunkSize;
             Origin = origin;
-        }
-
-        public static void AddListener(object chunksUpdated_EventHandler)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -45,6 +45,8 @@ MonoBehaviour:
     <TileBase>k__BackingField: {fileID: 11400000, guid: 066b0690a7a246843bd0502a00ede077, type: 2}
   - <TileType>k__BackingField: 102
     <TileBase>k__BackingField: {fileID: 11400000, guid: 715d35da015b1fb4da7ce31616f8a1cd, type: 2}
+  - <TileType>k__BackingField: 1301
+    <TileBase>k__BackingField: {fileID: 11400000, guid: 1746f9bca8c4044449aadff407d9fc71, type: 2}
   <TileToFloorTileBase>k__BackingField:
   - <TileType>k__BackingField: 1
     <TileBase>k__BackingField: {fileID: 11400000, guid: 8f0de23d773965942bf4c621fce7bb34, type: 2}
@@ -54,7 +56,7 @@ MonoBehaviour:
     <TileBase>k__BackingField: {fileID: 11400000, guid: bb84114cdd6dccd4cb05682dc92a8577, type: 2}
   <TileDefinitions>k__BackingField:
   - TileType: 0
-    TileProperties: 0
+    TileProperties: 64
     MaxHitPoints: 0
   - TileType: 1
     TileProperties: 7
@@ -84,9 +86,12 @@ MonoBehaviour:
     TileProperties: 0
     MaxHitPoints: 0
   - TileType: 1211
-    TileProperties: 32
+    TileProperties: 96
     MaxHitPoints: 0
   - TileType: 101
-    TileProperties: 32
+    TileProperties: 96
     MaxHitPoints: 15
+  - TileType: 1301
+    TileProperties: 114
+    MaxHitPoints: 150
   <InteractableTiles>k__BackingField: []

@@ -5,11 +5,11 @@ namespace Core.Map
     public struct TileInstance : IEquatable<TileInstance>
     {
         public Tile TileType;
-        public ushort CurrentHitPoints;
+        public float CurrentHitPoints;
 
         public static TileInstance None => new(Tile.None, 0);
 
-        public TileInstance(Tile tileType, ushort currentHitPoints)
+        public TileInstance(Tile tileType, float currentHitPoints)
         {
             TileType = tileType;
             CurrentHitPoints = currentHitPoints;

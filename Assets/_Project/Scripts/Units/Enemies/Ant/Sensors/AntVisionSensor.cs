@@ -11,7 +11,7 @@ namespace Core.Units
         {
             return;
 
-            PheromoneGrid.Drop(_ant.Position, AntPheromone.Explore, 5);
+            PheromoneGrid.Drop(_ant.Position, Chemical.ExplorePheromone, 5);
         }
     }
 }

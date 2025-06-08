@@ -1,7 +1,9 @@
 ﻿using Core.ItemSystem;
+using Core.Level;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
+using Unity.Sentis;
 using UnityEngine;
 
 namespace Core.Units
@@ -12,6 +14,9 @@ namespace Core.Units
         [SerializeField] private Transform _startingArea;
 
         private Ant _ant;
+        private IChemicalGridService _chemicalGrid;
+
+        private Vector2 _previousPosition;
 
         public enum Action
         {
@@ -22,14 +27,27 @@ namespace Core.Units
         public void Setup(Ant ant)
         {
             _ant = ant;
-            _ant.Blackboard.CarryingItemChanged += (item =>
+            _chemicalGrid = _ant.ChemicalGrid;
+
+            _ant.TilemapCollision.Collided += () =>
             {
-                if (item == Item.Leaf)
-                {
-                    AddReward(1.0f);
-                    EndEpisode();
-                }
-            });
+                AddReward(-0.001f);
+            };
+
+            _ant.TilemapCollision.CollisionStaid += () =>
+            {
+                AddReward(-0.001f);
+            };
+
+            var model = GetComponent<Unity.MLAgents.Policies.BehaviorParameters>().Model;
+            if (model != null)
+            {
+                Debug.Log($"{GetType()} - Model loaded: {model.name}");
+            }
+            else
+            {
+                Debug.LogWarning($"{GetType()} - No model assigned");
+            }
         }
 
         public override void OnEpisodeBegin()
@@ -37,7 +55,7 @@ namespace Core.Units
             _ant.Blackboard.CarryingItem = Item.None;
             _ant.Blackboard.MovingDirection = Vector2.zero;
 
-            Vector2 randomPos = new(Random.Range(-5f, 5f), Random.Range(-5f, 5f));
+            Vector2 randomPos = new(UnityEngine.Random.Range(-5f, 5f), UnityEngine.Random.Range(-5f, 5f));
             _ant.MovementController.Teleport(_startingArea.position.XY() + randomPos);
         }
 
@@ -51,26 +69,35 @@ namespace Core.Units
         public override void WriteDiscreteActionMask(IDiscreteActionMask actionMasker)
         {
             bool canInteract = CanInteract();
-            Debug.Log($"{GetType()} canInteract - {canInteract}");
             actionMasker.SetActionEnabled(branch: 0, actionIndex: (int)Action.Interact, isEnabled: canInteract);
         }
-
 
         public override void OnActionReceived(ActionBuffers actions)
         {
             float moveX = actions.ContinuousActions[0];
             float moveY = actions.ContinuousActions[1];
 
-            _ant.Blackboard.MovingDirection = new Vector2(moveX, moveY).normalized;
+            _ant.Blackboard.MovingDirection = new Vector2(moveX, moveY);
 
             int interactAction = actions.DiscreteActions[0];
 
-            Debug.Log($"{GetType()} - interact {interactAction}");
-            if (interactAction == (int)Action.Interact)
+            bool choseInteraction = interactAction == (int)Action.Interact;
+
+            if (choseInteraction)
             {
                 _ant.TryToInteract();
             }
+
+            bool isCarryingLeaf = _ant.Blackboard.CarryingItem == Item.Leaf;
+
+            if (isCarryingLeaf)
+            {
+                AddReward(2.0f);
+                EndEpisode();
+            }
+
         }
+
         public override void Heuristic(in ActionBuffers actionsOut)
         {
             ActionSegment<float> continuousActions = actionsOut.ContinuousActions;
@@ -81,13 +108,10 @@ namespace Core.Units
             continuousActions[0] = moveInput.x;
             continuousActions[1] = moveInput.y;
 
-            // 1. Read the latched input
             bool interactInput = _inputHandler.InteractTriggered;
 
-            // 2. Set the action based on the input
             discreteActions[0] = interactInput ? 1 : 0;
 
-            // 3. If the input was true, immediately consume it so it's not used again next time.
             if (interactInput)
             {
                 _inputHandler.ConsumeInteractInput();
@@ -102,6 +126,22 @@ namespace Core.Units
         private void FixedUpdate()
         {
             AddReward(-1f / MaxStep);
+
+            if (_ant.Blackboard.CarryingItem == Item.None)
+            {
+                _ant.ChemicalGrid.Drop(_ant.Position, Chemical.ExplorePheromone, 22.5f);
+            }
+
+            //else if (isReturningHome)
+            //{
+            //    // Reward for getting near fungus
+            //    float previousFungusScent = _chemicalGrid.Get(_previousPosition, Chemical.FungusScent);
+
+            //    if (fungusScent > previousFungusScent)
+            //    {
+            //        AddReward(0.02f);
+            //    }
+            //}
         }
     }
 }

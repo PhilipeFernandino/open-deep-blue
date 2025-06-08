@@ -9,7 +9,7 @@ namespace Core.HoldableSystem
 
         protected override void UseBehavior(Vector2 worldPosition)
         {
-            _gridService.DamageTileAt(worldPosition, (int)Attributes.MiningStrength);
+            _gridService.DamageTileAt(worldPosition, Attributes.MiningStrength);
         }
     }
 }

@@ -45,7 +45,7 @@ namespace Core.Interaction
                 _player = FindAnyObjectByType<Player.Player>();
             }
 
-            Vector2Int v2 = (vector + _player.FacingDirection).Discrete();
+            Vector2Int v2 = (vector + _player.FacingDirection).RoundToInt();
 
             if (v2 != _lastPosition)
             {
