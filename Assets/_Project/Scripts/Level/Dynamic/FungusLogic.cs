@@ -12,7 +12,13 @@ namespace Core.Level.Dynamic
             }
             else
             {
-                data.CurrentSaciation -= defData.SaciationLost;
+                if (data.CurrentSaciation > defData.MaxSaciation * 0.2)
+                {
+                    data.CurrentHealth += defData.LostHealthWhenStarved;
+                    data.CurrentFoodStore += defData.FoodProduction;
+                }
+
+                data.CurrentSaciation = Mathf.Max(0f, data.CurrentSaciation - defData.SaciationLost);
             }
 
             if (data.CurrentHealth <= 0)
@@ -21,7 +27,6 @@ namespace Core.Level.Dynamic
                 //grid.TrySetTileAt(position, Map.Tile.None);
             }
 
-            data.CurrentFoodStore += defData.FoodProduction;
         }
     }
 }

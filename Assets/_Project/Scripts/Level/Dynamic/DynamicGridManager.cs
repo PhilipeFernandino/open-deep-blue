@@ -1,14 +1,17 @@
 ﻿using Coimbra;
+using Coimbra.Services;
 using Core.Debugger;
 using Core.Map;
 using Core.Util;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Playables;
+using UnityEngine.UIElements;
 
 namespace Core.Level.Dynamic
 {
-    public class DynamicTileManager : Actor
+    public class DynamicGridManager : Actor, IDynamicGridManager
     {
         [Header("Debugging")]
         [SerializeField] private DebugChannelSO _debugChannel;
@@ -19,6 +22,24 @@ namespace Core.Level.Dynamic
         private IGridService _gridService;
         private IChemicalGridService _chemicalService;
         private TilesSettings _tilesSettings;
+
+        public bool TryGetFungusFood(Vector2Int pos)
+        {
+            if (_runnerMap.TryGetValue(Tile.Fungus, out var runner) && runner is FungusRunner fungusRunner)
+            {
+                return fungusRunner.TryGetFungusFood(pos);
+            }
+            return false;
+        }
+
+        public bool TryApplyFungusModification(Vector2Int position, ModifyFungusData modification)
+        {
+            if (_runnerMap.TryGetValue(Tile.Fungus, out var runner) && runner is FungusRunner fungusRunner)
+            {
+                return fungusRunner.TryApplyModification(position, modification);
+            }
+            return false;
+        }
 
         protected override void OnSpawn()
         {
@@ -80,4 +101,14 @@ namespace Core.Level.Dynamic
         }
 
     }
+
+    [DynamicService]
+    public interface IDynamicGridManager : IService
+    {
+        public bool TryGetFungusFood(Vector2Int position);
+        public bool TryApplyFungusModification(Vector2Int position, ModifyFungusData modification);
+    }
+
+    public delegate void ModifyFungusData(ref FungusData data);
+
 }

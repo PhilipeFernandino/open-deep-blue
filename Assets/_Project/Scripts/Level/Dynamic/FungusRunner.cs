@@ -1,8 +1,8 @@
 ﻿using Core.Debugger;
 using Core.Map;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Core.Level.Dynamic
 {
@@ -31,6 +31,30 @@ namespace Core.Level.Dynamic
                 MaxHealth = _fungusDef.MaxHealth,
                 SaciationLost = _fungusDef.SaciationLost
             };
+        }
+
+        public bool TryGetFungusFood(Vector2Int position)
+        {
+            if (_dataMap.TryGetValue(position, out FungusData data) && data.CurrentFoodStore >= 5f)
+            {
+                var modifiedData = data;
+                modifiedData.CurrentFoodStore -= 5f;
+                _dataMap[position] = modifiedData;
+                return true;
+            }
+            return false;
+        }
+
+        public bool TryApplyModification(Vector2Int position, ModifyFungusData modificationAction)
+        {
+            if (_dataMap.TryGetValue(position, out FungusData data))
+            {
+                var modifiedData = data;
+                modificationAction(ref modifiedData);
+                _dataMap[position] = modifiedData;
+                return true;
+            }
+            return false;
         }
 
         public FungusRunner(IGridService grid, IChemicalGridService chemicals, TileDefinition definition)

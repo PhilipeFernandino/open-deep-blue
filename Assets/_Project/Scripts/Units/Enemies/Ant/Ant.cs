@@ -49,6 +49,7 @@ namespace Core.Units
         internal IChemicalGridService ChemicalGrid { get; private set; }
         internal IInteractionService InteractionService { get; private set; }
 
+        public Item IsCarrying => Blackboard.CarryingItem;
 
         public Vector2 Position => transform.position.XY();
 

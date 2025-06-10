@@ -11,8 +11,12 @@ namespace Core.Interaction
         public override void Execute(MonoBehaviour interactor, Vector2 worldPosition)
         {
             IGridService gridService = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
-            gridService.DamageTileAt(worldPosition, 5);
-            ((Ant)interactor).Give(ItemSystem.Item.Leaf);
+
+            if (interactor is Ant ant && ant.IsCarrying == ItemSystem.Item.None)
+            {
+                gridService.DamageTileAt(worldPosition, 5);
+                ant.Give(ItemSystem.Item.Leaf);
+            }
         }
     }
 }

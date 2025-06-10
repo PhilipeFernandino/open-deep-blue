@@ -90,11 +90,11 @@ namespace Core.Units
 
             bool isCarryingLeaf = _ant.Blackboard.CarryingItem == Item.Leaf;
 
-            if (isCarryingLeaf)
-            {
-                AddReward(2.0f);
-                EndEpisode();
-            }
+            //if (isCarryingLeaf)
+            //{
+            //    AddReward(2.0f);
+            //    EndEpisode();
+            //}
 
         }
 
