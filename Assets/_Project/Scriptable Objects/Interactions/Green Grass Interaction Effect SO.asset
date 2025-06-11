@@ -9,6 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39ae3af596314cf4695d9d7258fb06b0, type: 3}
-  m_Name: Green Grass Interaction
+  m_Script: {fileID: 11500000, guid: 4554f411d032f034cb0e8143d9dae214, type: 3}
+  m_Name: Green Grass Interaction Effect SO
   m_EditorClassIdentifier: 

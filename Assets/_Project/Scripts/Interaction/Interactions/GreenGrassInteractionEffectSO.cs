@@ -10,7 +10,7 @@ namespace Core.Interaction
     {
         public override void Execute(MonoBehaviour interactor, Vector2 worldPosition)
         {
-            IGridService gridService = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
+            var gridService = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
 
             if (interactor is Ant ant && ant.IsCarrying == ItemSystem.Item.None)
             {

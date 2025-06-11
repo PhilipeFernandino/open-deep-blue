@@ -13,8 +13,7 @@ namespace Core.Interaction
     {
         public override void Execute(MonoBehaviour interactor, Vector2 worldPosition)
         {
-            var gridService = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
-            var dynamicGridManager = ServiceLocatorUtilities.GetServiceAssert<IDynamicGridManager>();
+            var fungusService = ServiceLocatorUtilities.GetServiceAssert<IFungusService>();
 
 
             if (interactor is Ant ant)
@@ -26,7 +25,7 @@ namespace Core.Interaction
                         fungusData.CurrentSaciation += 10f;
                     };
 
-                    bool success = dynamicGridManager.TryApplyFungusModification(worldPosition.RoundToInt(), modification);
+                    bool success = fungusService.TryApplyModification(worldPosition.RoundToInt(), modification);
 
                     if (success)
                     {
@@ -35,7 +34,7 @@ namespace Core.Interaction
                 }
                 else
                 {
-                    bool gotFood = dynamicGridManager.TryGetFungusFood(worldPosition.RoundToInt());
+                    bool gotFood = fungusService.TryTakeFungusFood(worldPosition.RoundToInt());
                     if (gotFood)
                     {
                         ant.Give(ItemSystem.Item.Fungus);

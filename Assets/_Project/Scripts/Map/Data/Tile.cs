@@ -30,6 +30,8 @@
 
         Fungus = 1301,
 
+        QueenAnt = 1401,
+
         // Boss mark tiles
         AntQueenSpawn = 2001,
         AntQueenRoomTile = 2002,

@@ -17,7 +17,7 @@ namespace Core.Debugger
         public List<ChemicalStrength> Chemicals;
     }
 
-    [CreateAssetMenu(fileName = "ChemicalInfoModule", menuName = "Core/Debugger/Modules/Chemical Info Module")]
+    [CreateAssetMenu(fileName = "Chemical Info Module", menuName = "Core/Debugger/Modules/Chemical Info Module")]
     public class ChemicalInfoModule : DebugModuleSO
     {
         private readonly StringBuilder _stringBuilder = new StringBuilder();

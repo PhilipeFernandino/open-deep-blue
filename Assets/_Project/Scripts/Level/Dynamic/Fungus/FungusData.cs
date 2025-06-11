@@ -1,6 +1,4 @@
-﻿using Core.Map;
-
-namespace Core.Level.Dynamic
+﻿namespace Core.Level.Dynamic
 {
     public struct FungusData : IDynamicTileData
     {
@@ -9,7 +7,7 @@ namespace Core.Level.Dynamic
         public float CurrentHealth;
     }
 
-    public struct FungusDefinition : IDynamicTileData
+    public struct FungusDefinition
     {
         public float MaxFoodStore;
         public float MaxHealth;

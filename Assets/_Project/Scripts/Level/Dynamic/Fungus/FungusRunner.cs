@@ -1,18 +1,17 @@
-﻿using Core.Debugger;
+﻿using Coimbra.Services;
+using Core.Debugger;
 using Core.Map;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace Core.Level.Dynamic
 {
-    public class FungusRunner : ILogicRunner
+    public class FungusRunner : ILogicRunner, IFungusService
     {
         private readonly Dictionary<Vector2Int, FungusData> _dataMap = new();
         private readonly FungusLogic _logic = new FungusLogic();
         private readonly IGridService _gridService;
         private readonly IChemicalGridService _chemicalService;
-        private readonly TileDefinition _tileDefinition;
         private readonly FungusDefinition _fungusDef;
 
         private readonly List<Vector2Int> _keysToUpdate = new();
@@ -33,7 +32,12 @@ namespace Core.Level.Dynamic
             };
         }
 
-        public bool TryGetFungusFood(Vector2Int position)
+        public bool TryGetData(Vector2Int position, out FungusData data)
+        {
+            return _dataMap.TryGetValue(position, out data);
+        }
+
+        public bool TryTakeFungusFood(Vector2Int position)
         {
             if (_dataMap.TryGetValue(position, out FungusData data) && data.CurrentFoodStore >= 5f)
             {
@@ -57,11 +61,12 @@ namespace Core.Level.Dynamic
             return false;
         }
 
-        public FungusRunner(IGridService grid, IChemicalGridService chemicals, TileDefinition definition)
+        public FungusRunner(IGridService grid, IChemicalGridService chemicals)
         {
+            ServiceLocator.Set<IFungusService>(this);
+
             _gridService = grid;
             _chemicalService = chemicals;
-            _tileDefinition = definition;
 
             _fungusDef = new()
             {
@@ -88,7 +93,7 @@ namespace Core.Level.Dynamic
         public void HandleTileChanged(int x, int y, TileInstance newTile)
         {
             var position = new Vector2Int(x, y);
-            if (newTile.TileType == _tileDefinition.TileType)
+            if (newTile.TileType == Tile.Fungus)
             {
                 _dataMap[position] = new FungusData
                 {
@@ -120,5 +125,20 @@ namespace Core.Level.Dynamic
                 _chemicalService.Drop(position, Chemical.FungusScent, 100f);
             }
         }
+
+        public void Dispose()
+        {
+
+        }
     }
+
+    [DynamicService]
+    public interface IFungusService : IService
+    {
+        bool TryApplyModification(Vector2Int position, ModifyFungusData modification);
+        public bool TryTakeFungusFood(Vector2Int position);
+        bool TryGetData(Vector2Int position, out FungusData data);
+    }
+
+    public delegate void ModifyFungusData(ref FungusData data);
 }

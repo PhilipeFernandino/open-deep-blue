@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using Core.Level.Dynamic;
+using System.Text;
 using UnityEngine;
 
 namespace Core.Debugger
@@ -16,6 +17,12 @@ namespace Core.Debugger
         public float FoodProduction;
     }
 
+    public struct QueenTileData
+    {
+        public QueenData QueenData;
+        public QueenDefinition QueenDefinition;
+    }
+
     [CreateAssetMenu(fileName = "Dynamic Grid Info Module", menuName = "Core/Debugger/Modules/Dynamic Grid Info Module")]
     public class DynamicGridInfoModule : DebugModuleSO
     {
@@ -23,20 +30,31 @@ namespace Core.Debugger
 
         public override void UpdateData(object data)
         {
+            _stringBuilder.Clear();
+
             if (data is FungusTileData tileData)
             {
-                _stringBuilder.Clear();
-
                 _stringBuilder.AppendLine($"Fungus Tile:");
-                _stringBuilder.AppendLine($"CurrentHealth: {tileData.CurrentHealth}/{tileData.MaxHealth}");
-                _stringBuilder.AppendLine($"CurrentSaciation: {tileData.CurrentSaciation}/{tileData.MaxSaciation}");
-                _stringBuilder.AppendLine($"CurrentFoodStore: {tileData.CurrentFoodStore}/{tileData.MaxFoodStore}");
-                _stringBuilder.AppendLine($"LostHealthWhenStarved: {tileData.LostHealthWhenStarved}");
-                _stringBuilder.AppendLine($"FoodProduction: {tileData.FoodProduction}");
-                _stringBuilder.AppendLine($"LostSaciation: {tileData.SaciationLost}");
+                _stringBuilder.AppendLine($"Health: {tileData.CurrentHealth}/{tileData.MaxHealth}");
+                _stringBuilder.AppendLine($"Saciation: {tileData.CurrentSaciation}/{tileData.MaxSaciation}");
+                _stringBuilder.AppendLine($"Food Store: {tileData.CurrentFoodStore}/{tileData.MaxFoodStore}");
+                _stringBuilder.AppendLine($"Lost Health When Starved: {tileData.LostHealthWhenStarved}");
+                _stringBuilder.AppendLine($"Food Production: {tileData.FoodProduction}");
+                _stringBuilder.AppendLine($"Lost Saciation: {tileData.SaciationLost}");
 
-                DisplayText = _stringBuilder.ToString();
             }
+
+            if (data is QueenTileData queenTileData)
+            {
+                _stringBuilder.AppendLine($"Queen Tile:");
+                _stringBuilder.AppendLine($"Health: {queenTileData.QueenData.CurrentHealth}/{queenTileData.QueenDefinition.MaxHealth}");
+                _stringBuilder.AppendLine($"Saciation: {queenTileData.QueenData.CurrentSaciation} / {queenTileData.QueenDefinition.MaxSaciation}");
+                _stringBuilder.AppendLine($"Pregnancy: {queenTileData.QueenData.CurrentPregnancyPercentage * 100f}%");
+                _stringBuilder.AppendLine($"LostHealthWhenStarved: {queenTileData.QueenDefinition.LostHealthWhenStarved}");
+                _stringBuilder.AppendLine($"FoodProduction: {queenTileData.QueenDefinition.BroodPerLaying}");
+            }
+
+            DisplayText = _stringBuilder.ToString();
         }
 
         public override void ResetData()

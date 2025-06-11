@@ -6,8 +6,6 @@ using Core.Util;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Playables;
-using UnityEngine.UIElements;
 
 namespace Core.Level.Dynamic
 {
@@ -21,40 +19,21 @@ namespace Core.Level.Dynamic
 
         private IGridService _gridService;
         private IChemicalGridService _chemicalService;
-        private TilesSettings _tilesSettings;
-
-        public bool TryGetFungusFood(Vector2Int pos)
-        {
-            if (_runnerMap.TryGetValue(Tile.Fungus, out var runner) && runner is FungusRunner fungusRunner)
-            {
-                return fungusRunner.TryGetFungusFood(pos);
-            }
-            return false;
-        }
-
-        public bool TryApplyFungusModification(Vector2Int position, ModifyFungusData modification)
-        {
-            if (_runnerMap.TryGetValue(Tile.Fungus, out var runner) && runner is FungusRunner fungusRunner)
-            {
-                return fungusRunner.TryApplyModification(position, modification);
-            }
-            return false;
-        }
 
         protected override void OnSpawn()
         {
             _gridService = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
             _chemicalService = ServiceLocatorUtilities.GetServiceAssert<IChemicalGridService>();
-            _tilesSettings = ScriptableSettings.GetOrFind<TilesSettings>();
             _gridService.Initialized += Setup;
         }
 
         private void Setup()
         {
-            var definition = _tilesSettings.GetDefinition(Tile.Fungus);
+            var fungusRunner = new FungusRunner(_gridService, _chemicalService);
+            _runnerMap[Tile.Fungus] = fungusRunner;
 
-            var runner = new FungusRunner(_gridService, _chemicalService, definition);
-            _runnerMap[definition.TileType] = runner;
+            var antQueenRunner = new QueenRunner(_gridService, _chemicalService);
+            _runnerMap[Tile.QueenAnt] = antQueenRunner;
 
             _gridService.TileChanged += HandleTileChanged;
         }
@@ -96,7 +75,12 @@ namespace Core.Level.Dynamic
             {
                 var data = (FungusTileData)_runnerMap[Tile.Fungus].GetData(x, y);
                 _debugChannel.RaiseEvent("dynamic", data);
+            }
 
+            if (tileInstance.TileType == Tile.QueenAnt)
+            {
+                var data = (QueenTileData)_runnerMap[Tile.QueenAnt].GetData(x, y);
+                _debugChannel.RaiseEvent("dynamic", data);
             }
         }
 
@@ -105,10 +89,5 @@ namespace Core.Level.Dynamic
     [DynamicService]
     public interface IDynamicGridManager : IService
     {
-        public bool TryGetFungusFood(Vector2Int position);
-        public bool TryApplyFungusModification(Vector2Int position, ModifyFungusData modification);
     }
-
-    public delegate void ModifyFungusData(ref FungusData data);
-
 }

@@ -9,6 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c2bb69b56fb030c499bc76d163c963d7, type: 3}
-  m_Name: Fungus Interaction SO
+  m_Script: {fileID: 11500000, guid: e0de5502f55aa174f802f41a46b7c723, type: 3}
+  m_Name: Fungus Interaction Effect SO
   m_EditorClassIdentifier: 

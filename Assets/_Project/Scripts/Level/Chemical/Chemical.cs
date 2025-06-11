@@ -8,5 +8,6 @@
         ExplorePheromone = 3,
         FoodScent = 4,
         FungusScent = 5,
+        QueenPheromone = 6,
     }
 }

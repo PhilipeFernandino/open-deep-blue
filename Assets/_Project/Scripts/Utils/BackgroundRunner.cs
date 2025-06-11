@@ -2,10 +2,11 @@
 
 public class BackgroundRunner : MonoBehaviour
 {
+    [Range(1f, 20f)][SerializeField] private float _timeScale;
+
     private void Start()
     {
         Application.runInBackground = true;
-        QualitySettings.vSyncCount = 0;
-        Application.targetFrameRate = 60;
+        Time.timeScale = _timeScale;
     }
 }

@@ -12,7 +12,7 @@ namespace Core.Debugger
         public TileDefinition TileDefiniton;
     }
 
-    [CreateAssetMenu(fileName = "GridInfoModule", menuName = "Core/Debugger/Modules/Grid Info Module")]
+    [CreateAssetMenu(fileName = "Grid Info Module", menuName = "Core/Debugger/Modules/Grid Info Module")]
     public class GridInfoModule : DebugModuleSO
     {
         private readonly StringBuilder _stringBuilder = new StringBuilder();
