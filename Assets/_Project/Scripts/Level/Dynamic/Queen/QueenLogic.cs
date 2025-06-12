@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Core.Train;
+using UnityEngine;
 
 namespace Core.Level.Dynamic
 {
@@ -22,7 +23,7 @@ namespace Core.Level.Dynamic
 
             if (data.CurrentPregnancyPercentage >= 1f)
             {
-                // TODO: lay eggs
+                new ColonyEvent(ColonyEventType.QueenProcreation).Invoke(data);
                 data.CurrentPregnancyPercentage = 0f;
             }
 
@@ -30,8 +31,7 @@ namespace Core.Level.Dynamic
 
             if (data.CurrentHealth <= 0)
             {
-                // TODO: 
-                //grid.TrySetTileAt(position, Map.Tile.None);
+                new ColonyEvent(ColonyEventType.QueenDeath).Invoke(data);
             }
 
         }

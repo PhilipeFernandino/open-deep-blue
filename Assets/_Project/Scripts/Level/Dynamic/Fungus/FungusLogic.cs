@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Core.Train;
+using UnityEngine;
 
 namespace Core.Level.Dynamic
 {
@@ -16,6 +17,7 @@ namespace Core.Level.Dynamic
                 {
                     data.CurrentHealth += defData.LostHealthWhenStarved;
                     data.CurrentFoodStore += defData.FoodProduction;
+                    new ColonyEvent(ColonyEventType.FungusProducing).Invoke(data);
                 }
 
                 data.CurrentSaciation = Mathf.Max(0f, data.CurrentSaciation - defData.SaciationLost);
@@ -25,6 +27,7 @@ namespace Core.Level.Dynamic
             {
                 // TODO: 
                 //grid.TrySetTileAt(position, Map.Tile.None);
+                new ColonyEvent(ColonyEventType.FungusDeath).Invoke(data);
             }
 
         }

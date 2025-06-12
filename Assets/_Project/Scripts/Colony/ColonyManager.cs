@@ -1,0 +1,42 @@
+﻿using Coimbra;
+using Coimbra.Services;
+using Core.Units;
+using System.Collections.Generic;
+using Unity.MLAgents;
+
+namespace Core.Train
+{
+
+    public class ColonyManager : Actor, IColonyService
+    {
+        private List<AntAgent> _antAgents = new();
+        private SimpleMultiAgentGroup _agentGroup;
+
+        protected override void OnInitialize()
+        {
+            _agentGroup = new();
+
+            foreach (var antAgent in _antAgents)
+            {
+                RegisterAnt(antAgent);
+            }
+
+            ServiceLocator.Set<IColonyService>(this);
+        }
+
+        public void AddGroupReward(float value)
+        {
+            _agentGroup.AddGroupReward(value);
+        }
+
+        public void RegisterAnt(AntAgent agent)
+        {
+            _agentGroup.RegisterAgent(agent);
+        }
+
+        public void UnregisterAnt(AntAgent agent)
+        {
+            _agentGroup.UnregisterAgent(agent);
+        }
+    }
+}
