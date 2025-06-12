@@ -1,5 +1,6 @@
 ﻿using Core.Level;
 using Core.Map;
+using Google.Protobuf.WellKnownTypes;
 using System.Collections.Generic;
 using Unity.MLAgents.Sensors;
 using UnityEngine;
@@ -7,17 +8,21 @@ using UnityEngine;
 public class ChemicalGridSensor : ISensor
 {
     private readonly IChemicalGridService _chemicalService;
+    private readonly IGridService _gridService;
     private readonly Transform _agentTransform;
     private readonly int _chunkSize;
     private readonly List<Chemical> _chemicalsToObserve;
+    private readonly List<Tile> _tilesToObserve;
     private readonly ObservationSpec _observationSpec;
     private readonly string _name;
 
     public ChemicalGridSensor(
         IChemicalGridService chemicalService,
+        IGridService gridService,
         Transform agentTransform,
         int chunkSize,
         List<Chemical> chemicalsToObserve,
+        List<Tile> tilesToObserve,
         string name = "ChemicalGridSensor"
     )
     {
@@ -25,6 +30,7 @@ public class ChemicalGridSensor : ISensor
         _agentTransform = agentTransform;
         _chunkSize = chunkSize;
         _chemicalsToObserve = chemicalsToObserve;
+        _tilesToObserve = tilesToObserve;
         _name = name;
 
         _observationSpec = ObservationSpec.Visual(
@@ -64,21 +70,37 @@ public class ChemicalGridSensor : ISensor
         for (int c = 0; c < _chemicalsToObserve.Count; c++)
         {
             Chemical chemicalType = _chemicalsToObserve[c];
-            var map = _chemicalService.GetMap(chemicalType);
+            for (int y = 0; y < _chunkSize; y++)
+            {
+                for (int x = 0; x < _chunkSize; x++)
+                {
+                    int worldX = antX + (x - halfChunk);
+                    int worldY = antY + (y - halfChunk);
+                    float value = _chemicalService.Get(worldX, worldY, chemicalType) / 255f;
+
+                    writer[y, x, c] = value;
+                }
+            }
+        }
+
+        for (int t = 0; t < _tilesToObserve.Count; t++)
+        {
+            int tileChannelIndex = _chemicalsToObserve.Count + t;
 
             for (int y = 0; y < _chunkSize; y++)
             {
                 for (int x = 0; x < _chunkSize; x++)
                 {
-                    float value = 0f;
-                    if (map != null)
-                    {
-                        int worldX = antX + (x - halfChunk);
-                        int worldY = antY + (y - halfChunk);
-                        value = _chemicalService.Get(worldX, worldY, chemicalType) / 255f;
-                    }
+                    int worldX = antX + (x - halfChunk);
+                    int worldY = antY + (y - halfChunk);
+                    var tileType = _tilesToObserve[t];
 
-                    writer[y, x, c] = value;
+                    if (_gridService.TryGetTileAt(worldX, worldY, out TileInstance tile))
+                    {
+                        float value = (tile.TileType == tileType) ? 1.0f : 0.0f;
+                        writer[y, x, tileChannelIndex] = value;
+                    }
+                    writer[y, x, tileChannelIndex] = 0f;
                 }
             }
         }

@@ -505,8 +505,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c1742013ef3c2745ad8e5dfa3a7296b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chunkSize: 9
-  chemicalsToObserve: 0400000000000000030000000100000005000000
+  _chunkSize: 9
+  _chemicalsToObserve: 00000000030000000400000005000000
+  _tilesToObserve: 150579056500
   sensorName: ChemicalGridSensor
 --- !u!1001 &8909867542022313629
 PrefabInstance:

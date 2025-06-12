@@ -7,12 +7,9 @@ using UnityEngine;
 
 public class ChemicalGridSensorComponent : SensorComponent
 {
-    [Header("Sensor Settings")]
-    [Tooltip("Size of the grid to observe around the agent. Must be an odd number.")]
-    public int chunkSize = 9;
-
-    [Tooltip("The list of chemicals this sensor will observe.")]
-    public List<Chemical> chemicalsToObserve = new();
+    [SerializeField] public int _chunkSize = 9;
+    [SerializeField] public List<Chemical> _chemicalsToObserve = new();
+    [SerializeField] public List<Core.Map.Tile> _tilesToObserve = new();
 
     // You can optionally give it a unique name if you plan to have multiple chemical sensors on one agent
     public string sensorName = "ChemicalGridSensor";
@@ -20,10 +17,19 @@ public class ChemicalGridSensorComponent : SensorComponent
     public override ISensor[] CreateSensors()
     {
         var chemicalService = ServiceLocator.Get<IChemicalGridService>();
+        var gridService = ServiceLocator.Get<IGridService>();
 
         return new ISensor[]
         {
-            new ChemicalGridSensor(chemicalService, transform, chunkSize, chemicalsToObserve, sensorName)
-        };
+            new ChemicalGridSensor(
+                chemicalService,
+                gridService,
+                transform,
+                _chunkSize,
+                _chemicalsToObserve,
+                _tilesToObserve,
+                sensorName
+            )
+    };
     }
 }
