@@ -18,12 +18,14 @@ public class ChemicalGridSensorComponent : SensorComponent
     {
         var chemicalService = ServiceLocator.Get<IChemicalGridService>();
         var gridService = ServiceLocator.Get<IGridService>();
+        var obstacleService = ServiceLocator.Get<IObstacleService>();
 
         return new ISensor[]
         {
             new ChemicalGridSensor(
                 chemicalService,
                 gridService,
+                obstacleService,
                 transform,
                 _chunkSize,
                 _chemicalsToObserve,

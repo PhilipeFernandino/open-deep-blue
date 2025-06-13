@@ -8,7 +8,7 @@ public struct ChemicalPropagationJob : IJobParallelFor
 {
     [ReadOnly] public NativeArray<float> ReadGrid;
     [WriteOnly] public NativeArray<float> WriteGrid;
-    [ReadOnly] public NativeArray<bool> ObstacleGrid;
+    [ReadOnly] public NativeArray<bool>.ReadOnly ObstacleGrid;
 
     public int GridDimensions;
     public float DecayAmount;

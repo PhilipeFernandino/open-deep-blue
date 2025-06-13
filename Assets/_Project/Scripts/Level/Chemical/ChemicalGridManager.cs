@@ -32,11 +32,10 @@ namespace Core.Level
         private readonly Dictionary<Tile, List<ChemicalEmission>> _chemicalEmission = new();
 
         private IGridService _gridService;
-        private TilesSettings _tilesSettings;
+        private IObstacleService _obstacleService;
 
         private NativeArray<float> _readBuffer;
         private NativeArray<float> _writeBuffer;
-        private NativeArray<bool> _obstacleGrid;
 
         private bool _isInitialized = false;
         private int _dimensions;
@@ -84,8 +83,8 @@ namespace Core.Level
 
         protected override void OnSpawn()
         {
-            _tilesSettings = ScriptableSettings.GetOrFind<TilesSettings>();
             _gridService = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
+            _obstacleService = ServiceLocatorUtilities.GetServiceAssert<IObstacleService>();
             _gridService.Initialized += Setup;
         }
 
@@ -101,10 +100,6 @@ namespace Core.Level
                 _chemicalMaps.Add(chemicalType, new ChemicalMap(_dimensions, Allocator.Persistent));
             }
 
-            _gridService.TileChanged += HandleTileChanged;
-
-            BuildInitialObstacleMap();
-
             _readBuffer = new NativeArray<float>(gridSize, Allocator.Persistent);
             _writeBuffer = new NativeArray<float>(gridSize, Allocator.Persistent);
 
@@ -119,8 +114,6 @@ namespace Core.Level
         {
             if (_isInitialized)
             {
-                _gridService.TileChanged -= HandleTileChanged;
-
                 foreach (var map in _chemicalMaps.Values)
                 {
                     map.Dispose();
@@ -128,7 +121,6 @@ namespace Core.Level
 
                 _readBuffer.Dispose();
                 _writeBuffer.Dispose();
-                _obstacleGrid.Dispose();
             }
         }
 
@@ -215,29 +207,6 @@ namespace Core.Level
             job.Schedule(map.Grid.Length, 64).Complete();
         }
 
-        private void BuildInitialObstacleMap()
-        {
-            _obstacleGrid = new NativeArray<bool>(_dimensions * _dimensions, Allocator.Persistent);
-
-            var grid = _gridService.Grid;
-            for (int x = 0; x < _dimensions; x++)
-            {
-                for (int y = 0; y < _dimensions; y++)
-                {
-                    int index = y * _dimensions + x;
-                    _obstacleGrid[index] = !_tilesSettings.GetDefinition(grid[x, y].TileType).IsWalkable;
-                }
-            }
-        }
-
-        private void HandleTileChanged(int x, int y, TileInstance tileInstance, TileDefinition tileDefinition)
-        {
-            if (!_isInitialized)
-                return;
-
-            int index = y * _dimensions + x;
-            _obstacleGrid[index] = !tileDefinition.TileProperties.HasFlag(TileProperties.IsWalkable);
-        }
 
         private void Propagate(Chemical chemical, float propagationDecay)
         {
@@ -256,6 +225,7 @@ namespace Core.Level
             _readBuffer.CopyFrom(map);
 
             JobHandle jobHandle = default;
+            var obstacleGrid = _obstacleService.GetObstacleGrid();
 
             for (int i = 0; i < _propagationPasses; i++)
             {
@@ -265,7 +235,7 @@ namespace Core.Level
                     DecayAmount = propagationDecay,
                     ReadGrid = _readBuffer,
                     WriteGrid = _writeBuffer,
-                    ObstacleGrid = _obstacleGrid,
+                    ObstacleGrid = obstacleGrid,
                 };
                 jobHandle = job.Schedule(map.Length, 64);
                 jobHandle.Complete();

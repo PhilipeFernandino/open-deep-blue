@@ -30,8 +30,6 @@ namespace Core.Units
         private Movement2D _movementController;
         private BoxCollider2D _boxCollider;
 
-        private AntVisionSensor _visionSensor;
-        private AntBodySensor _bodySensor;
         private AntTilemapCollision _tilemapCollision;
 
         internal AntBlackboard Blackboard { get; private set; }
@@ -85,9 +83,6 @@ namespace Core.Units
         private void Update()
         {
             _fsm.Update();
-
-            _bodySensor.Sense();
-            _visionSensor.Sense();
         }
 
         private void FixedUpdate()
@@ -109,9 +104,6 @@ namespace Core.Units
             _boxCollider = GetComponent<BoxCollider2D>();
             _healthComponent.Attacked += Attacked_EventHandler;
             _tilemapCollision = GetComponent<AntTilemapCollision>();
-
-            _bodySensor = new(this);
-            _visionSensor = new(this);
         }
 
         private void Attacked_EventHandler(AttackedData data)

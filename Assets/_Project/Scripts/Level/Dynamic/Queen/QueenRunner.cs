@@ -99,7 +99,7 @@ namespace Core.Level.Dynamic
                 var data = _dataMap[position];
                 _logic.OnUpdate(ref data, _queenDef, position, _gridService, _chemicalService);
                 _dataMap[position] = data;
-                _chemicalService.Drop(position, Chemical.QueenPheromone, 150f);
+                _chemicalService.Drop(position, Chemical.QueenPheromone, 150f * Time.deltaTime);
             }
         }
 

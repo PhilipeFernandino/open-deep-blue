@@ -90,6 +90,16 @@ namespace Core.Level
             return Map.TileInstance.None;
         }
 
+        public TileInstance Get(int x, int y)
+        {
+            if (TryGetTileAt(x, y, out TileInstance tile))
+            {
+                return tile;
+            }
+
+            return TileInstance.None;
+        }
+
         public bool TryGetTileAt(int x, int y, out TileInstance tile)
         {
             if (!IsWithinBounds(x, y, 0, _mapMetadata.Dimensions))

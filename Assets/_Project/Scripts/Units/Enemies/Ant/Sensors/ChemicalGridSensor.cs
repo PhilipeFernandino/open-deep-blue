@@ -9,16 +9,22 @@ public class ChemicalGridSensor : ISensor
 {
     private readonly IChemicalGridService _chemicalService;
     private readonly IGridService _gridService;
+    private readonly IObstacleService _obstacleService;
+
     private readonly Transform _agentTransform;
     private readonly int _chunkSize;
+
     private readonly List<Chemical> _chemicalsToObserve;
     private readonly List<Tile> _tilesToObserve;
+
     private readonly ObservationSpec _observationSpec;
+
     private readonly string _name;
 
     public ChemicalGridSensor(
         IChemicalGridService chemicalService,
         IGridService gridService,
+        IObstacleService obstacleService,
         Transform agentTransform,
         int chunkSize,
         List<Chemical> chemicalsToObserve,
@@ -26,6 +32,8 @@ public class ChemicalGridSensor : ISensor
         string name = "ChemicalGridSensor"
     )
     {
+        _gridService = gridService;
+        _obstacleService = obstacleService;
         _chemicalService = chemicalService;
         _agentTransform = agentTransform;
         _chunkSize = chunkSize;
@@ -42,7 +50,7 @@ public class ChemicalGridSensor : ISensor
 
     private int GetObservationSize()
     {
-        return _chunkSize * _chunkSize * _chemicalsToObserve.Count;
+        return _chunkSize * _chunkSize * (_chemicalsToObserve.Count + _tilesToObserve.Count + 1);
     }
 
     public ObservationSpec GetObservationSpec()
@@ -95,13 +103,25 @@ public class ChemicalGridSensor : ISensor
                     int worldY = antY + (y - halfChunk);
                     var tileType = _tilesToObserve[t];
 
-                    if (_gridService.TryGetTileAt(worldX, worldY, out TileInstance tile))
-                    {
-                        float value = (tile.TileType == tileType) ? 1.0f : 0.0f;
-                        writer[y, x, tileChannelIndex] = value;
-                    }
-                    writer[y, x, tileChannelIndex] = 0f;
+                    var tile = _gridService.Get(worldX, worldY);
+                    float value = (tile.TileType == tileType) ? 1.0f : 0.0f;
+                    writer[y, x, tileChannelIndex] = value;
                 }
+            }
+        }
+
+        int obstacleChannel = _chemicalsToObserve.Count + _tilesToObserve.Count;
+
+        for (int y = 0; y < _chunkSize; y++)
+        {
+            for (int x = 0; x < _chunkSize; x++)
+            {
+                int worldX = antX + (x - halfChunk);
+                int worldY = antY + (y - halfChunk);
+
+                float value = _obstacleService.HasObstacle(worldX, worldY) ? 1.0f : 0.0f;
+                writer[y, x, obstacleChannel] = value;
+
             }
         }
 

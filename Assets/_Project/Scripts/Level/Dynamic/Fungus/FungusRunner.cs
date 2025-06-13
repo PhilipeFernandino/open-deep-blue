@@ -122,7 +122,7 @@ namespace Core.Level.Dynamic
                 var data = _dataMap[position];
                 _logic.OnUpdate(ref data, _fungusDef, position, _gridService, _chemicalService);
                 _dataMap[position] = data;
-                _chemicalService.Drop(position, Chemical.FungusScent, 100f);
+                _chemicalService.Drop(position, Chemical.FungusScent, 100f * Time.deltaTime);
             }
         }
 

@@ -20,6 +20,7 @@ namespace Core.Level
         public void DrawInGrid(Vector2 position, Color color) { throw new NotImplementedException(); }
         public void DrawInGrid(Vector2 position, in Vector2Int size, Color color) { throw new NotImplementedException(); }
 
+        public TileInstance Get(int x, int y);
         public bool HasTileAt(int x, int y);
         public void LoadTilesBlock(BoundsInt area, TileBase[] tiles);
         public void LoadFloorTilesBlock(BoundsInt area, TileBase[] tiles);
@@ -36,6 +37,11 @@ namespace Core.Level
             return HasTileAt(pos.x, pos.y);
         }
 
+        public TileInstance Get(Vector2 v)
+        {
+            var pos = ToGridPosition(v);
+            return Get(pos.x, pos.y);
+        }
 
         public bool TrySetTileAt(Vector2 v, Map.Tile tile, bool overrideTile = false)
         {

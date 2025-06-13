@@ -64,6 +64,7 @@ namespace Core.Units
             var blackboard = _ant.Blackboard;
             sensor.AddObservation(blackboard.MovingDirection.normalized);
             sensor.AddOneHotObservation((int)blackboard.CarryingItem, (int)Item.Last + 1);
+            sensor.AddObservation(CanInteract());
         }
 
         public override void WriteDiscreteActionMask(IDiscreteActionMask actionMasker)
@@ -89,13 +90,6 @@ namespace Core.Units
             }
 
             bool isCarryingLeaf = _ant.Blackboard.CarryingItem == Item.Leaf;
-
-            //if (isCarryingLeaf)
-            //{
-            //    AddReward(2.0f);
-            //    EndEpisode();
-            //}
-
         }
 
         public override void Heuristic(in ActionBuffers actionsOut)
@@ -129,19 +123,8 @@ namespace Core.Units
 
             if (_ant.Blackboard.CarryingItem == Item.None)
             {
-                _ant.ChemicalGrid.Drop(_ant.Position, Chemical.ExplorePheromone, 22.5f);
+                _ant.ChemicalGrid.Drop(_ant.Position, Chemical.ExplorePheromone, 22.5f * Time.deltaTime);
             }
-
-            //else if (isReturningHome)
-            //{
-            //    // Reward for getting near fungus
-            //    float previousFungusScent = _chemicalGrid.Get(_previousPosition, Chemical.FungusScent);
-
-            //    if (fungusScent > previousFungusScent)
-            //    {
-            //        AddReward(0.02f);
-            //    }
-            //}
         }
     }
 }
