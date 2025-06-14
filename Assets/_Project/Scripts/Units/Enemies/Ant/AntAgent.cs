@@ -1,5 +1,7 @@
 ﻿using Core.ItemSystem;
 using Core.Level;
+using Core.Train;
+using Core.Util;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
@@ -15,6 +17,7 @@ namespace Core.Units
 
         private Ant _ant;
         private IChemicalGridService _chemicalGrid;
+        private IColonyService _colonyManager;
 
         private Vector2 _previousPosition;
 
@@ -28,6 +31,7 @@ namespace Core.Units
         {
             _ant = ant;
             _chemicalGrid = _ant.ChemicalGrid;
+            _colonyManager = ServiceLocatorUtilities.GetServiceAssert<IColonyService>();
 
             _ant.TilemapCollision.Collided += () =>
             {
@@ -48,6 +52,8 @@ namespace Core.Units
             {
                 Debug.LogWarning($"{GetType()} - No model assigned");
             }
+
+            _colonyManager.RegisterAnt(this);
         }
 
         public override void OnEpisodeBegin()

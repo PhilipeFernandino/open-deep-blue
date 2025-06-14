@@ -189,6 +189,7 @@ Transform:
   - {fileID: 8720216356864721403}
   - {fileID: 1506421843292665432}
   - {fileID: 313926926429564360}
+  - {fileID: 9099078725327924762}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1567793414303212607
@@ -347,7 +348,7 @@ MonoBehaviour:
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
     hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 5022602860645237092, guid: 6a1b0cc2437602f4eb3f1d2445514b9c, type: 3}
+  m_Model: {fileID: 0}
   m_InferenceDevice: 0
   m_BehaviorType: 0
   m_BehaviorName: Ant
@@ -461,6 +462,53 @@ Transform:
   - {fileID: 1544373875054835027}
   m_Father: {fileID: 9019613529773615207}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5585351869111518182
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9099078725327924762}
+  - component: {fileID: 5372400292477384000}
+  m_Layer: 8
+  m_Name: Tile Grid Sensor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9099078725327924762
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5585351869111518182}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9019613529773615207}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5372400292477384000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5585351869111518182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c08fff42960c0b14ea5eda50d701fcc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _chunkSize: 9
+  _tilesToObserve: 650015057905
+  sensorName: TileGridSensor
 --- !u!1 &6920064295541619248
 GameObject:
   m_ObjectHideFlags: 0
@@ -507,7 +555,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _chunkSize: 9
   _chemicalsToObserve: 00000000030000000400000005000000
-  _tilesToObserve: 150579056500
   sensorName: ChemicalGridSensor
 --- !u!1001 &8909867542022313629
 PrefabInstance:
