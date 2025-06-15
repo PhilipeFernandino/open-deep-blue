@@ -33,16 +33,6 @@ namespace Core.Units
             _chemicalGrid = _ant.ChemicalGrid;
             _colonyManager = ServiceLocatorUtilities.GetServiceAssert<IColonyService>();
 
-            _ant.TilemapCollision.Collided += () =>
-            {
-                AddReward(-0.001f);
-            };
-
-            _ant.TilemapCollision.CollisionStaid += () =>
-            {
-                AddReward(-0.001f);
-            };
-
             var model = GetComponent<Unity.MLAgents.Policies.BehaviorParameters>().Model;
             if (model != null)
             {

@@ -6,11 +6,13 @@ using Core.EventBus;
 using Core.Map;
 using NaughtyAttributes;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
 using static Core.Util.Range;
+using Tile = Core.Map.Tile;
 
 namespace Core.Level
 {
@@ -45,9 +47,27 @@ namespace Core.Level
 
         private MapMetadata _mapMetadata;
 
+
         public int ChunkSize => _chunkSize;
         public int LoadedDimensions => _chunkSize * (_loadNearChunks * 2 + 1);
-        public int MapDimensions => _mapMetadata.Dimensions;
+        public int Dimensions => _mapMetadata.Dimensions;
+
+        public void ListPositions(Tile tile, List<Vector2Int> listPositions)
+        {
+            listPositions.Clear();
+
+            for (int i = 0; i < Dimensions; i++)
+            {
+                for (int j = 0; j < Dimensions; j++)
+                {
+                    Tile compareTile = Get(i, j).TileType;
+                    if (compareTile == tile)
+                    {
+                        listPositions.Add(new(i, j));
+                    }
+                }
+            }
+        }
 
         public void ClearDrawAt(Vector2 position) => _gridDrawer?.ClearAt(position);
         public void DrawInGrid(Vector2 position, Color color) => _gridDrawer?.DrawInGrid(position, color);

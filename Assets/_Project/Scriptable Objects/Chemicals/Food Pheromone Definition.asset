@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Food Pheromone Definition
   m_EditorClassIdentifier: 
   <ChemicalType>k__BackingField: 0
-  <DecayRate>k__BackingField: 0.9999
-  <PropagationDecayAmount>k__BackingField: 35
+  <DecayRate>k__BackingField: 0.999
+  <DiffusionFactor>k__BackingField: 0.501
+  <PropagationFactor>k__BackingField: 0.9

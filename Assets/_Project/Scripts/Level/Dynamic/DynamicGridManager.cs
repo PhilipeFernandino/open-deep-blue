@@ -35,6 +35,9 @@ namespace Core.Level.Dynamic
             var antQueenRunner = new QueenRunner(_gridService, _chemicalService);
             _runnerMap[Tile.QueenAnt] = antQueenRunner;
 
+            var foodRunner = new FoodRunner(_gridService, _chemicalService);
+            _runnerMap[Tile.GreenGrass] = foodRunner;
+
             _gridService.TileChanged += HandleTileChanged;
         }
 
@@ -76,10 +79,14 @@ namespace Core.Level.Dynamic
                 var data = (FungusTileData)_runnerMap[Tile.Fungus].GetData(x, y);
                 _debugChannel.RaiseEvent("dynamic", data);
             }
-
-            if (tileInstance.TileType == Tile.QueenAnt)
+            else if (tileInstance.TileType == Tile.QueenAnt)
             {
                 var data = (QueenTileData)_runnerMap[Tile.QueenAnt].GetData(x, y);
+                _debugChannel.RaiseEvent("dynamic", data);
+            }
+            else if (tileInstance.TileType == Tile.GreenGrass)
+            {
+                var data = (FoodTileData)_runnerMap[Tile.GreenGrass].GetData(x, y);
                 _debugChannel.RaiseEvent("dynamic", data);
             }
         }

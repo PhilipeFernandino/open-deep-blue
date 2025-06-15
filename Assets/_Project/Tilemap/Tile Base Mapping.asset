@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdae98aa489e35d45b3b8d69fe97a6ef, type: 3}
+  m_Name: Tile Base Mapping
+  m_EditorClassIdentifier: 
+  <TileBaseTiles>k__BackingField:
+  - <Tile>k__BackingField: 0
+    <TileBase>k__BackingField: {fileID: 0}
+  - <Tile>k__BackingField: 1
+    <TileBase>k__BackingField: {fileID: 11400000, guid: 42cae335e8043cc45a267828a2b87427, type: 2}
+  - <Tile>k__BackingField: 2
+    <TileBase>k__BackingField: {fileID: 11400000, guid: 3ac1f65b5ae9ef246b20f782be43e884, type: 2}
+  - <Tile>k__BackingField: 3
+    <TileBase>k__BackingField: {fileID: 11400000, guid: e00e245f626611441bfa57ee12314c4b, type: 2}
+  - <Tile>k__BackingField: 4
+    <TileBase>k__BackingField: {fileID: 11400000, guid: 9a9cc2eeb9602824c8d604e6aa0c8cd7, type: 2}
+  - <Tile>k__BackingField: 5
+    <TileBase>k__BackingField: {fileID: 11400000, guid: f44df8625b99b1f4ea1d48fcc0cf2c49, type: 2}
+  - <Tile>k__BackingField: 6
+    <TileBase>k__BackingField: {fileID: 11400000, guid: aaaa4e88a8fe0134cabb5bf9c6c7efb9, type: 2}
+  - <Tile>k__BackingField: 101
+    <TileBase>k__BackingField: {fileID: 11400000, guid: 066b0690a7a246843bd0502a00ede077, type: 2}
+  - <Tile>k__BackingField: 102
+    <TileBase>k__BackingField: {fileID: 11400000, guid: 715d35da015b1fb4da7ce31616f8a1cd, type: 2}
+  - <Tile>k__BackingField: 151
+    <TileBase>k__BackingField: {fileID: 11400000, guid: 68a0cf4e54aeab6489bcc9b70433602a, type: 2}
+  - <Tile>k__BackingField: 501
+    <TileBase>k__BackingField: {fileID: 11400000, guid: 07c2592daae58074ca45764b2fac52d1, type: 2}
+  - <Tile>k__BackingField: 1001
+    <TileBase>k__BackingField: {fileID: 11400000, guid: 338b12a87377feb48980417039441600, type: 2}
+  - <Tile>k__BackingField: 1002
+    <TileBase>k__BackingField: {fileID: 11400000, guid: 3b5e8be18c943234baff587e49b9f208, type: 2}
+  - <Tile>k__BackingField: 1211
+    <TileBase>k__BackingField: {fileID: 11400000, guid: be0b6d87cd647ea4f8413e397369a0a3, type: 2}
+  - <Tile>k__BackingField: 1301
+    <TileBase>k__BackingField: {fileID: 11400000, guid: 1746f9bca8c4044449aadff407d9fc71, type: 2}
+  - <Tile>k__BackingField: 1401
+    <TileBase>k__BackingField: {fileID: 11400000, guid: 0435b38c43a5b0f4fa2f0e4a4b7e5ef9, type: 2}
+  - <Tile>k__BackingField: 2001
+    <TileBase>k__BackingField: {fileID: 11400000, guid: 0740d841b11f6b846855f9a8c8f6144d, type: 2}
+  - <Tile>k__BackingField: 2002
+    <TileBase>k__BackingField: {fileID: 11400000, guid: 0740d841b11f6b846855f9a8c8f6144d, type: 2}

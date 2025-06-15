@@ -71,7 +71,7 @@ namespace Core.Units
 
         public void TryToInteract()
         {
-            Vector2 interactPosition = Position + _movementController.LastMovementInput * 0.5f;
+            Vector2 interactPosition = Position + _movementController.LastMovementInput.normalized;
             InteractionService.Interact(interactPosition, this);
         }
 

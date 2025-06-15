@@ -23,6 +23,12 @@ namespace Core.Debugger
         public QueenDefinition QueenDefinition;
     }
 
+    public struct FoodTileData
+    {
+        public float CurrentFoodStore;
+        public float MaxFoodStore;
+    }
+
     [CreateAssetMenu(fileName = "Dynamic Grid Info Module", menuName = "Core/Debugger/Modules/Dynamic Grid Info Module")]
     public class DynamicGridInfoModule : DebugModuleSO
     {
@@ -53,6 +59,13 @@ namespace Core.Debugger
                 _stringBuilder.AppendLine($"LostHealthWhenStarved: {queenTileData.QueenDefinition.LostHealthWhenStarved}");
                 _stringBuilder.AppendLine($"FoodProduction: {queenTileData.QueenDefinition.BroodPerLaying}");
             }
+
+            if (data is FoodTileData foodTileData)
+            {
+                _stringBuilder.AppendLine($"Food Tile:");
+                _stringBuilder.AppendLine($"Food: {foodTileData.CurrentFoodStore}/{foodTileData.MaxFoodStore}");
+            }
+
 
             DisplayText = _stringBuilder.ToString();
         }

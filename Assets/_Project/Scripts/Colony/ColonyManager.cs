@@ -9,18 +9,10 @@ namespace Core.Train
 
     public class ColonyManager : Actor, IColonyService
     {
-        private List<AntAgent> _antAgents = new();
-        private SimpleMultiAgentGroup _agentGroup;
+        private SimpleMultiAgentGroup _agentGroup = new();
 
         protected override void OnInitialize()
         {
-            _agentGroup = new();
-
-            foreach (var antAgent in _antAgents)
-            {
-                RegisterAnt(antAgent);
-            }
-
             ServiceLocator.Set<IColonyService>(this);
         }
 

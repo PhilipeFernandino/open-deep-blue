@@ -38,7 +38,7 @@ public class TileGridSensor : ISensor
         _observationSpec = ObservationSpec.Visual(
             _chunkSize,
             _chunkSize,
-            _tilesToObserve.Count
+            _tilesToObserve.Count + 1
         );
     }
 

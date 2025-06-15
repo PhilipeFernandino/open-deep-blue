@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace Core.Level.Dynamic
 {
-    public class QueenLogic : ILogicController<QueenData, QueenDefinition>
+    public class QueenLogic
     {
-        public void OnUpdate(ref QueenData data, QueenDefinition defData, Vector2Int position, IGridService grid, IChemicalGridService chemicals)
+        public void OnUpdate(ref QueenData data, QueenDefinition defData, Vector2Int position, IChemicalGridService chemicals)
         {
             if (data.CurrentSaciation <= 0)
             {

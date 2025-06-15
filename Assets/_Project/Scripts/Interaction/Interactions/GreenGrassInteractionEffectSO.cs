@@ -1,4 +1,5 @@
 ﻿using Core.Level;
+using Core.Level.Dynamic;
 using Core.Units;
 using Core.Util;
 using UnityEngine;
@@ -10,11 +11,10 @@ namespace Core.Interaction
     {
         public override void Execute(MonoBehaviour interactor, Vector2 worldPosition)
         {
-            var gridService = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
+            var foodService = ServiceLocatorUtilities.GetServiceAssert<IFoodService>();
 
-            if (interactor is Ant ant && ant.IsCarrying == ItemSystem.Item.None)
+            if (interactor is Ant ant && foodService.TryEat(worldPosition.RoundToInt()))
             {
-                gridService.DamageTileAt(worldPosition, 5);
                 ant.Give(ItemSystem.Item.Leaf);
             }
         }

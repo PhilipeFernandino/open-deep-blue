@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <ChemicalType>k__BackingField: 3
   <DecayRate>k__BackingField: 0.9999
-  <PropagationDecayAmount>k__BackingField: 15
+  <DiffusionFactor>k__BackingField: 0.5
+  <PropagationFactor>k__BackingField: 0.5

@@ -24,7 +24,7 @@ namespace Core.Level
 
         private bool _isInitialized = false;
 
-        public int Dimensions => _gridService?.MapDimensions ?? 0;
+        public int Dimensions => _gridService?.Dimensions ?? 0;
 
         public NativeArray<bool>.ReadOnly GetObstacleGrid() => _obstacleGrid.AsReadOnly();
 
@@ -67,7 +67,7 @@ namespace Core.Level
 
         private void Setup()
         {
-            int dimensions = _gridService.MapDimensions;
+            int dimensions = _gridService.Dimensions;
             _obstacleGrid = new NativeArray<bool>(dimensions * dimensions, Allocator.Persistent);
             BuildInitialObstacleMap();
             _gridService.TileChanged += HandleTileChanged;
@@ -77,7 +77,7 @@ namespace Core.Level
         private void BuildInitialObstacleMap()
         {
             var grid = _gridService.Grid;
-            int dimensions = _gridService.MapDimensions;
+            int dimensions = _gridService.Dimensions;
             for (int x = 0; x < dimensions; x++)
             {
                 for (int y = 0; y < dimensions; y++)

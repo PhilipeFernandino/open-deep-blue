@@ -12,7 +12,7 @@ namespace Core.Level.Dynamic
         private readonly FungusLogic _logic = new FungusLogic();
         private readonly IGridService _gridService;
         private readonly IChemicalGridService _chemicalService;
-        private readonly FungusDefinition _fungusDef;
+        private readonly FungusDefinition _foodDef;
 
         private readonly List<Vector2Int> _keysToUpdate = new();
 
@@ -24,11 +24,11 @@ namespace Core.Level.Dynamic
                 CurrentHealth = data.CurrentHealth,
                 CurrentSaciation = data.CurrentSaciation,
                 CurrentFoodStore = data.CurrentFoodStore,
-                FoodProduction = _fungusDef.FoodProduction,
-                LostHealthWhenStarved = _fungusDef.LostHealthWhenStarved,
-                MaxFoodStore = _fungusDef.MaxFoodStore,
-                MaxHealth = _fungusDef.MaxHealth,
-                SaciationLost = _fungusDef.SaciationLost
+                FoodProduction = _foodDef.FoodProduction,
+                LostHealthWhenStarved = _foodDef.LostHealthWhenStarved,
+                MaxFoodStore = _foodDef.MaxFoodStore,
+                MaxHealth = _foodDef.MaxHealth,
+                SaciationLost = _foodDef.SaciationLost
             };
         }
 
@@ -68,7 +68,7 @@ namespace Core.Level.Dynamic
             _gridService = grid;
             _chemicalService = chemicals;
 
-            _fungusDef = new()
+            _foodDef = new()
             {
                 FoodProduction = 0.001f,
                 LostHealthWhenStarved = 0.001f,
@@ -78,9 +78,9 @@ namespace Core.Level.Dynamic
                 MaxSaciation = 50f,
             };
 
-            for (int i = 0; i < grid.MapDimensions; i++)
+            for (int i = 0; i < grid.Dimensions; i++)
             {
-                for (int j = 0; j < grid.MapDimensions; j++)
+                for (int j = 0; j < grid.Dimensions; j++)
                 {
                     if (grid.Grid[i, j].TileType == Tile.Fungus)
                     {
@@ -97,9 +97,9 @@ namespace Core.Level.Dynamic
             {
                 _dataMap[position] = new FungusData
                 {
-                    CurrentHealth = _fungusDef.MaxHealth,
+                    CurrentHealth = _foodDef.MaxHealth,
                     CurrentFoodStore = 0,
-                    CurrentSaciation = _fungusDef.MaxSaciation
+                    CurrentSaciation = _foodDef.MaxSaciation
                 };
             }
             else
@@ -120,9 +120,8 @@ namespace Core.Level.Dynamic
             foreach (var position in _keysToUpdate)
             {
                 var data = _dataMap[position];
-                _logic.OnUpdate(ref data, _fungusDef, position, _gridService, _chemicalService);
+                _logic.OnUpdate(ref data, _foodDef, position, _gridService, _chemicalService);
                 _dataMap[position] = data;
-                _chemicalService.Drop(position, Chemical.FungusScent, 100f * Time.deltaTime);
             }
         }
 

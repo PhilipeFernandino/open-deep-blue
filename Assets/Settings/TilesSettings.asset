@@ -14,41 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _preload: 1
   _type: 2
-  <TileToTileBase>k__BackingField:
-  - <TileType>k__BackingField: 0
-    <TileBase>k__BackingField: {fileID: 0}
-  - <TileType>k__BackingField: 1
-    <TileBase>k__BackingField: {fileID: 11400000, guid: 42cae335e8043cc45a267828a2b87427, type: 2}
-  - <TileType>k__BackingField: 2
-    <TileBase>k__BackingField: {fileID: 11400000, guid: 3ac1f65b5ae9ef246b20f782be43e884, type: 2}
-  - <TileType>k__BackingField: 3
-    <TileBase>k__BackingField: {fileID: 11400000, guid: e00e245f626611441bfa57ee12314c4b, type: 2}
-  - <TileType>k__BackingField: 4
-    <TileBase>k__BackingField: {fileID: 11400000, guid: 9a9cc2eeb9602824c8d604e6aa0c8cd7, type: 2}
-  - <TileType>k__BackingField: 5
-    <TileBase>k__BackingField: {fileID: 11400000, guid: f44df8625b99b1f4ea1d48fcc0cf2c49, type: 2}
-  - <TileType>k__BackingField: 6
-    <TileBase>k__BackingField: {fileID: 11400000, guid: aaaa4e88a8fe0134cabb5bf9c6c7efb9, type: 2}
-  - <TileType>k__BackingField: 2002
-    <TileBase>k__BackingField: {fileID: 11400000, guid: 0740d841b11f6b846855f9a8c8f6144d, type: 2}
-  - <TileType>k__BackingField: 2001
-    <TileBase>k__BackingField: {fileID: 11400000, guid: 0740d841b11f6b846855f9a8c8f6144d, type: 2}
-  - <TileType>k__BackingField: 151
-    <TileBase>k__BackingField: {fileID: 11400000, guid: 68a0cf4e54aeab6489bcc9b70433602a, type: 2}
-  - <TileType>k__BackingField: 1001
-    <TileBase>k__BackingField: {fileID: 11400000, guid: 338b12a87377feb48980417039441600, type: 2}
-  - <TileType>k__BackingField: 501
-    <TileBase>k__BackingField: {fileID: 11400000, guid: 07c2592daae58074ca45764b2fac52d1, type: 2}
-  - <TileType>k__BackingField: 1211
-    <TileBase>k__BackingField: {fileID: 11400000, guid: be0b6d87cd647ea4f8413e397369a0a3, type: 2}
-  - <TileType>k__BackingField: 101
-    <TileBase>k__BackingField: {fileID: 11400000, guid: 066b0690a7a246843bd0502a00ede077, type: 2}
-  - <TileType>k__BackingField: 102
-    <TileBase>k__BackingField: {fileID: 11400000, guid: 715d35da015b1fb4da7ce31616f8a1cd, type: 2}
-  - <TileType>k__BackingField: 1301
-    <TileBase>k__BackingField: {fileID: 11400000, guid: 1746f9bca8c4044449aadff407d9fc71, type: 2}
-  - <TileType>k__BackingField: 1401
-    <TileBase>k__BackingField: {fileID: 11400000, guid: 0435b38c43a5b0f4fa2f0e4a4b7e5ef9, type: 2}
+  <TileToTileBase>k__BackingField: {fileID: 11400000, guid: c7a419f6da0231d4c93357e193bbf2c8, type: 2}
   <TileToFloorTileBase>k__BackingField:
   - <TileType>k__BackingField: 1
     <TileBase>k__BackingField: {fileID: 11400000, guid: 8f0de23d773965942bf4c621fce7bb34, type: 2}
@@ -91,7 +57,7 @@ MonoBehaviour:
     TileProperties: 96
     MaxHitPoints: 0
   - TileType: 101
-    TileProperties: 96
+    TileProperties: 112
     MaxHitPoints: 15
   - TileType: 1301
     TileProperties: 114

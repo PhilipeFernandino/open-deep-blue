@@ -1,6 +1,7 @@
 ﻿using Coimbra.Services;
 using Core.Map;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -14,12 +15,13 @@ namespace Core.Level
         public TileInstance[,] Grid { get; }
         public int ChunkSize { get; }
         public int LoadedDimensions { get; }
-        public int MapDimensions { get; }
+        public int Dimensions { get; }
 
         public void ClearDrawAt(Vector2 position) { throw new NotImplementedException(); }
         public void DrawInGrid(Vector2 position, Color color) { throw new NotImplementedException(); }
         public void DrawInGrid(Vector2 position, in Vector2Int size, Color color) { throw new NotImplementedException(); }
 
+        public void ListPositions(Map.Tile tile, List<Vector2Int> listPositions);
         public TileInstance Get(int x, int y);
         public bool HasTileAt(int x, int y);
         public void LoadTilesBlock(BoundsInt area, TileBase[] tiles);

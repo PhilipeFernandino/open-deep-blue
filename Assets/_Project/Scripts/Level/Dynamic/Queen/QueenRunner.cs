@@ -9,7 +9,7 @@ namespace Core.Level.Dynamic
     public class QueenRunner : ILogicRunner, IQueenService
     {
         private readonly Dictionary<Vector2Int, QueenData> _dataMap = new();
-        private readonly QueenLogic _logic = new QueenLogic();
+        private readonly QueenLogic _logic = new();
         private readonly IGridService _gridService;
         private readonly IChemicalGridService _chemicalService;
         private readonly QueenDefinition _queenDef;
@@ -53,9 +53,9 @@ namespace Core.Level.Dynamic
                 PregnancyRate = 0.001f,
             };
 
-            for (int i = 0; i < grid.MapDimensions; i++)
+            for (int i = 0; i < grid.Dimensions; i++)
             {
-                for (int j = 0; j < grid.MapDimensions; j++)
+                for (int j = 0; j < grid.Dimensions; j++)
                 {
                     if (grid.Grid[i, j].TileType == Tile.QueenAnt)
                     {
@@ -97,9 +97,8 @@ namespace Core.Level.Dynamic
             foreach (var position in _keysToUpdate)
             {
                 var data = _dataMap[position];
-                _logic.OnUpdate(ref data, _queenDef, position, _gridService, _chemicalService);
+                _logic.OnUpdate(ref data, _queenDef, position, _chemicalService);
                 _dataMap[position] = data;
-                _chemicalService.Drop(position, Chemical.QueenPheromone, 150f * Time.deltaTime);
             }
         }
 

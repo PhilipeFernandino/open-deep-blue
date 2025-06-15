@@ -1,5 +1,4 @@
-﻿// In AntInputHandler.cs
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class AntInputHandler : MonoBehaviour
@@ -27,11 +26,8 @@ public class AntInputHandler : MonoBehaviour
 
     private void Update()
     {
-        // Read the movement state every frame. This is fine because it's a continuous state, not a single event.
         MoveInput = _movementAction.action.ReadValue<Vector2>();
-
-        // REMOVED: Do NOT reset the trigger here anymore.
-        // InteractTriggered = false; 
+        //InteractTriggered = false;
     }
 
     private void OnInteract(InputAction.CallbackContext context)

@@ -91,7 +91,7 @@ namespace Core.Level
         private void Setup()
         {
 
-            _dimensions = _gridService.MapDimensions;
+            _dimensions = _gridService.Dimensions;
 
             int gridSize = _dimensions * _dimensions;
 
@@ -163,8 +163,7 @@ namespace Core.Level
 
             foreach (var def in _chemicalDefs)
             {
-                Decay(def.ChemicalType, def.DecayRate);
-                Propagate(def.ChemicalType, def.PropagationDecayAmount);
+                PropagateAndDecay(def);
             }
         }
 
@@ -185,57 +184,44 @@ namespace Core.Level
                     {
                         foreach (var emission in emissions)
                         {
-                            _chemicalMaps[emission.Chemical].Set(x, y, emission.Strength);
+                            _chemicalMaps[emission.Chemical].Sum(x, y, emission.Strength * Time.deltaTime);
                         }
                     }
                 }
             }
         }
 
-        private void Decay(Chemical chemical, float rate)
+
+        private void PropagateAndDecay(ChemicalDefinition def)
         {
-            ChemicalMap map = GetMap(chemical);
-
-            if (map == null)
-                return;
-
-            var job = new DecayJob
-            {
-                Grid = map.Grid,
-                EvaporationMultiplier = rate
-            };
-            job.Schedule(map.Grid.Length, 64).Complete();
-        }
-
-
-        private void Propagate(Chemical chemical, float propagationDecay)
-        {
-            ChemicalMap map = GetMap(chemical);
+            ChemicalMap map = GetMap(def.ChemicalType);
 
             if (map == null)
                 return;
 
             NativeArray<float> targetGrid = map.Grid;
 
-            RunPropagationJob(targetGrid, propagationDecay);
+            RunPropagateAndDecayJob(targetGrid, def);
         }
 
-        private void RunPropagationJob(NativeArray<float> map, float propagationDecay)
+        private void RunPropagateAndDecayJob(NativeArray<float> map, ChemicalDefinition def)
         {
             _readBuffer.CopyFrom(map);
+            var obstacleGrid = _obstacleService.GetObstacleGrid();
 
             JobHandle jobHandle = default;
-            var obstacleGrid = _obstacleService.GetObstacleGrid();
 
             for (int i = 0; i < _propagationPasses; i++)
             {
-                var job = new ChemicalPropagationJob
+                var job = new PropagateAndDecayJob
                 {
-                    GridDimensions = _dimensions,
-                    DecayAmount = propagationDecay,
                     ReadGrid = _readBuffer,
                     WriteGrid = _writeBuffer,
                     ObstacleGrid = obstacleGrid,
+                    GridDimensions = _dimensions,
+                    DiffusionFactor = def.DiffusionFactor,
+                    PropagationDecayMultiplier = def.PropagationFactor,
+                    EvaporationMultiplier = (i == _propagationPasses - 1) ? def.DecayRate : 1.0f
                 };
                 jobHandle = job.Schedule(map.Length, 64);
                 jobHandle.Complete();

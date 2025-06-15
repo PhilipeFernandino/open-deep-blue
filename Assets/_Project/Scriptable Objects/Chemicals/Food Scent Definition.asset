@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Food Scent Definition
   m_EditorClassIdentifier: 
   <ChemicalType>k__BackingField: 4
-  <DecayRate>k__BackingField: 0.999
-  <PropagationDecayAmount>k__BackingField: 4
+  <DecayRate>k__BackingField: 0.9995
+  <DiffusionFactor>k__BackingField: 0.8
+  <PropagationFactor>k__BackingField: 0.9

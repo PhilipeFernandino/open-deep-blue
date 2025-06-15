@@ -15,7 +15,7 @@ namespace Core.Map
     [ProjectSettings("Game Settings/Map")]
     public class TilesSettings : ScriptableSettings
     {
-        [field: SerializeField] public TileToTileBase[] TileToTileBase { get; private set; }
+        [field: SerializeField] public TileBaseMappingSO TileToTileBase { get; private set; }
         [field: SerializeField] public TileToTileBase[] TileToFloorTileBase { get; private set; }
         [field: SerializeField] public TileDefinition[] TileDefinitions { get; private set; }
         [field: SerializeField] public InteractableTile[] InteractableTiles { get; private set; }
@@ -28,11 +28,6 @@ namespace Core.Map
 
         protected override void OnLoaded()
         {
-            // Workaround unity serialization issue
-            TileToTileBase = TileToTileBase.ToArray();
-            TileDefinitions = TileDefinitions.ToArray();
-            TileToFloorTileBase = TileToFloorTileBase.ToArray();
-
             SetTileDefinitions();
             SetTileToTileBase();
             SetTileToFloorTileBase();
@@ -54,9 +49,9 @@ namespace Core.Map
             int maxTileType = Enum.GetValues(typeof(Tile)).Cast<ushort>().Max();
             _tileToTileBaseLookup = new TileBase[maxTileType + 1];
 
-            foreach (var def in TileToTileBase)
+            foreach (var def in TileToTileBase.TileBaseTiles)
             {
-                _tileToTileBaseLookup[(int)def.TileType] = def.TileBase;
+                _tileToTileBaseLookup[(int)def.Tile] = def.TileBase;
             }
         }
 

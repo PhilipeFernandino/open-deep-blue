@@ -8,6 +8,8 @@ namespace Core.Level
     {
         [field: SerializeField] public Chemical ChemicalType { get; private set; }
         [field: SerializeField][field: Range(0.9f, 1f)] public float DecayRate { get; private set; }
-        [field: SerializeField][field: Range(0f, 255f)] public float PropagationDecayAmount { get; private set; }
+        [field: SerializeField][field: Range(0f, 1f)] public float DiffusionFactor { get; private set; }
+        [field: SerializeField][field: Range(0f, 1f)] public float PropagationFactor { get; private set; }
+
     }
 }
