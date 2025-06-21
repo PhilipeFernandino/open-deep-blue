@@ -46,20 +46,17 @@ Shader "Custom/LightOverlay" {
             v2f vert (appdata v) {
                 v2f o;
                 o.pos = UnityObjectToClipPos(v.vertex);
-                o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz - _Origin.xyz; // World position
+                o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz - _Origin.xyz; 
                 return o;
             }
 
 
             fixed4 frag (v2f i) : SV_Target {
-                // Convert world position to UVs
                 float2 uv = i.worldPos.xy / _MapSize.xy;
 
-                // Sample light texture and apply tint/intensity
                 float light = tex2D(_LightTex, uv).r;
                 fixed4 lightTint = _LightColor * light * _LightIntensity;
 
-                // Optional: Add falloff for smoother edges
                 lightTint *= smoothstep(0, _FallofIntensity, light);
 
                 return lightTint;

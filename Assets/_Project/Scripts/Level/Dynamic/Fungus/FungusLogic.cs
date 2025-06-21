@@ -1,4 +1,5 @@
 ﻿using Core.Train;
+using System;
 using UnityEngine;
 
 namespace Core.Level.Dynamic
@@ -9,27 +10,39 @@ namespace Core.Level.Dynamic
         {
             if (data.CurrentSaciation <= 0)
             {
-                data.CurrentHealth -= defData.LostHealthWhenStarved;
+                data.CurrentHealth = Mathf.Max(
+                    data.CurrentHealth - (defData.LostHealthWhenStarved * Time.fixedDeltaTime),
+                    0
+                );
             }
             else
             {
-                if (data.CurrentSaciation > defData.MaxSaciation * 0.2)
+                if (data.CurrentSaciation > defData.MaxSaciation * defData.FoodProductionSaciationThreshold)
                 {
-                    data.CurrentHealth += defData.LostHealthWhenStarved;
-                    data.CurrentFoodStore += defData.FoodProduction;
+                    data.CurrentHealth = Mathf.Min(
+                        data.CurrentHealth + (defData.LostHealthWhenStarved * Time.fixedDeltaTime),
+                        defData.MaxHealth
+                    );
+
+                    data.CurrentFoodStore = Mathf.Min(
+                        data.CurrentFoodStore + (defData.FoodProduction * Time.fixedDeltaTime),
+                        defData.MaxFoodStore
+                    );
+
                     new ColonyEvent(ColonyEventType.FungusProducing).Invoke(data);
                 }
 
-                data.CurrentSaciation = Mathf.Max(0f, data.CurrentSaciation - defData.SaciationLost);
+                data.CurrentSaciation = Mathf.Max(
+                    data.CurrentSaciation - (defData.SaciationLost * Time.fixedDeltaTime),
+                    0f
+                );
             }
 
             if (data.CurrentHealth <= 0)
             {
-                // TODO: 
-                //grid.TrySetTileAt(position, Map.Tile.None);
                 new ColonyEvent(ColonyEventType.FungusDeath).Invoke(data);
+                data.CurrentHealth = defData.MaxHealth;
             }
-
         }
     }
 }

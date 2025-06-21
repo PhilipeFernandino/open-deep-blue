@@ -1,7 +1,9 @@
 ﻿using Core.ItemSystem;
 using Core.Level;
+using Core.Map;
 using Core.Train;
 using Core.Util;
+using System.Collections.Generic;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
@@ -14,17 +16,30 @@ namespace Core.Units
     {
         [SerializeField] private AntInputHandler _inputHandler;
         [SerializeField] private Transform _startingArea;
+        [SerializeField] private List<Tile> _interactableTileTypes;
 
         private Ant _ant;
         private IChemicalGridService _chemicalGrid;
         private IColonyService _colonyManager;
+        private DecisionRequester _decisionRequester;
 
-        private Vector2 _previousPosition;
+        public bool CanEatNow => _ant.IsCarrying(Item.Fungus);
+        public bool CanDigNow => _ant.IsFacing(Tile.BlueStone);
+        public bool CanFeedFungus => _ant.IsCarrying(Item.Leaf) && _ant.IsFacing(Tile.Fungus);
+        public bool CanFeedQueen => _ant.IsCarrying(Item.Fungus) && _ant.IsFacing(Tile.QueenAnt);
+        public bool CanGatherLeaf => _ant.IsCarrying(Item.None) && _ant.IsFacing(Tile.GreenGrass);
+        public bool CanGatherFungus => _ant.IsCarrying(Item.None) && _ant.IsFacing(Tile.Fungus);
 
-        public enum Action
+
+        public enum AntAction
         {
             None,
-            Interact
+            Eat,
+            Dig,
+            FeedQueen,
+            FeedFungus,
+            GatherLeaf,
+            GatherFungus,
         }
 
         public void Setup(Ant ant)
@@ -32,6 +47,7 @@ namespace Core.Units
             _ant = ant;
             _chemicalGrid = _ant.ChemicalGrid;
             _colonyManager = ServiceLocatorUtilities.GetServiceAssert<IColonyService>();
+            _decisionRequester = GetComponent<DecisionRequester>();
 
             var model = GetComponent<Unity.MLAgents.Policies.BehaviorParameters>().Model;
             if (model != null)
@@ -60,13 +76,42 @@ namespace Core.Units
             var blackboard = _ant.Blackboard;
             sensor.AddObservation(blackboard.MovingDirection.normalized);
             sensor.AddOneHotObservation((int)blackboard.CarryingItem, (int)Item.Last + 1);
-            sensor.AddObservation(CanInteract());
+
+            (int tileObservationSize, int tileOneHotIndex) = ObserveFacingTile();
+            sensor.AddOneHotObservation(tileOneHotIndex, tileObservationSize);
+        }
+
+        private (int tileObservationSize, int tileOneHotIndex) ObserveFacingTile()
+        {
+            int tileObservationSize, tileOneHotIndex;
+
+            Tile tileInFront = _ant.IsFacing();
+
+            int interactableIndex = _interactableTileTypes.IndexOf(tileInFront);
+
+            tileObservationSize = _interactableTileTypes.Count + 1;
+            if (interactableIndex != -1)
+            {
+                tileOneHotIndex = interactableIndex;
+            }
+            else
+            {
+                tileOneHotIndex = _interactableTileTypes.Count;
+            }
+
+            return (tileObservationSize, tileOneHotIndex);
         }
 
         public override void WriteDiscreteActionMask(IDiscreteActionMask actionMasker)
         {
-            bool canInteract = CanInteract();
-            actionMasker.SetActionEnabled(branch: 0, actionIndex: (int)Action.Interact, isEnabled: canInteract);
+            actionMasker.SetActionEnabled(branch: 0, actionIndex: (int)AntAction.None, isEnabled: true);
+
+            actionMasker.SetActionEnabled(branch: 0, actionIndex: (int)AntAction.Eat, isEnabled: CanEatNow);
+            actionMasker.SetActionEnabled(branch: 0, actionIndex: (int)AntAction.Dig, isEnabled: CanDigNow);
+            actionMasker.SetActionEnabled(branch: 0, actionIndex: (int)AntAction.FeedFungus, isEnabled: CanFeedFungus);
+            actionMasker.SetActionEnabled(branch: 0, actionIndex: (int)AntAction.FeedQueen, isEnabled: CanFeedQueen);
+            actionMasker.SetActionEnabled(branch: 0, actionIndex: (int)AntAction.GatherLeaf, isEnabled: CanGatherLeaf);
+            actionMasker.SetActionEnabled(branch: 0, actionIndex: (int)AntAction.GatherFungus, isEnabled: CanGatherFungus);
         }
 
         public override void OnActionReceived(ActionBuffers actions)
@@ -76,51 +121,82 @@ namespace Core.Units
 
             _ant.Blackboard.MovingDirection = new Vector2(moveX, moveY);
 
-            int interactAction = actions.DiscreteActions[0];
+            var chosenAction = (AntAction)actions.DiscreteActions[0];
 
-            bool choseInteraction = interactAction == (int)Action.Interact;
-
-            if (choseInteraction)
+            switch (chosenAction)
             {
-                _ant.TryToInteract();
-            }
+                case AntAction.None:
+                    break;
+                case AntAction.Eat:
+                    _ant.TryEat();
+                    break;
+                case AntAction.Dig:
+                    _ant.TryDig(_decisionRequester.DecisionPeriod * Time.fixedDeltaTime);
+                    break;
+                case AntAction.FeedQueen:
+                case AntAction.FeedFungus:
+                case AntAction.GatherLeaf:
+                case AntAction.GatherFungus:
+                    _ant.TryToInteract();
+                    break;
 
-            bool isCarryingLeaf = _ant.Blackboard.CarryingItem == Item.Leaf;
+            }
         }
 
         public override void Heuristic(in ActionBuffers actionsOut)
         {
-            ActionSegment<float> continuousActions = actionsOut.ContinuousActions;
-            ActionSegment<int> discreteActions = actionsOut.DiscreteActions;
+            var continuousActions = actionsOut.ContinuousActions;
+            continuousActions[0] = _inputHandler.MoveInput.x;
+            continuousActions[1] = _inputHandler.MoveInput.y;
 
-            Vector2 moveInput = _inputHandler.MoveInput;
+            var discreteActions = actionsOut.DiscreteActions;
 
-            continuousActions[0] = moveInput.x;
-            continuousActions[1] = moveInput.y;
+            AntAction chosenAction = AntAction.None;
 
-            bool interactInput = _inputHandler.InteractTriggered;
-
-            discreteActions[0] = interactInput ? 1 : 0;
-
-            if (interactInput)
+            if (_inputHandler.EatTriggered)
             {
+                chosenAction = AntAction.Eat;
+                _inputHandler.ConsumeEatInput();
+            }
+            else if (_inputHandler.InteractTriggered)
+            {
+                if (CanDigNow)
+                {
+                    chosenAction = AntAction.Dig;
+                }
+                else if (CanFeedQueen)
+                {
+                    chosenAction = AntAction.FeedQueen;
+                }
+                else if (CanFeedFungus)
+                {
+                    chosenAction = AntAction.FeedFungus;
+                }
+                else if (CanGatherLeaf)
+                {
+                    chosenAction = AntAction.GatherLeaf;
+                }
+                else if (CanGatherFungus)
+                {
+                    chosenAction = AntAction.GatherFungus;
+                }
+
                 _inputHandler.ConsumeInteractInput();
             }
-        }
 
-        private bool CanInteract()
-        {
-            return _ant.CanInteract();
+            discreteActions[0] = (int)chosenAction;
         }
 
         private void FixedUpdate()
         {
             AddReward(-1f / MaxStep);
 
-            if (_ant.Blackboard.CarryingItem == Item.None)
+            if (_ant.Blackboard.CarryingItem == Item.Leaf)
             {
-                _ant.ChemicalGrid.Drop(_ant.Position, Chemical.ExplorePheromone, 22.5f * Time.deltaTime);
+                _ant.ChemicalGrid.Drop(_ant.Position, Chemical.FoodPheromone, 22.5f * Time.fixedDeltaTime);
             }
+
+            _ant.ChemicalGrid.Drop(_ant.Position, Chemical.PresencePheromone, 10f * Time.fixedDeltaTime);
         }
     }
 }

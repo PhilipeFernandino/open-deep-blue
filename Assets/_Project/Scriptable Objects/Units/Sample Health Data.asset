@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a73903964c68a824a91b8ad1491be1c9, type: 3}
   m_Name: Sample Health Data
   m_EditorClassIdentifier: 
-  <BaseHealth>k__BackingField: 5000
+  <BaseHealth>k__BackingField: 250

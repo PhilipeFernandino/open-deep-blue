@@ -1,20 +1,41 @@
 ﻿using Core.ItemSystem;
-using Core.Level;
-using Core.Map;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Core.Units
 {
-    public class AntBlackboard
+    public class AntBlackboard : MonoBehaviour
     {
+        [Header("Saciety")]
+        public float SacietyLoss = 1;
+        public float MaxSaciety = 50;
+
+        [Header("Combat")]
+        public float AttackDistance = 1;
+        public float AttackDamage = 5;
+        public float AggroDistance = 1;
+
+        [Header("General")]
+        public float DigDamage = 5;
+        public float MovementSpeed = 2;
+
+        [HideInInspector] public float Health;
+        [HideInInspector] public Vector2 MovingDirection;
+
+        private float _saciety;
         private Item _carryingItem;
 
-        public Vector2 MovingDirection;
-        public float MovementSpeed;
-        public float AggroDistance;
+        public float SacietyPercentage => Saciety / MaxSaciety;
+
+        public float Saciety
+        {
+            set
+            {
+                _saciety = Mathf.Clamp(value, 0, MaxSaciety);
+            }
+
+            get => _saciety;
+        }
 
         public Item CarryingItem
         {
@@ -25,9 +46,6 @@ namespace Core.Units
                 CarryingItemChanged?.Invoke(_carryingItem);
             }
         }
-        public TileInstance TileAhead;
-
-        public Dictionary<Chemical, float[]> Pheromone;
 
         public event Action<Item> CarryingItemChanged;
     }

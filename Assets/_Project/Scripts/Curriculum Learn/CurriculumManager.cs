@@ -15,12 +15,12 @@ public class CurriculumManager : MonoBehaviour
     private List<Vector2Int> _antSpawnPoints = new();
     private List<Vector2Int> _foodSpawnPoints = new();
 
-    void Awake()
+    private void Awake()
     {
         Academy.Instance.OnEnvironmentReset += OnEnvironmentReset;
     }
 
-    void OnDestroy()
+    private void OnDestroy()
     {
         if (Academy.IsInitialized)
         {

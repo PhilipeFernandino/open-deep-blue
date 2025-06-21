@@ -15,7 +15,7 @@ namespace Core.Interaction
 
             if (interactor is Ant ant)
             {
-                if (ant.IsCarrying == ItemSystem.Item.Fungus)
+                if (ant.Carrying == ItemSystem.Item.Fungus)
                 {
                     bool success = queenService.TryFeedTheQueen(worldPosition.RoundToInt(), 5f);
 

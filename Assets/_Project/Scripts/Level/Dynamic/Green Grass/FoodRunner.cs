@@ -1,6 +1,7 @@
 ﻿using Coimbra.Services;
 using Core.Debugger;
 using Core.Map;
+using Core.Util;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -47,25 +48,21 @@ namespace Core.Level.Dynamic
             return false;
         }
 
-        public FoodRunner(IGridService grid, IChemicalGridService chemicals)
+        public FoodRunner(ScriptableObject foodDef)
         {
             ServiceLocator.Set<IFoodService>(this);
 
-            _gridService = grid;
-            _chemicalService = chemicals;
+            _gridService = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
+            _chemicalService = ServiceLocatorUtilities.GetServiceAssert<IChemicalGridService>();
 
-            _foodDef = new()
-            {
-                FoodProduction = 0.003f,
-                MaxFoodStore = 50f,
-            };
+            _foodDef = (FoodDefinition)foodDef;
 
-            for (int i = 0; i < grid.Dimensions; i++)
+            for (int i = 0; i < _gridService.Dimensions; i++)
             {
-                for (int j = 0; j < grid.Dimensions; j++)
+                for (int j = 0; j < _gridService.Dimensions; j++)
                 {
 
-                    HandleTileChanged(i, j, grid.Grid[i, j]);
+                    HandleTileChanged(i, j, _gridService.Grid[i, j]);
                 }
             }
         }

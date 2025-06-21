@@ -14,6 +14,7 @@ namespace Core.Player
 
         public Vector2 Position => _rb2D.position;
         public Vector2 LastMovementInput { get; private set; }
+        public Vector2 FacingDirection { get; private set; }
 
 
         private float _speed;
@@ -44,6 +45,11 @@ namespace Core.Player
         {
             _movementInput = direction;
             LastMovementInput = _movementInput.NormalizeExcess();
+
+            if (direction != Vector2.zero)
+            {
+                FacingDirection = direction;
+            }
         }
 
         public void Dash(Vector2 velocity, float duration, Action callback = null)

@@ -64,7 +64,7 @@ namespace Core.HealthSystem
         public void Setup(HealthData healthData)
         {
             _healthData = healthData;
-            _health = _healthData.BaseHealth;
+            Health = MaxHealth;
         }
 
         public async UniTask AddIFrames(float duration)

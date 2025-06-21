@@ -1,4 +1,5 @@
 ﻿using Coimbra;
+using Core.Debugger;
 using Core.EventBus;
 using Core.FSM;
 using Core.HealthSystem;
@@ -21,10 +22,10 @@ namespace Core.Units
     {
         [SerializeField] private AntAgent _agent;
         [SerializeField] private HealthComponent _healthComponent;
-        [SerializeField] private float _movementSpeed;
-        [SerializeField] private float _aggroDistance;
-        [SerializeField] private float _attackDistance;
-        [SerializeField] private float _attackDamage;
+
+        [Header("Debugging")]
+        [SerializeField] private DebugChannelSO _debugChannel;
+        [SerializeField] private bool _debug;
 
         private FSM<AntState> _fsm;
         private Movement2D _movementController;
@@ -38,18 +39,25 @@ namespace Core.Units
         internal AntTilemapCollision TilemapCollision => _tilemapCollision;
         internal Movement2D MovementController => _movementController;
         internal BoxCollider2D BoxCollider => _boxCollider;
-        internal float AttackDistance => _attackDistance;
-        internal float AttackDamage => _attackDamage;
-        internal float AggroDistance => _aggroDistance;
+
+        internal float Health => _healthComponent.Health;
+        internal float MaxHealth => _healthComponent.MaxHealth;
+        internal float AttackDistance => Blackboard.AttackDistance;
+        internal float AttackDamage => Blackboard.AttackDamage;
+        internal float DigDamage => Blackboard.DigDamage;
+        internal float AggroDistance => Blackboard.AggroDistance;
+        internal float MovementSpeed => Blackboard.MovementSpeed;
 
         internal IPathService PathService { get; private set; }
-        internal IGridService TileGrid { get; private set; }
+        internal IGridService GridService { get; private set; }
         internal IChemicalGridService ChemicalGrid { get; private set; }
         internal IInteractionService InteractionService { get; private set; }
 
-        public Item IsCarrying => Blackboard.CarryingItem;
+        public Item Carrying => Blackboard.CarryingItem;
 
         public Vector2 Position => transform.position.XY();
+
+        public Vector2 InteractPosition => Position + _movementController.FacingDirection * 1f;
 
         Dictionary<AntState, IFSMState<AntState>> IFSMAgent<AntState>.States => _fsm.States;
 
@@ -63,16 +71,43 @@ namespace Core.Units
             Debug.Log(message);
         }
 
+        public void TryEat()
+        {
+            if (IsCarrying(Item.Fungus))
+            {
+                Blackboard.Saciety += 15f;
+                Give(Item.None);
+            }
+        }
+
+        public void TryDig(float scale)
+        {
+            GridService.DamageTileAt(InteractPosition, scale * DigDamage);
+        }
+
+        public bool IsCarrying(Item item)
+        {
+            return Carrying == item;
+        }
+
+        public bool IsFacing(Tile tile)
+        {
+            return IsFacing() == tile;
+        }
+
+        public Tile IsFacing()
+        {
+            return GridService.Get(InteractPosition).TileType;
+        }
+
         public bool CanInteract()
         {
-            Vector2 interactPosition = Position + _movementController.LastMovementInput * 0.5f;
-            return InteractionService.CanInteract(interactPosition);
+            return InteractionService.CanInteract(InteractPosition);
         }
 
         public void TryToInteract()
         {
-            Vector2 interactPosition = Position + _movementController.LastMovementInput.normalized;
-            InteractionService.Interact(interactPosition, this);
+            InteractionService.Interact(InteractPosition, this);
         }
 
         public void Give(Item item)
@@ -83,39 +118,49 @@ namespace Core.Units
         private void Update()
         {
             _fsm.Update();
+
+            if (_debug)
+            {
+                Debug.Log("debug!!!");
+                _debugChannel.RaiseEvent("ant",
+                    new AntDebugData()
+                    {
+                        CarryingItem = Carrying,
+                        FacingTile = IsFacing(),
+                        Health = Health,
+                        MaxHealth = MaxHealth,
+                        MaxSaciety = Blackboard.MaxSaciety,
+                        Position = Position,
+                        Saciety = Blackboard.Saciety
+                    });
+            }
         }
 
         private void FixedUpdate()
         {
+            Blackboard.Saciety -= Blackboard.SacietyLoss * Time.fixedDeltaTime;
             _fsm.FixedUpdate();
         }
 
         protected override void OnInitialize()
         {
-            Blackboard = new()
-            {
-                CarryingItem = Item.None,
-                AggroDistance = _aggroDistance,
-                MovementSpeed = _movementSpeed,
-                MovingDirection = Vector3.zero
-            };
-
             _movementController = GetComponent<Movement2D>();
             _boxCollider = GetComponent<BoxCollider2D>();
             _healthComponent.Attacked += Attacked_EventHandler;
             _tilemapCollision = GetComponent<AntTilemapCollision>();
+
+            Blackboard = GetComponent<AntBlackboard>();
         }
 
         private void Attacked_EventHandler(AttackedData data)
         {
             var knockbackForce = (Position - data.Attack.SourcePosition).normalized * data.Attack.Knockback;
-            Debug.Log($"Attacked data: {data}, {knockbackForce}, {Position}");
             _movementController.AddKnockback(knockbackForce);
         }
 
         protected override void OnSpawn()
         {
-            _movementController.Setup(_movementSpeed);
+            _movementController.Setup(MovementSpeed);
 
             _fsm = new(new()
             {
@@ -123,7 +168,7 @@ namespace Core.Units
                 { AntState.Moving, new AntMovingState() },
             }, this);
 
-            TileGrid = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
+            GridService = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
             PathService = ServiceLocatorUtilities.GetServiceAssert<IPathService>();
             ChemicalGrid = ServiceLocatorUtilities.GetServiceAssert<IChemicalGridService>();
             InteractionService = ServiceLocatorUtilities.GetServiceAssert<IInteractionService>();

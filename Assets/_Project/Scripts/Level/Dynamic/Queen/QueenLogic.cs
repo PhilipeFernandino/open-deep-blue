@@ -9,16 +9,25 @@ namespace Core.Level.Dynamic
         {
             if (data.CurrentSaciation <= 0)
             {
-                data.CurrentHealth -= defData.LostHealthWhenStarved;
+                data.CurrentHealth = Mathf.Max(
+                    data.CurrentHealth - (defData.LostHealthWhenStarved * Time.fixedDeltaTime),
+                    0
+                );
             }
             else
             {
-                if (data.CurrentSaciation > defData.MaxSaciation * 0.2)
+                if (data.CurrentSaciation > defData.MaxSaciation * defData.PregnancySaciationThreshold)
                 {
-                    data.CurrentHealth += defData.LostHealthWhenStarved;
+                    data.CurrentHealth = Mathf.Min(
+                        data.CurrentHealth + (defData.LostHealthWhenStarved * Time.fixedDeltaTime),
+                        defData.MaxHealth
+                    );
                 }
 
-                data.CurrentSaciation = Mathf.Max(0f, data.CurrentSaciation - defData.SaciationLost);
+                data.CurrentSaciation = Mathf.Max(
+                    0f,
+                    data.CurrentSaciation - (defData.SaciationLost * Time.fixedDeltaTime)
+                );
             }
 
             if (data.CurrentPregnancyPercentage >= 1f)
@@ -32,6 +41,7 @@ namespace Core.Level.Dynamic
             if (data.CurrentHealth <= 0)
             {
                 new ColonyEvent(ColonyEventType.QueenDeath).Invoke(data);
+                data.CurrentHealth = defData.MaxHealth;
             }
 
         }

@@ -18,7 +18,7 @@ namespace Core.Units
 
         private void FixedUpdate()
         {
-            var direction = _movement.LastMovementInput;
+            var direction = _movement.FacingDirection;
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             _rotateTransform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
         }

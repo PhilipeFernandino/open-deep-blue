@@ -1,6 +1,4 @@
 ﻿using Core.Level;
-using Core.Map;
-using Google.Protobuf.WellKnownTypes;
 using System.Collections.Generic;
 using Unity.MLAgents.Sensors;
 using UnityEngine;

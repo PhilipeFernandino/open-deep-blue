@@ -1,6 +1,7 @@
 ﻿using Coimbra.Services;
 using Core.Debugger;
 using Core.Map;
+using Core.Util;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -38,28 +39,20 @@ namespace Core.Level.Dynamic
             return false;
         }
 
-        public QueenRunner(IGridService grid, IChemicalGridService chemicals)
+        public QueenRunner(ScriptableObject queenDef)
         {
-            _gridService = grid;
-            _chemicalService = chemicals;
+            _gridService = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
+            _chemicalService = ServiceLocatorUtilities.GetServiceAssert<IChemicalGridService>();
 
-            _queenDef = new()
-            {
-                LostHealthWhenStarved = 0.001f,
-                SaciationLost = 0.001f,
-                MaxHealth = 50f,
-                MaxSaciation = 50f,
-                BroodPerLaying = 3,
-                PregnancyRate = 0.001f,
-            };
+            _queenDef = (QueenDefinition)queenDef;
 
-            for (int i = 0; i < grid.Dimensions; i++)
+            for (int i = 0; i < _gridService.Dimensions; i++)
             {
-                for (int j = 0; j < grid.Dimensions; j++)
+                for (int j = 0; j < _gridService.Dimensions; j++)
                 {
-                    if (grid.Grid[i, j].TileType == Tile.QueenAnt)
+                    if (_gridService.Grid[i, j].TileType == Tile.QueenAnt)
                     {
-                        HandleTileChanged(i, j, grid.Grid[i, j]);
+                        HandleTileChanged(i, j, _gridService.Grid[i, j]);
                     }
                 }
             }

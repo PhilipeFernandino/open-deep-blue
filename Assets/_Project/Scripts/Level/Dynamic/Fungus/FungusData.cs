@@ -6,14 +6,4 @@
         public float CurrentFoodStore;
         public float CurrentHealth;
     }
-
-    public struct FungusDefinition
-    {
-        public float MaxFoodStore;
-        public float MaxHealth;
-        public float MaxSaciation;
-        public float SaciationLost;
-        public float LostHealthWhenStarved;
-        public float FoodProduction;
-    }
 }

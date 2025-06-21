@@ -1,6 +1,7 @@
 ﻿using Coimbra.Services;
 using Core.Debugger;
 using Core.Map;
+using Core.Util;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,7 +13,7 @@ namespace Core.Level.Dynamic
         private readonly FungusLogic _logic = new FungusLogic();
         private readonly IGridService _gridService;
         private readonly IChemicalGridService _chemicalService;
-        private readonly FungusDefinition _foodDef;
+        private readonly FungusDefinition _fungusDef;
 
         private readonly List<Vector2Int> _keysToUpdate = new();
 
@@ -24,11 +25,11 @@ namespace Core.Level.Dynamic
                 CurrentHealth = data.CurrentHealth,
                 CurrentSaciation = data.CurrentSaciation,
                 CurrentFoodStore = data.CurrentFoodStore,
-                FoodProduction = _foodDef.FoodProduction,
-                LostHealthWhenStarved = _foodDef.LostHealthWhenStarved,
-                MaxFoodStore = _foodDef.MaxFoodStore,
-                MaxHealth = _foodDef.MaxHealth,
-                SaciationLost = _foodDef.SaciationLost
+                FoodProduction = _fungusDef.FoodProduction,
+                LostHealthWhenStarved = _fungusDef.LostHealthWhenStarved,
+                MaxFoodStore = _fungusDef.MaxFoodStore,
+                MaxHealth = _fungusDef.MaxHealth,
+                SaciationLost = _fungusDef.SaciationLost
             };
         }
 
@@ -61,30 +62,22 @@ namespace Core.Level.Dynamic
             return false;
         }
 
-        public FungusRunner(IGridService grid, IChemicalGridService chemicals)
+        public FungusRunner(ScriptableObject fungusDef)
         {
             ServiceLocator.Set<IFungusService>(this);
 
-            _gridService = grid;
-            _chemicalService = chemicals;
+            _gridService = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
+            _chemicalService = ServiceLocatorUtilities.GetServiceAssert<IChemicalGridService>();
 
-            _foodDef = new()
-            {
-                FoodProduction = 0.001f,
-                LostHealthWhenStarved = 0.001f,
-                SaciationLost = 0.001f,
-                MaxHealth = 50f,
-                MaxFoodStore = 50f,
-                MaxSaciation = 50f,
-            };
+            _fungusDef = (FungusDefinition)fungusDef;
 
-            for (int i = 0; i < grid.Dimensions; i++)
+            for (int i = 0; i < _gridService.Dimensions; i++)
             {
-                for (int j = 0; j < grid.Dimensions; j++)
+                for (int j = 0; j < _gridService.Dimensions; j++)
                 {
-                    if (grid.Grid[i, j].TileType == Tile.Fungus)
+                    if (_gridService.Grid[i, j].TileType == Tile.Fungus)
                     {
-                        HandleTileChanged(i, j, grid.Grid[i, j]);
+                        HandleTileChanged(i, j, _gridService.Grid[i, j]);
                     }
                 }
             }
@@ -97,9 +90,9 @@ namespace Core.Level.Dynamic
             {
                 _dataMap[position] = new FungusData
                 {
-                    CurrentHealth = _foodDef.MaxHealth,
+                    CurrentHealth = _fungusDef.MaxHealth,
                     CurrentFoodStore = 0,
-                    CurrentSaciation = _foodDef.MaxSaciation
+                    CurrentSaciation = _fungusDef.MaxSaciation
                 };
             }
             else
@@ -120,7 +113,7 @@ namespace Core.Level.Dynamic
             foreach (var position in _keysToUpdate)
             {
                 var data = _dataMap[position];
-                _logic.OnUpdate(ref data, _foodDef, position, _gridService, _chemicalService);
+                _logic.OnUpdate(ref data, _fungusDef, position, _gridService, _chemicalService);
                 _dataMap[position] = data;
             }
         }

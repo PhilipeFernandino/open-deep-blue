@@ -56,8 +56,8 @@ namespace Core.Debugger
                 _stringBuilder.AppendLine($"Health: {queenTileData.QueenData.CurrentHealth}/{queenTileData.QueenDefinition.MaxHealth}");
                 _stringBuilder.AppendLine($"Saciation: {queenTileData.QueenData.CurrentSaciation} / {queenTileData.QueenDefinition.MaxSaciation}");
                 _stringBuilder.AppendLine($"Pregnancy: {queenTileData.QueenData.CurrentPregnancyPercentage * 100f}%");
-                _stringBuilder.AppendLine($"LostHealthWhenStarved: {queenTileData.QueenDefinition.LostHealthWhenStarved}");
-                _stringBuilder.AppendLine($"FoodProduction: {queenTileData.QueenDefinition.BroodPerLaying}");
+                _stringBuilder.AppendLine($"Lost Health When Starved: {queenTileData.QueenDefinition.LostHealthWhenStarved}");
+                _stringBuilder.AppendLine($"Brood Per Laying: {queenTileData.QueenDefinition.BroodPerLaying}");
             }
 
             if (data is FoodTileData foodTileData)

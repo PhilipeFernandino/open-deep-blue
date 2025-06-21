@@ -3,39 +3,51 @@ using Coimbra.Services;
 using Core.Debugger;
 using Core.Map;
 using Core.Util;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Core.Level.Dynamic
 {
+    [Serializable]
+    public class TileToDataDef
+    {
+        public Tile Tile;
+        public ScriptableObject Definition;
+    }
+
     public class DynamicGridManager : Actor, IDynamicGridManager
     {
         [Header("Debugging")]
         [SerializeField] private DebugChannelSO _debugChannel;
         [SerializeField] private bool _debug = true;
+        [SerializeField] private List<TileToDataDef> _tileToDataDef;
 
         private readonly Dictionary<Tile, ILogicRunner> _runnerMap = new();
 
         private IGridService _gridService;
-        private IChemicalGridService _chemicalService;
 
         protected override void OnSpawn()
         {
             _gridService = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
-            _chemicalService = ServiceLocatorUtilities.GetServiceAssert<IChemicalGridService>();
             _gridService.Initialized += Setup;
+        }
+
+        private ScriptableObject DataDefinition(Tile tile)
+        {
+            return _tileToDataDef.Find((t) => t.Tile == tile).Definition;
         }
 
         private void Setup()
         {
-            var fungusRunner = new FungusRunner(_gridService, _chemicalService);
+            var fungusRunner = new FungusRunner(DataDefinition(Tile.Fungus));
             _runnerMap[Tile.Fungus] = fungusRunner;
 
-            var antQueenRunner = new QueenRunner(_gridService, _chemicalService);
+            var antQueenRunner = new QueenRunner(DataDefinition(Tile.QueenAnt));
             _runnerMap[Tile.QueenAnt] = antQueenRunner;
 
-            var foodRunner = new FoodRunner(_gridService, _chemicalService);
+            var foodRunner = new FoodRunner(DataDefinition(Tile.GreenGrass));
             _runnerMap[Tile.GreenGrass] = foodRunner;
 
             _gridService.TileChanged += HandleTileChanged;

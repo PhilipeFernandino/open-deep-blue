@@ -1,6 +1,4 @@
 ﻿using Coimbra;
-using Coimbra.Services;
-using Core.Debugger;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -11,18 +9,14 @@ namespace Core.Debugger
     {
 
         [Header("Configuration")]
-        [Tooltip("The central channel for all debug communications.")]
         [SerializeField] private DebugChannelSO _debugChannel;
 
-        [Tooltip("A list of all possible debug modules the system can display.")]
         [SerializeField] private List<DebugModuleSO> _availableModules;
 
         [Header("Input")]
-        [Tooltip("Reference to the Input Action used to toggle the debug UI.")]
         [SerializeField] private InputActionReference _toggleActionReference;
 
         [Header("UI")]
-        [Tooltip("Reference to the script that controls the UI panel.")]
         [SerializeField] private DebugUI _debugUI;
 
         public void ToggleDebugUI()
