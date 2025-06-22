@@ -20,6 +20,8 @@ namespace Core.Train
 
         protected override void OnLoaded()
         {
+            _lessonConfig.Clear();
+
             foreach (var config in _configMap)
             {
                 _lessonConfig.Add(config.Lesson, config.Config);

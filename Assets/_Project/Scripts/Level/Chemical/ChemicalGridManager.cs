@@ -51,8 +51,8 @@ namespace Core.Level
 
         public ChemicalMap GetMap(Chemical chemical) => _chemicalMaps.GetValueOrDefault(chemical);
         public float Get(int x, int y, Chemical chemical) => GetMap(chemical).Get(x, y);
-        public void Drop(int x, int y, Chemical chemical, float value) => GetMap(chemical).Sum(x, y, value);
-        public void Remove(int x, int y, Chemical chemical, float value) => GetMap(chemical).Sum(x, y, -value);
+        public void Drop(int x, int y, Chemical chemical, float value) => GetMap(chemical)?.Sum(x, y, value);
+        public void Remove(int x, int y, Chemical chemical, float value) => GetMap(chemical)?.Sum(x, y, -value);
         public void Clean(int x, int y, Chemical chemical) => GetMap(chemical).Set(x, y, 0);
 
         public void SumAllOnMap(Chemical chemicalType, float value)
@@ -90,6 +90,7 @@ namespace Core.Level
 
         private void Setup()
         {
+            OnDestroyed();
 
             _dimensions = _gridService.Dimensions;
 
@@ -112,16 +113,22 @@ namespace Core.Level
 
         protected override void OnDestroyed()
         {
-            if (_isInitialized)
+            foreach (var map in _chemicalMaps.Values)
             {
-                foreach (var map in _chemicalMaps.Values)
-                {
-                    map.Dispose();
-                }
+                map.Dispose();
+            }
 
+            if (_readBuffer.IsCreated)
+            {
                 _readBuffer.Dispose();
+            }
+
+            if (_writeBuffer.IsCreated)
+            {
                 _writeBuffer.Dispose();
             }
+
+            _chemicalMaps.Clear();
         }
 
         private void Update()

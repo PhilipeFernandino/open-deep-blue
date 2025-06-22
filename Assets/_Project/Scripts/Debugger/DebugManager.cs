@@ -21,10 +21,9 @@ namespace Core.Debugger
 
         public void ToggleDebugUI()
         {
-            bool isNowActive = !_debugUI.gameObject.activeSelf;
-            _debugUI.gameObject.SetActive(isNowActive);
+            _debugUI.ToggleSelf();
 
-            if (isNowActive)
+            if (_debugUI.IsEnabled)
             {
                 _debugUI.Initialize(_availableModules.FindAll(m => m.IsActive));
             }
@@ -36,7 +35,7 @@ namespace Core.Debugger
             _toggleActionReference.action.Enable();
             _toggleActionReference.action.performed += OnToggleInput;
 
-            _debugUI.gameObject.SetActive(false);
+            _debugUI.SetActiveState(false);
         }
 
         private void OnToggleInput(InputAction.CallbackContext context)
@@ -51,7 +50,7 @@ namespace Core.Debugger
                 if (module.IsActive && module.ModuleId == moduleId)
                 {
                     module.UpdateData(data);
-                    if (_debugUI != null && _debugUI.gameObject.activeInHierarchy)
+                    if (_debugUI != null && _debugUI.IsEnabled)
                     {
                         _debugUI.UpdateModuleText(module);
                     }

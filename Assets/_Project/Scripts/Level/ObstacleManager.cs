@@ -59,7 +59,7 @@ namespace Core.Level
                 _gridService.TileChanged -= HandleTileChanged;
             }
 
-            if (_isInitialized && _obstacleGrid.IsCreated)
+            if (_obstacleGrid.IsCreated)
             {
                 _obstacleGrid.Dispose();
             }
@@ -67,8 +67,11 @@ namespace Core.Level
 
         private void Setup()
         {
+            OnDestroyed();
+
             int dimensions = _gridService.Dimensions;
             _obstacleGrid = new NativeArray<bool>(dimensions * dimensions, Allocator.Persistent);
+
             BuildInitialObstacleMap();
             _gridService.TileChanged += HandleTileChanged;
             _isInitialized = true;

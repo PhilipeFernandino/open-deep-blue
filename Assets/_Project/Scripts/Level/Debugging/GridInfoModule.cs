@@ -6,6 +6,7 @@ namespace Core.Debugger
 {
     public struct GridDebugData
     {
+        public string TilemapName;
         public int Dimensions;
         public Vector2Int TilePosition;
         public TileInstance TileInstance;
@@ -23,6 +24,7 @@ namespace Core.Debugger
             {
                 _stringBuilder.Clear();
 
+                _stringBuilder.AppendLine($"Tilemap Loaded: {tileData.TilemapName}");
                 _stringBuilder.AppendLine($"Grid Dim: ({tileData.Dimensions} x {tileData.Dimensions})");
                 _stringBuilder.AppendLine($"Mouse At Grid Position: {tileData.TilePosition}");
                 _stringBuilder.AppendLine($"Tile Instance: {tileData.TileInstance}");

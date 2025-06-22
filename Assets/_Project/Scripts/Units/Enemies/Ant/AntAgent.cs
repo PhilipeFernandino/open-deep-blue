@@ -3,6 +3,7 @@ using Core.Level;
 using Core.Map;
 using Core.Train;
 using Core.Util;
+using System;
 using System.Collections.Generic;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
@@ -21,7 +22,6 @@ namespace Core.Units
 
         private Ant _ant;
         private IChemicalGridService _chemicalGrid;
-        private IColonyService _colonyManager;
         private DecisionRequester _decisionRequester;
         private AntBlackboard _blackboard;
 
@@ -32,6 +32,7 @@ namespace Core.Units
         public bool CanGatherLeaf => _ant.IsCarrying(Item.None) && _ant.IsFacing(Tile.GreenGrass);
         public bool CanGatherFungus => _ant.IsCarrying(Item.None) && _ant.IsFacing(Tile.Fungus);
 
+        public event Func<Vector2> SpawnPointRequested = () => Vector2.zero;
 
         public enum AntAction
         {
@@ -49,7 +50,6 @@ namespace Core.Units
             _ant = ant;
             _blackboard = _ant.Blackboard;
             _chemicalGrid = _ant.ChemicalGrid;
-            _colonyManager = ServiceLocatorUtilities.GetServiceAssert<IColonyService>();
             _decisionRequester = GetComponent<DecisionRequester>();
 
             var model = GetComponent<Unity.MLAgents.Policies.BehaviorParameters>().Model;
@@ -61,7 +61,8 @@ namespace Core.Units
             {
                 Debug.LogWarning($"{GetType()} - No model assigned");
             }
-            _colonyManager.RegisterAnt(this);
+
+            new AntEvent(AntEventType.Born, _ant);
         }
 
         public override void OnEpisodeBegin()
@@ -69,8 +70,7 @@ namespace Core.Units
             _ant.Blackboard.CarryingItem = Item.None;
             _ant.Blackboard.MovingDirection = Vector2.zero;
 
-            Vector2 randomPos = new(UnityEngine.Random.Range(-5f, 5f), UnityEngine.Random.Range(-5f, 5f));
-            _ant.MovementController.Teleport(_startingArea.position.XY() + randomPos);
+            _ant.MovementController.Teleport(SpawnPointRequested.Invoke());
         }
 
         public override void CollectObservations(VectorSensor sensor)

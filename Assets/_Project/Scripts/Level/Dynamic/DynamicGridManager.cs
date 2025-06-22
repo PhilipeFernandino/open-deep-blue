@@ -41,6 +41,8 @@ namespace Core.Level.Dynamic
 
         private void Setup()
         {
+            _runnerMap.Clear();
+
             var fungusRunner = new FungusRunner(DataDefinition(Tile.Fungus));
             _runnerMap[Tile.Fungus] = fungusRunner;
 

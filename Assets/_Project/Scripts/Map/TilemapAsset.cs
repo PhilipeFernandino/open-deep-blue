@@ -8,11 +8,13 @@ namespace Core.Map
     public class TilemapAsset : ScriptableObject
     {
         [SerializeField] private int _dimensions;
+        [SerializeField] private string _name = "";
 
         [HideInInspector, SerializeField] private List<Tile> _tiles;
         [HideInInspector, SerializeField] private List<Tile> _biomeTiles;
 
         public int Dimensions => _dimensions;
+        public string Name => _name;
 
         public Tile[,] Tiles
         {

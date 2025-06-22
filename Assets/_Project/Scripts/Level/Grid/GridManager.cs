@@ -23,7 +23,7 @@ namespace Core.Level
         [SerializeField] private Tilemap _tilemap;
         [SerializeField] private Tilemap _floorTilemap;
         [SerializeField] private SpriteRenderer _gridSpriteRendererPrefab;
-        [SerializeField] private bool _loadOnStart;
+        [SerializeField] private bool _useChunkLoad;
 
         [Header("Chunk Control")]
         [SerializeField] private int _chunkSize;
@@ -34,7 +34,6 @@ namespace Core.Level
         [SerializeField] private DebugChannelSO _debugChannel;
         [SerializeField] private bool _debug = true;
 
-        // Allow direct access for faster reading
         public TileInstance[,] Grid => _grid;
 
         private TileInstance[,] _grid;
@@ -43,14 +42,17 @@ namespace Core.Level
         private GridDrawer _gridDrawer;
 
         private int _gridSize;
-        private bool _isInitialized = false;
 
         private MapMetadata _mapMetadata;
-
 
         public int ChunkSize => _chunkSize;
         public int LoadedDimensions => _chunkSize * (_loadNearChunks * 2 + 1);
         public int Dimensions => _mapMetadata.Dimensions;
+
+
+        public event Action Initialized;
+        public event Action<int, int, TileInstance, TileDefinition> TileChanged;
+
 
         public void ListPositions(Tile tile, List<Vector2Int> listPositions)
         {
@@ -73,9 +75,6 @@ namespace Core.Level
         public void DrawInGrid(Vector2 position, Color color) => _gridDrawer?.DrawInGrid(position, color);
         public void DrawInGrid(Vector2 position, in Vector2Int size, Color color) => _gridDrawer?.DrawInGrid(position, size, color);
 
-        public event Action Initialized;
-        public event Action<int, int, TileInstance, TileDefinition> TileChanged;
-
         private void Update()
         {
             RaiseDebug();
@@ -95,6 +94,7 @@ namespace Core.Level
 
             _debugChannel.RaiseEvent("grid", new GridDebugData()
             {
+                TilemapName = _mapMetadata.Name,
                 Dimensions = _mapMetadata.Dimensions,
                 TilePosition = new Vector2Int(x, y),
                 TileInstance = tileInstance,
@@ -186,7 +186,7 @@ namespace Core.Level
         {
             ServiceLocator.Set<IGridService>(this);
             _gridDrawer = new(this, _gridSpriteRendererPrefab);
-            MapMetadataGeneratedEvent.AddListener(MapLoaded_EventHandler);
+            MapMetadataGeneratedEvent.AddListener(MapLoadedEventHandler);
         }
 
         protected override void OnSpawn()
@@ -194,25 +194,25 @@ namespace Core.Level
             _tilesSettings = ScriptableSettings.GetOrFind<TilesSettings>();
         }
 
-        private void MapLoaded_EventHandler(ref EventContext context, in MapMetadataGeneratedEvent e)
+        private void MapLoadedEventHandler(ref EventContext context, in MapMetadataGeneratedEvent e)
         {
-            UnityEngine.Debug.Log($"{GetType()} - {nameof(MapLoaded_EventHandler)}");
-
             InitializeGrid(e.MapMetadata);
-            _isInitialized = true;
+
             _mapMetadata = e.MapMetadata;
-            _chunkController = new(
-                _mapMetadata,
-                _chunkSize,
-                _loadNearChunks,
-                _positionEventBus,
-                this,
-                _tilesSettings);
 
-
-            if (_loadOnStart)
+            if (_useChunkLoad)
             {
-                _chunkController.UpdatePosition(_positionEventBus.Position);
+                _chunkController = new(
+                    _mapMetadata,
+                    _chunkSize,
+                    _loadNearChunks,
+                    _positionEventBus,
+                    this,
+                    _tilesSettings);
+            }
+            else
+            {
+                LoadFullTilemap();
             }
 
             Initialized?.Invoke();
@@ -222,7 +222,6 @@ namespace Core.Level
         {
             _gridSize = mapMetadata.Dimensions;
             _grid = new TileInstance[_gridSize, _gridSize];
-
 
             for (int i = 0; i < mapMetadata.Dimensions; i++)
             {
@@ -250,8 +249,29 @@ namespace Core.Level
 
         public void LoadTilesBlock(BoundsInt area, TileBase[] tiles)
         {
-            UnityEngine.Debug.Log($"Loaded tiles block area: {area}");
             _tilemap.SetTilesBlock(area, tiles);
+        }
+
+        private void LoadFullTilemap()
+        {
+            int dimensions = _mapMetadata.Dimensions;
+            var fullArea = new BoundsInt(0, 0, 0, dimensions, dimensions, 1);
+
+            var allTiles = new TileBase[dimensions * dimensions];
+            var allFloorTiles = new TileBase[dimensions * dimensions];
+
+            for (int y = 0; y < dimensions; y++)
+            {
+                for (int x = 0; x < dimensions; x++)
+                {
+                    int index = y * dimensions + x;
+                    allTiles[index] = _tilesSettings.GetTileBase(_mapMetadata.Tiles[x, y]);
+                    allFloorTiles[index] = _tilesSettings.GetFloorTileBase(_mapMetadata.BiomeTiles[x, y]);
+                }
+            }
+
+            LoadTilesBlock(fullArea, allTiles);
+            LoadFloorTilesBlock(fullArea, allFloorTiles);
         }
 
         public void LoadFloorTilesBlock(BoundsInt area, TileBase[] tiles)
@@ -262,22 +282,6 @@ namespace Core.Level
         public void LateUpdate()
         {
             _gridDrawer.Clear();
-        }
-
-        [Header("Debug")]
-        [SerializeField] private int _clearDimensions;
-
-        [Button]
-        private void ClearTiles()
-        {
-            for (int i = 0; i < _clearDimensions; i++)
-            {
-                for (int j = 0; j <= _clearDimensions; j++)
-                {
-
-                    _tilemap.SetTile(new Vector3Int(i, j, 0), null);
-                }
-            }
         }
     }
 }

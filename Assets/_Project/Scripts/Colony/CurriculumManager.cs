@@ -1,9 +1,13 @@
 ﻿using Coimbra;
 using Coimbra.Services;
 using Coimbra.Services.Events;
+using Core.Debugger;
 using Core.Level;
 using Core.Map;
 using Core.Train;
+using Core.Util;
+using Extensions;
+using NaughtyAttributes;
 using System;
 using System.Collections.Generic;
 using Unity.MLAgents;
@@ -23,6 +27,9 @@ namespace Core.Colony
 
     public class CurriculumManager : Actor, ICurriculumService
     {
+        [SerializeField] private bool _debug;
+        [SerializeField] private DebugChannelSO _debugChannel;
+
         private CurriculumSettingsSO _settings;
 
         private IGridService _gridService;
@@ -33,6 +40,9 @@ namespace Core.Colony
 
         public int CurrentLessonIndex => _currentLessonIndex;
         public Lesson CurrentLesson => (Lesson)_currentLessonIndex;
+
+        private List<Vector2Int> _spawnPoints = new();
+        private List<Vector2Int> _greenGrassPoints = new();
 
         public LessonConfigSO GetCurrentConfig()
         {
@@ -50,6 +60,7 @@ namespace Core.Colony
         protected override void OnSpawn()
         {
             _settings = ScriptableSettings.GetOrFind<CurriculumSettingsSO>();
+            _gridService = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
         }
 
         protected override void OnDestroyed()
@@ -70,36 +81,106 @@ namespace Core.Colony
             }
 
             _currentLessonIndex = newLessonIndex;
+            SetupLesson(_currentLessonIndex);
+            EnvironmentResetted?.Invoke();
+        }
 
-            switch (_currentLessonIndex)
+        private void LoadCurrentMapConfig()
+        {
+            var tilemapAsset = GetCurrentConfig().Tilemap;
+            var mapMetadata = new MapMetadata(
+                tilemapAsset.Tiles,
+                tilemapAsset.BiomeTiles,
+                new List<PointOfInterest>(),
+                tilemapAsset.Dimensions,
+                tilemapAsset.Name
+            );
+
+            new MapMetadataGeneratedEvent(mapMetadata).Invoke(this);
+        }
+
+        private void SetupLesson(int lesson)
+        {
+            switch (lesson)
             {
                 case 0:
                     SetupForagingLesson();
                     break;
                 case 1:
-                    //SetupFungusLesson();
+                    SetupFungusLesson();
                     break;
                 case 2:
-                    //SetupQueenLesson();
+                    SetupQueenLesson();
                     break;
                 default:
-                    //SetupForagingLesson();
                     break;
             }
+        }
 
-            EnvironmentResetted?.Invoke();
+        private void Update()
+        {
+            if (!_debug)
+                return;
+
+            _debugChannel.RaiseEvent("curriculum",
+                new CurriculumDebugData()
+                {
+                    CurrentLesson = CurrentLesson,
+                    LessonConfig = GetCurrentConfig()
+                }
+             );
         }
 
         private void SetupForagingLesson()
         {
+            LoadCurrentMapConfig();
+            _gridService.ListPositions(Tile.AntQueenSpawn, _spawnPoints);
+        }
+
+        private void SetupFungusLesson()
+        {
+            LoadCurrentMapConfig();
+            _gridService.ListPositions(Tile.AntQueenSpawn, _spawnPoints);
+
+        }
+
+        private void SetupQueenLesson()
+        {
+            LoadCurrentMapConfig();
+            _gridService.ListPositions(Tile.AntQueenSpawn, _spawnPoints);
         }
 
         private void AntEventHandler(ref EventContext context, in AntEvent e)
         {
-            if (CurrentLesson == Lesson.Foraging101 && e.AntEventType == AntEventType.Eat)
+            switch (e.AntEventType)
             {
-                e.Ant.Agent.EndEpisode();
+                case AntEventType.Born:
+                    e.Ant.Agent.SpawnPointRequested += AgentSpawnPointRequestedEventHandler;
+                    break;
+                case AntEventType.Death:
+                    e.Ant.Agent.SpawnPointRequested -= AgentSpawnPointRequestedEventHandler;
+                    break;
             }
+
+            if (CurrentLesson == Lesson.Foraging101)
+            {
+                if (e.AntEventType == AntEventType.Eat)
+                {
+                    e.Ant.Agent.EndEpisode();
+                }
+            }
+        }
+
+        private Vector2 AgentSpawnPointRequestedEventHandler()
+        {
+            return _spawnPoints.RandomElement();
+        }
+
+        [Button]
+        private void NextLesson()
+        {
+            _currentLessonIndex = (_currentLessonIndex + 1) % 3;
+            SetupLesson(_currentLessonIndex);
         }
     }
 

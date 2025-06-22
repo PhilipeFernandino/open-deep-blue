@@ -64,8 +64,6 @@ namespace Core.Level
             TileBase[] tiles = new TileBase[ChunkSize * ChunkSize];
             TileBase[] floorTiles = new TileBase[ChunkSize * ChunkSize];
 
-            Debug.Log($"{GetType()} - {area}");
-
             for (int w = anchor.y; w < anchor.y + ChunkSize; w++)
             {
                 for (int h = anchor.x; h < anchor.x + ChunkSize; h++)
@@ -77,7 +75,6 @@ namespace Core.Level
 
                         int index = ww * ChunkSize + hh;
 
-                        // get from grid tiles instead of mapmetad
                         tiles[index] = _tilesSettings.GetTileBase(_mapMetadata.Tiles[h, w]);
                         floorTiles[index] = _tilesSettings.GetFloorTileBase(_mapMetadata.BiomeTiles[h, w]);
                     }
@@ -86,8 +83,6 @@ namespace Core.Level
 
             _gridService.LoadTilesBlock(area, tiles);
             _gridService.LoadFloorTilesBlock(area, floorTiles);
-
-            Debug.Log($"{GetType()} - Tilemap added for: {anchor}");
         }
 
         public void UnsetTileChunk((BoundsInt area, Vector2Int anchor) e)

@@ -16,9 +16,14 @@ namespace Core.Train
         private Dictionary<AntEventType, float> _antEventScores = new();
 
         public TilemapAsset Tilemap => _tilemap;
+        public List<ColonyEventScore> ColonyEvents => _events;
+        public List<AntEventScore> AntEvents => _antEvents;
 
         private void OnEnable()
         {
+            _colonyEventScores.Clear();
+            _antEventScores.Clear();
+
             foreach (var e in _events)
             {
                 _colonyEventScores.Add(e.EventType, e.Score);

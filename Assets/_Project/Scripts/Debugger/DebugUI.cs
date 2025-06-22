@@ -1,12 +1,12 @@
 ﻿using Coimbra;
+using Core.UI;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
 namespace Core.Debugger
 {
-
-    public class DebugUI : MonoBehaviour
+    public class DebugUI : UIDynamicCanvas
     {
         [Header("UI Prefabs and Containers")]
         [SerializeField] private TextMeshProUGUI _debugTextPrefab;

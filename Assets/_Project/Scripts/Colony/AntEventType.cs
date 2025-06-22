@@ -2,13 +2,16 @@
 {
     public enum AntEventType
     {
+        Born,
         Eat,
-        PerStep,
+        Step,
         GatherLeaf,
         GatherFungus,
         FeedQueen,
         FeedFungus,
         Dig,
         WallCollision,
+        EndEpisode,
+        Death
     }
 }
