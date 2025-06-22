@@ -30,7 +30,7 @@ namespace Core.Debugger
 
                 foreach (var chemical in chemicalData.Chemicals)
                 {
-                    _stringBuilder.AppendLine($"{chemical.ChemicalType}: {chemical.Strength}");
+                    _stringBuilder.AppendLine($"{chemical.ChemicalType}: {chemical.Strength:0.##}");
                 }
 
                 DisplayText = _stringBuilder.ToString();

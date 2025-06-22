@@ -1,5 +1,6 @@
 ﻿using Core.Level;
 using Core.Level.Dynamic;
+using Core.Train;
 using Core.Units;
 using Core.Util;
 using UnityEngine;
@@ -21,7 +22,8 @@ namespace Core.Interaction
 
                     if (success)
                     {
-                        ant.Give(ItemSystem.Item.None);
+                        ant.GiveItem(ItemSystem.Item.None);
+                        new AntEvent(AntEventType.FeedQueen, ant).Invoke(this);
                     }
                 }
             }

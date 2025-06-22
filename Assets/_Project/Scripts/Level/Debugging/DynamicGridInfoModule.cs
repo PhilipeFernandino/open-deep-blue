@@ -41,9 +41,9 @@ namespace Core.Debugger
             if (data is FungusTileData tileData)
             {
                 _stringBuilder.AppendLine($"Fungus Tile:");
-                _stringBuilder.AppendLine($"Health: {tileData.CurrentHealth}/{tileData.MaxHealth}");
-                _stringBuilder.AppendLine($"Saciation: {tileData.CurrentSaciation}/{tileData.MaxSaciation}");
-                _stringBuilder.AppendLine($"Food Store: {tileData.CurrentFoodStore}/{tileData.MaxFoodStore}");
+                _stringBuilder.AppendLine($"Health: {tileData.CurrentHealth:0.##}/{tileData.MaxHealth}");
+                _stringBuilder.AppendLine($"Saciation: {tileData.CurrentSaciation:0.##}/{tileData.MaxSaciation}");
+                _stringBuilder.AppendLine($"Food Store: {tileData.CurrentFoodStore:0.##}/{tileData.MaxFoodStore}");
                 _stringBuilder.AppendLine($"Lost Health When Starved: {tileData.LostHealthWhenStarved}");
                 _stringBuilder.AppendLine($"Food Production: {tileData.FoodProduction}");
                 _stringBuilder.AppendLine($"Lost Saciation: {tileData.SaciationLost}");
@@ -53,17 +53,18 @@ namespace Core.Debugger
             if (data is QueenTileData queenTileData)
             {
                 _stringBuilder.AppendLine($"Queen Tile:");
-                _stringBuilder.AppendLine($"Health: {queenTileData.QueenData.CurrentHealth}/{queenTileData.QueenDefinition.MaxHealth}");
-                _stringBuilder.AppendLine($"Saciation: {queenTileData.QueenData.CurrentSaciation} / {queenTileData.QueenDefinition.MaxSaciation}");
+                _stringBuilder.AppendLine($"Health: {queenTileData.QueenData.CurrentHealth:0.##}/{queenTileData.QueenDefinition.MaxHealth}");
+                _stringBuilder.AppendLine($"Saciation: {queenTileData.QueenData.CurrentSaciation:0.##} / {queenTileData.QueenDefinition.MaxSaciation}");
                 _stringBuilder.AppendLine($"Pregnancy: {queenTileData.QueenData.CurrentPregnancyPercentage * 100f}%");
                 _stringBuilder.AppendLine($"Lost Health When Starved: {queenTileData.QueenDefinition.LostHealthWhenStarved}");
                 _stringBuilder.AppendLine($"Brood Per Laying: {queenTileData.QueenDefinition.BroodPerLaying}");
+                _stringBuilder.AppendLine($"Lost Saciation: {queenTileData.QueenDefinition.SaciationLost:0.##}");
             }
 
             if (data is FoodTileData foodTileData)
             {
                 _stringBuilder.AppendLine($"Food Tile:");
-                _stringBuilder.AppendLine($"Food: {foodTileData.CurrentFoodStore}/{foodTileData.MaxFoodStore}");
+                _stringBuilder.AppendLine($"Food: {foodTileData.CurrentFoodStore:0.##}/{foodTileData.MaxFoodStore}");
             }
 
 

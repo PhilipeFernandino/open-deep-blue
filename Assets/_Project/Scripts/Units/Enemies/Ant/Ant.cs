@@ -8,6 +8,7 @@ using Core.ItemSystem;
 using Core.Level;
 using Core.Map;
 using Core.Player;
+using Core.Train;
 using Core.Util;
 using System;
 using System.Collections.Generic;
@@ -61,58 +62,34 @@ namespace Core.Units
 
         Dictionary<AntState, IFSMState<AntState>> IFSMAgent<AntState>.States => _fsm.States;
 
-        public void TransferState(AntState nextState, IEnterStateData enterStateData, IFSMState<AntState> actor)
-        {
-            _fsm.TransferState(nextState, enterStateData, actor);
-        }
 
-        public void Log(string message)
-        {
-            Debug.Log(message);
-        }
+        public void GiveReward(float value) => _agent.AddReward(value);
+        public bool IsCarrying(Item item) => Carrying == item;
+        public bool IsFacing(Tile tile) => IsFacing() == tile;
+        public Tile IsFacing() => GridService.Get(InteractPosition).TileType;
+        public bool CanInteract() => InteractionService.CanInteract(InteractPosition);
+        public void TryToInteract() => InteractionService.Interact(InteractPosition, this);
+        public void GiveItem(Item item) => Blackboard.CarryingItem = item;
 
         public void TryEat()
         {
             if (IsCarrying(Item.Fungus))
             {
                 Blackboard.Saciety += 15f;
-                Give(Item.None);
+                GiveItem(Item.None);
+                new AntEvent(AntEventType.Eat, this).Invoke(this);
             }
         }
+
+        public void TransferState(AntState nextState, IEnterStateData enterStateData, IFSMState<AntState> actor)
+        => _fsm.TransferState(nextState, enterStateData, actor);
+
+        public void Log(string message) => Debug.Log(message);
 
         public void TryDig(float scale)
         {
             GridService.DamageTileAt(InteractPosition, scale * DigDamage);
-        }
-
-        public bool IsCarrying(Item item)
-        {
-            return Carrying == item;
-        }
-
-        public bool IsFacing(Tile tile)
-        {
-            return IsFacing() == tile;
-        }
-
-        public Tile IsFacing()
-        {
-            return GridService.Get(InteractPosition).TileType;
-        }
-
-        public bool CanInteract()
-        {
-            return InteractionService.CanInteract(InteractPosition);
-        }
-
-        public void TryToInteract()
-        {
-            InteractionService.Interact(InteractPosition, this);
-        }
-
-        public void Give(Item item)
-        {
-            Blackboard.CarryingItem = item;
+            new AntEvent(AntEventType.Dig, this).Invoke(this);
         }
 
         private void Update()
@@ -131,7 +108,8 @@ namespace Core.Units
                         MaxHealth = MaxHealth,
                         MaxSaciety = Blackboard.MaxSaciety,
                         Position = Position,
-                        Saciety = Blackboard.Saciety
+                        Saciety = Blackboard.Saciety,
+                        CumulativeReward = Blackboard.CumulativeReward
                     });
             }
         }

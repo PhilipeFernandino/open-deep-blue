@@ -8,6 +8,7 @@ using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
 using Unity.Sentis;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace Core.Units
@@ -22,6 +23,7 @@ namespace Core.Units
         private IChemicalGridService _chemicalGrid;
         private IColonyService _colonyManager;
         private DecisionRequester _decisionRequester;
+        private AntBlackboard _blackboard;
 
         public bool CanEatNow => _ant.IsCarrying(Item.Fungus);
         public bool CanDigNow => _ant.IsFacing(Tile.BlueStone);
@@ -45,6 +47,7 @@ namespace Core.Units
         public void Setup(Ant ant)
         {
             _ant = ant;
+            _blackboard = _ant.Blackboard;
             _chemicalGrid = _ant.ChemicalGrid;
             _colonyManager = ServiceLocatorUtilities.GetServiceAssert<IColonyService>();
             _decisionRequester = GetComponent<DecisionRequester>();
@@ -58,7 +61,6 @@ namespace Core.Units
             {
                 Debug.LogWarning($"{GetType()} - No model assigned");
             }
-
             _colonyManager.RegisterAnt(this);
         }
 
@@ -73,9 +75,8 @@ namespace Core.Units
 
         public override void CollectObservations(VectorSensor sensor)
         {
-            var blackboard = _ant.Blackboard;
-            sensor.AddObservation(blackboard.MovingDirection.normalized);
-            sensor.AddOneHotObservation((int)blackboard.CarryingItem, (int)Item.Last + 1);
+            sensor.AddObservation(_blackboard.MovingDirection.normalized);
+            sensor.AddOneHotObservation((int)_blackboard.CarryingItem, (int)Item.Last + 1);
 
             (int tileObservationSize, int tileOneHotIndex) = ObserveFacingTile();
             sensor.AddOneHotObservation(tileOneHotIndex, tileObservationSize);
@@ -189,14 +190,13 @@ namespace Core.Units
 
         private void FixedUpdate()
         {
-            AddReward(-1f / MaxStep);
-
             if (_ant.Blackboard.CarryingItem == Item.Leaf)
             {
                 _ant.ChemicalGrid.Drop(_ant.Position, Chemical.FoodPheromone, 22.5f * Time.fixedDeltaTime);
             }
 
             _ant.ChemicalGrid.Drop(_ant.Position, Chemical.PresencePheromone, 10f * Time.fixedDeltaTime);
+            _blackboard.CumulativeReward = GetCumulativeReward();
         }
     }
 }

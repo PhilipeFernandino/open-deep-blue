@@ -20,6 +20,7 @@ namespace Core.Units
         public float MovementSpeed = 2;
 
         [HideInInspector] public float Health;
+        [HideInInspector] public float CumulativeReward;
         [HideInInspector] public Vector2 MovingDirection;
 
         private float _saciety;

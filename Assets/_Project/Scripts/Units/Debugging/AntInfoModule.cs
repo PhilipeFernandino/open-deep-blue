@@ -14,6 +14,7 @@ namespace Core.Debugger
         public float MaxSaciety;
         public float Health;
         public float MaxHealth;
+        public float CumulativeReward;
     }
 
     [CreateAssetMenu(fileName = "Ant Info Module", menuName = "Core/Debugger/Modules/Ant Info Module")]
@@ -27,11 +28,12 @@ namespace Core.Debugger
             {
                 _stringBuilder.Clear();
 
-                _stringBuilder.AppendLine($"Position: ({antData.Position})");
+                _stringBuilder.AppendLine($"Position: {antData.Position}");
                 _stringBuilder.AppendLine($"Carrying Item: {antData.CarryingItem}");
                 _stringBuilder.AppendLine($"Facing Tile: {antData.FacingTile}");
-                _stringBuilder.AppendLine($"Saciety: {antData.Saciety}/{antData.MaxSaciety}");
-                _stringBuilder.AppendLine($"Saciety: {antData.Health}/{antData.MaxHealth}");
+                _stringBuilder.AppendLine($"Saciety: {antData.Saciety:0.##}/{antData.MaxSaciety}");
+                _stringBuilder.AppendLine($"Saciety: {antData.Health:0.##}/{antData.MaxHealth}");
+                _stringBuilder.AppendLine($"Cumulative Reward: {antData.CumulativeReward:0.##}");
 
                 DisplayText = _stringBuilder.ToString();
             }

@@ -1,36 +1,38 @@
-﻿using Coimbra.Services.Events;
+﻿using Coimbra;
+using Coimbra.Services.Events;
+using Core.Colony;
 using Core.Util;
-using System;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace Core.Train
 {
-    public class ColonyScorer : MonoBehaviour
-    {
-        [SerializeField] private List<ColonyEventScore> _events = new();
 
-        private Dictionary<ColonyEventType, float> _colonyEventScores = new();
+    public class ColonyScorer : Actor
+    {
+        private ICurriculumService _curriculumService;
         private IColonyService _groupService;
 
-        private void Awake()
+        protected override void OnInitialize()
         {
             ColonyEvent.AddListener(ColonyEventHandler);
-
-            foreach (var e in _events)
-            {
-                _colonyEventScores.Add(e.EventType, e.Score);
-            }
+            AntEvent.AddListener(AntEventHandler);
         }
 
-        private void Start()
+        protected override void OnSpawn()
         {
             _groupService = ServiceLocatorUtilities.GetServiceAssert<IColonyService>();
+            _curriculumService = ServiceLocatorUtilities.GetServiceAssert<ICurriculumService>();
+        }
+
+        private void AntEventHandler(ref EventContext context, in AntEvent e)
+        {
+            var score = _curriculumService.GetCurrentConfig().GetReward(e.AntEventType);
+            e.Ant.GiveReward(score);
         }
 
         private void ColonyEventHandler(ref EventContext context, in ColonyEvent e)
         {
-            _groupService.AddGroupReward(_colonyEventScores[e.EventType]);
+            var score = _curriculumService.GetCurrentConfig().GetReward(e.EventType);
+            _groupService.AddGroupReward(score);
         }
     }
 }

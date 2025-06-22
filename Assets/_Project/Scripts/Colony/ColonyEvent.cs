@@ -1,11 +1,11 @@
-﻿using System;
-using Coimbra.Services.Events;
+﻿using Coimbra.Services.Events;
+using System;
 
 namespace Core.Train
 {
-    public partial struct ColonyEvent : IEvent
+    public readonly partial struct ColonyEvent : IEvent
     {
-        public ColonyEventType EventType;
+        public readonly ColonyEventType EventType;
 
         public ColonyEvent(ColonyEventType eventType)
         {

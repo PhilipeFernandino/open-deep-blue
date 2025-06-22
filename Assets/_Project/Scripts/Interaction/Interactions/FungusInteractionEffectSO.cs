@@ -1,5 +1,6 @@
 ﻿using Core.Level;
 using Core.Level.Dynamic;
+using Core.Train;
 using Core.Units;
 using Core.Util;
 using TMPro;
@@ -15,12 +16,9 @@ namespace Core.Interaction
         {
             var fungusService = ServiceLocatorUtilities.GetServiceAssert<IFungusService>();
 
-            Debug.Log($"Trying to interact with fungus", this);
 
             if (interactor is Ant ant)
             {
-                Debug.Log($"Is ant", this);
-
                 if (ant.IsCarrying(ItemSystem.Item.Leaf))
                 {
                     ModifyFungusData modification = (ref FungusData fungusData) =>
@@ -32,16 +30,17 @@ namespace Core.Interaction
 
                     if (success)
                     {
-                        ant.Give(ItemSystem.Item.None);
+                        ant.GiveItem(ItemSystem.Item.None);
+                        new AntEvent(AntEventType.FeedFungus, ant).Invoke(this);
                     }
                 }
                 else
                 {
                     bool gotFood = fungusService.TryTakeFungusFood(worldPosition.RoundToInt());
-                    Debug.Log($"Got food: {gotFood}", this);
                     if (gotFood)
                     {
-                        ant.Give(ItemSystem.Item.Fungus);
+                        ant.GiveItem(ItemSystem.Item.Fungus);
+                        new AntEvent(AntEventType.GatherFungus, ant).Invoke(this);
                     }
                 }
             }

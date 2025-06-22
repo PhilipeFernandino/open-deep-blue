@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b48beb302da99a54585a70d0f77c6e74, type: 3}
+  m_Name: CurriculumSettingsSO
+  m_EditorClassIdentifier: 
+  _preload: 1
+  _type: 2
+  _configMap:
+  - Lesson: 0
+    Config: {fileID: 11400000, guid: 743648220d6793044a704b4b108f1835, type: 2}

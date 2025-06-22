@@ -1,5 +1,6 @@
 ﻿using Core.Level;
 using Core.Level.Dynamic;
+using Core.Train;
 using Core.Units;
 using Core.Util;
 using UnityEngine;
@@ -15,7 +16,8 @@ namespace Core.Interaction
 
             if (interactor is Ant ant && foodService.TryEat(worldPosition.RoundToInt()))
             {
-                ant.Give(ItemSystem.Item.Leaf);
+                ant.GiveItem(ItemSystem.Item.Leaf);
+                new AntEvent(AntEventType.GatherLeaf, ant).Invoke(this);
             }
         }
     }
