@@ -98,7 +98,6 @@ namespace Core.Units
 
             if (_debug)
             {
-                Debug.Log("debug!!!");
                 _debugChannel.RaiseEvent("ant",
                     new AntDebugData()
                     {
@@ -109,7 +108,13 @@ namespace Core.Units
                         MaxSaciety = Blackboard.MaxSaciety,
                         Position = Position,
                         Saciety = Blackboard.Saciety,
-                        CumulativeReward = Blackboard.CumulativeReward
+                        CumulativeReward = Blackboard.CumulativeReward,
+                        CanEat = _agent.CanEat,
+                        CanGatherFungus = _agent.CanGatherFungus,
+                        CanGatherLeaf = _agent.CanGatherLeaf,
+                        CanFeedQueen = _agent.CanFeedQueen,
+                        CanFeedFungus = _agent.CanFeedFungus,
+                        CanDig = _agent.CanDig
                     });
             }
         }

@@ -78,10 +78,10 @@ namespace Core.Level
 
         private void Update()
         {
-            Debug();
+            RaiseDebug();
         }
 
-        private void Debug()
+        private void RaiseDebug()
         {
             if (!_debug)
                 return;
@@ -135,13 +135,15 @@ namespace Core.Level
 
         public void DamageTileAt(int x, int y, float damage)
         {
+            Debug.Log($"Damage tile: {damage} at {x}, {y}", this);
             if (TryGetTileAt(x, y, out var tile))
             {
                 var tileDef = _tilesSettings.GetDefinition(tile.TileType);
                 float currentHitPoints = Mathf.Clamp(tile.CurrentHitPoints - damage, 0, tileDef.MaxHitPoints);
+                _grid[x, y].CurrentHitPoints = currentHitPoints;
                 if (currentHitPoints <= 0)
                 {
-                    TrySetTileAt(x, y, Map.Tile.None);
+                    TrySetTileAt(x, y, Map.Tile.None, true);
                 }
             }
         }

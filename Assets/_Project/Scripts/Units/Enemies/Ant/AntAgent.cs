@@ -25,8 +25,8 @@ namespace Core.Units
         private DecisionRequester _decisionRequester;
         private AntBlackboard _blackboard;
 
-        public bool CanEatNow => _ant.IsCarrying(Item.Fungus);
-        public bool CanDigNow => _ant.IsFacing(Tile.BlueStone);
+        public bool CanEat => _ant.IsCarrying(Item.Fungus);
+        public bool CanDig => _ant.IsFacing(Tile.BlueStone);
         public bool CanFeedFungus => _ant.IsCarrying(Item.Leaf) && _ant.IsFacing(Tile.Fungus);
         public bool CanFeedQueen => _ant.IsCarrying(Item.Fungus) && _ant.IsFacing(Tile.QueenAnt);
         public bool CanGatherLeaf => _ant.IsCarrying(Item.None) && _ant.IsFacing(Tile.GreenGrass);
@@ -107,8 +107,8 @@ namespace Core.Units
         {
             actionMasker.SetActionEnabled(branch: 0, actionIndex: (int)AntAction.None, isEnabled: true);
 
-            actionMasker.SetActionEnabled(branch: 0, actionIndex: (int)AntAction.Eat, isEnabled: CanEatNow);
-            actionMasker.SetActionEnabled(branch: 0, actionIndex: (int)AntAction.Dig, isEnabled: CanDigNow);
+            actionMasker.SetActionEnabled(branch: 0, actionIndex: (int)AntAction.Eat, isEnabled: CanEat);
+            actionMasker.SetActionEnabled(branch: 0, actionIndex: (int)AntAction.Dig, isEnabled: CanDig);
             actionMasker.SetActionEnabled(branch: 0, actionIndex: (int)AntAction.FeedFungus, isEnabled: CanFeedFungus);
             actionMasker.SetActionEnabled(branch: 0, actionIndex: (int)AntAction.FeedQueen, isEnabled: CanFeedQueen);
             actionMasker.SetActionEnabled(branch: 0, actionIndex: (int)AntAction.GatherLeaf, isEnabled: CanGatherLeaf);
@@ -132,7 +132,7 @@ namespace Core.Units
                     _ant.TryEat();
                     break;
                 case AntAction.Dig:
-                    _ant.TryDig(_decisionRequester.DecisionPeriod * Time.fixedDeltaTime);
+                    _ant.TryDig(_decisionRequester.DecisionPeriod);
                     break;
                 case AntAction.FeedQueen:
                 case AntAction.FeedFungus:
@@ -161,7 +161,7 @@ namespace Core.Units
             }
             else if (_inputHandler.InteractTriggered)
             {
-                if (CanDigNow)
+                if (CanDig)
                 {
                     chosenAction = AntAction.Dig;
                 }

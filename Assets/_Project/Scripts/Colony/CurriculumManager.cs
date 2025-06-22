@@ -1,5 +1,6 @@
 ﻿using Coimbra;
 using Coimbra.Services;
+using Coimbra.Services.Events;
 using Core.Level;
 using Core.Map;
 using Core.Train;
@@ -42,6 +43,8 @@ namespace Core.Colony
         {
             Academy.Instance.OnEnvironmentReset += OnAcademyEnvironmentReset;
             ServiceLocator.Set<ICurriculumService>(this);
+
+            AntEvent.AddListener(AntEventHandler);
         }
 
         protected override void OnSpawn()
@@ -89,8 +92,14 @@ namespace Core.Colony
 
         private void SetupForagingLesson()
         {
-            //_gridService.ListPositions(Tile.GreenGrass, _foodSpawnPoints);
-            //_gridService.ListPositions(Tile.AntQueenSpawn, _antSpawnPoints);
+        }
+
+        private void AntEventHandler(ref EventContext context, in AntEvent e)
+        {
+            if (CurrentLesson == Lesson.Foraging101 && e.AntEventType == AntEventType.Eat)
+            {
+                e.Ant.Agent.EndEpisode();
+            }
         }
     }
 

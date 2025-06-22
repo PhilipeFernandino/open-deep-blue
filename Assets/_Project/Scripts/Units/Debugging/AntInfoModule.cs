@@ -15,6 +15,13 @@ namespace Core.Debugger
         public float Health;
         public float MaxHealth;
         public float CumulativeReward;
+
+        public bool CanEat;
+        public bool CanDig;
+        public bool CanFeedFungus;
+        public bool CanFeedQueen;
+        public bool CanGatherLeaf;
+        public bool CanGatherFungus;
     }
 
     [CreateAssetMenu(fileName = "Ant Info Module", menuName = "Core/Debugger/Modules/Ant Info Module")]
@@ -33,7 +40,19 @@ namespace Core.Debugger
                 _stringBuilder.AppendLine($"Facing Tile: {antData.FacingTile}");
                 _stringBuilder.AppendLine($"Saciety: {antData.Saciety:0.##}/{antData.MaxSaciety}");
                 _stringBuilder.AppendLine($"Saciety: {antData.Health:0.##}/{antData.MaxHealth}");
-                _stringBuilder.AppendLine($"Cumulative Reward: {antData.CumulativeReward:0.##}");
+
+                if (antData.CanEat)
+                    _stringBuilder.AppendLine("CanEat");
+                if (antData.CanDig)
+                    _stringBuilder.AppendLine("CanDig");
+                if (antData.CanFeedFungus)
+                    _stringBuilder.AppendLine("CanFeedFungus");
+                if (antData.CanFeedQueen)
+                    _stringBuilder.AppendLine("CanFeedQueen");
+                if (antData.CanGatherLeaf)
+                    _stringBuilder.AppendLine("CanGatherLeaf");
+                if (antData.CanGatherFungus)
+                    _stringBuilder.AppendLine("CanGatherFungus");
 
                 DisplayText = _stringBuilder.ToString();
             }
