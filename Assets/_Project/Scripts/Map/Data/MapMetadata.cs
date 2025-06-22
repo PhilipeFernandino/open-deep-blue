@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Core.Map
 {
@@ -10,5 +11,41 @@ namespace Core.Map
         public List<PointOfInterest> PointsOfInterest { get; private set; } = PointsOfInterest;
         public string Name { get; private set; } = Name;
 
+        public void SetTile(int x, int y, Tile tile)
+        {
+            Tiles[x, y] = tile;
+        }
+
+        public void ListPositions(Tile tile, List<Vector2Int> listPositions)
+        {
+            listPositions.Clear();
+
+            for (int i = 0; i < Dimensions; i++)
+            {
+                for (int j = 0; j < Dimensions; j++)
+                {
+                    Tile compareTile = Tiles[i, j];
+                    if (compareTile == tile)
+                    {
+                        listPositions.Add(new(i, j));
+                    }
+                }
+            }
+        }
+
+        public void RemoveAll(Tile tile)
+        {
+            for (int i = 0; i < Dimensions; i++)
+            {
+                for (int j = 0; j < Dimensions; j++)
+                {
+                    Tile compareTile = Tiles[i, j];
+                    if (compareTile == tile)
+                    {
+                        Tiles[i, j] = Tile.None;
+                    }
+                }
+            }
+        }
     }
 }

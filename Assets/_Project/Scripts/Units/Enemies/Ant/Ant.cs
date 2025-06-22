@@ -133,15 +133,11 @@ namespace Core.Units
             _tilemapCollision = GetComponent<AntTilemapCollision>();
 
             Blackboard = GetComponent<AntBlackboard>();
+
+            OnStarting += AntOnStarting;
         }
 
-        private void Attacked_EventHandler(AttackedData data)
-        {
-            var knockbackForce = (Position - data.Attack.SourcePosition).normalized * data.Attack.Knockback;
-            _movementController.AddKnockback(knockbackForce);
-        }
-
-        protected override void OnSpawn()
+        private void AntOnStarting(Actor sender)
         {
             _movementController.Setup(MovementSpeed);
 
@@ -159,6 +155,12 @@ namespace Core.Units
             _agent.Setup(this);
 
             TransferState(AntState.Moving, null, null);
+        }
+
+        private void Attacked_EventHandler(AttackedData data)
+        {
+            var knockbackForce = (Position - data.Attack.SourcePosition).normalized * data.Attack.Knockback;
+            _movementController.AddKnockback(knockbackForce);
         }
     }
 

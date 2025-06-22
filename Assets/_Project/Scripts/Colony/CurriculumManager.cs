@@ -1,12 +1,12 @@
 ﻿using Coimbra;
 using Coimbra.Services;
 using Coimbra.Services.Events;
+using Core.Colony.Lessons;
 using Core.Debugger;
 using Core.Level;
 using Core.Map;
 using Core.Train;
 using Core.Util;
-using Extensions;
 using NaughtyAttributes;
 using System;
 using System.Collections.Generic;
@@ -41,8 +41,9 @@ namespace Core.Colony
         public int CurrentLessonIndex => _currentLessonIndex;
         public Lesson CurrentLesson => (Lesson)_currentLessonIndex;
 
-        private List<Vector2Int> _spawnPoints = new();
-        private List<Vector2Int> _greenGrassPoints = new();
+        private LessonHandler CurrentLessonHandler => _lessonHandlers[CurrentLesson];
+
+        private Dictionary<Lesson, LessonHandler> _lessonHandlers;
 
         public LessonConfigSO GetCurrentConfig()
         {
@@ -51,16 +52,38 @@ namespace Core.Colony
 
         protected override void OnInitialize()
         {
-            Academy.Instance.OnEnvironmentReset += OnAcademyEnvironmentReset;
             ServiceLocator.Set<ICurriculumService>(this);
 
-            AntEvent.AddListener(AntEventHandler);
+            OnStarting += CurriculumManagerOnStarting;
         }
 
-        protected override void OnSpawn()
+        private void CurriculumManagerOnStarting(Actor sender)
         {
             _settings = ScriptableSettings.GetOrFind<CurriculumSettingsSO>();
             _gridService = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
+
+            _lessonHandlers = new Dictionary<Lesson, LessonHandler>
+            {
+                {
+                    Lesson.Foraging101,
+                    new Foraging101LessonHandler(_gridService, _settings.GetConfig(Lesson.Foraging101))
+                },
+                {
+                    Lesson.Fungus,
+                    new FungusLessonHandler(_gridService, _settings.GetConfig(Lesson.Fungus))
+                },
+                {
+                    Lesson.Queen,
+                    new QueenLessonHandler(_gridService, _settings.GetConfig(Lesson.Queen))
+                },
+            };
+
+            SetupLesson(0);
+
+            AntEvent.AddListener(AntEventHandler);
+            ColonyEvent.AddListener(ColonyEventHandler);
+
+            Academy.Instance.OnEnvironmentReset += OnAcademyEnvironmentReset;
         }
 
         protected override void OnDestroyed()
@@ -73,6 +96,8 @@ namespace Core.Colony
 
         private void OnAcademyEnvironmentReset()
         {
+            Debug.Log("OnAcademyEnvironmentReset", this);
+
             int newLessonIndex = (int)Academy.Instance.EnvironmentParameters.GetWithDefault("lesson_index", 0.0f);
 
             if (newLessonIndex == _currentLessonIndex)
@@ -80,41 +105,15 @@ namespace Core.Colony
                 return;
             }
 
-            _currentLessonIndex = newLessonIndex;
-            SetupLesson(_currentLessonIndex);
+            SetupLesson(newLessonIndex);
             EnvironmentResetted?.Invoke();
-        }
-
-        private void LoadCurrentMapConfig()
-        {
-            var tilemapAsset = GetCurrentConfig().Tilemap;
-            var mapMetadata = new MapMetadata(
-                tilemapAsset.Tiles,
-                tilemapAsset.BiomeTiles,
-                new List<PointOfInterest>(),
-                tilemapAsset.Dimensions,
-                tilemapAsset.Name
-            );
-
-            new MapMetadataGeneratedEvent(mapMetadata).Invoke(this);
         }
 
         private void SetupLesson(int lesson)
         {
-            switch (lesson)
-            {
-                case 0:
-                    SetupForagingLesson();
-                    break;
-                case 1:
-                    SetupFungusLesson();
-                    break;
-                case 2:
-                    SetupQueenLesson();
-                    break;
-                default:
-                    break;
-            }
+            Debug.Log($"Setup lesson {lesson}", this);
+            _currentLessonIndex = lesson;
+            CurrentLessonHandler.OnEnter();
         }
 
         private void Update()
@@ -131,49 +130,40 @@ namespace Core.Colony
              );
         }
 
-        private void SetupForagingLesson()
-        {
-            LoadCurrentMapConfig();
-            _gridService.ListPositions(Tile.AntQueenSpawn, _spawnPoints);
-        }
-
-        private void SetupFungusLesson()
-        {
-            LoadCurrentMapConfig();
-            _gridService.ListPositions(Tile.AntQueenSpawn, _spawnPoints);
-
-        }
-
-        private void SetupQueenLesson()
-        {
-            LoadCurrentMapConfig();
-            _gridService.ListPositions(Tile.AntQueenSpawn, _spawnPoints);
-        }
-
         private void AntEventHandler(ref EventContext context, in AntEvent e)
         {
+            Debug.Log($"AntEventHandler", this);
+
             switch (e.AntEventType)
             {
-                case AntEventType.Born:
+                case AntEventType.EpisodeBegin:
                     e.Ant.Agent.SpawnPointRequested += AgentSpawnPointRequestedEventHandler;
-                    break;
-                case AntEventType.Death:
-                    e.Ant.Agent.SpawnPointRequested -= AgentSpawnPointRequestedEventHandler;
                     break;
             }
 
-            if (CurrentLesson == Lesson.Foraging101)
+            if (_currentLessonIndex == -1)
             {
-                if (e.AntEventType == AntEventType.Eat)
-                {
-                    e.Ant.Agent.EndEpisode();
-                }
+                return;
             }
+
+            CurrentLessonHandler.HandleAntEvent(e);
+        }
+
+        private void ColonyEventHandler(ref EventContext context, in ColonyEvent e)
+        {
+            if (_currentLessonIndex == -1)
+            {
+                return;
+            }
+
+            CurrentLessonHandler.HandleColonyEvent(e);
         }
 
         private Vector2 AgentSpawnPointRequestedEventHandler()
         {
-            return _spawnPoints.RandomElement();
+            var pos = CurrentLessonHandler.GetSpawnPoint();
+            Debug.Log($"Ant requested spawn point: {pos}");
+            return pos;
         }
 
         [Button]

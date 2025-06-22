@@ -2,6 +2,7 @@
 using Coimbra.Services.Events;
 using Core.Colony;
 using Core.Util;
+using UnityEngine;
 
 namespace Core.Train
 {
@@ -15,10 +16,13 @@ namespace Core.Train
         {
             ColonyEvent.AddListener(ColonyEventHandler);
             AntEvent.AddListener(AntEventHandler);
+
+            OnStarting += ColonyScorerOnStarting;
         }
 
-        protected override void OnSpawn()
+        private void ColonyScorerOnStarting(Actor sender)
         {
+            Debug.Log($"ColonyScorerOnStarting", this);
             _groupService = ServiceLocatorUtilities.GetServiceAssert<IColonyService>();
             _curriculumService = ServiceLocatorUtilities.GetServiceAssert<ICurriculumService>();
         }
@@ -31,7 +35,7 @@ namespace Core.Train
 
         private void ColonyEventHandler(ref EventContext context, in ColonyEvent e)
         {
-            var score = _curriculumService.GetCurrentConfig().GetReward(e.EventType);
+            var score = _curriculumService.GetCurrentConfig()?.GetReward(e.EventType) ?? 0;
             _groupService.AddGroupReward(score);
         }
     }

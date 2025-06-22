@@ -11,7 +11,9 @@
         FeedFungus,
         Dig,
         WallCollision,
-        EndEpisode,
-        Death
+        EpisodeEnd,
+        Death,
+        Setup,
+        EpisodeBegin
     }
 }

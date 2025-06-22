@@ -32,7 +32,7 @@ namespace Core.Units
         public bool CanGatherLeaf => _ant.IsCarrying(Item.None) && _ant.IsFacing(Tile.GreenGrass);
         public bool CanGatherFungus => _ant.IsCarrying(Item.None) && _ant.IsFacing(Tile.Fungus);
 
-        public event Func<Vector2> SpawnPointRequested = () => Vector2.zero;
+        public event Func<Vector2> SpawnPointRequested;
 
         public enum AntAction
         {
@@ -61,17 +61,18 @@ namespace Core.Units
             {
                 Debug.LogWarning($"{GetType()} - No model assigned");
             }
-
-            new AntEvent(AntEventType.Born, _ant);
         }
 
         public override void OnEpisodeBegin()
         {
+            new AntEvent(AntEventType.EpisodeBegin, _ant).Invoke(_ant);
+
             _ant.Blackboard.CarryingItem = Item.None;
             _ant.Blackboard.MovingDirection = Vector2.zero;
 
             _ant.MovementController.Teleport(SpawnPointRequested.Invoke());
         }
+
 
         public override void CollectObservations(VectorSensor sensor)
         {
