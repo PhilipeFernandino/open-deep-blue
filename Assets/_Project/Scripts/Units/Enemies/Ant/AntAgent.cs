@@ -123,14 +123,14 @@ namespace Core.Units
             if (!_ant.IsStarted)
                 return;
 
-            actionMasker.SetActionEnabled(branch: 0, actionIndex: (int)AntAction.None, isEnabled: true);
+            actionMasker.SetActionEnabled(0, (int)AntAction.None, true);
 
-            actionMasker.SetActionEnabled(branch: 0, actionIndex: (int)AntAction.Eat, isEnabled: CanEat);
-            actionMasker.SetActionEnabled(branch: 0, actionIndex: (int)AntAction.Dig, isEnabled: CanDig);
-            actionMasker.SetActionEnabled(branch: 0, actionIndex: (int)AntAction.FeedFungus, isEnabled: CanFeedFungus);
-            actionMasker.SetActionEnabled(branch: 0, actionIndex: (int)AntAction.FeedQueen, isEnabled: CanFeedQueen);
-            actionMasker.SetActionEnabled(branch: 0, actionIndex: (int)AntAction.GatherLeaf, isEnabled: CanGatherLeaf);
-            actionMasker.SetActionEnabled(branch: 0, actionIndex: (int)AntAction.GatherFungus, isEnabled: CanGatherFungus);
+            actionMasker.SetActionEnabled(0, (int)AntAction.Eat, CanEat);
+            actionMasker.SetActionEnabled(0, (int)AntAction.Dig, CanDig);
+            actionMasker.SetActionEnabled(0, (int)AntAction.FeedFungus, CanFeedFungus);
+            actionMasker.SetActionEnabled(0, (int)AntAction.FeedQueen, CanFeedQueen);
+            actionMasker.SetActionEnabled(0, (int)AntAction.GatherLeaf, CanGatherLeaf);
+            actionMasker.SetActionEnabled(0, (int)AntAction.GatherFungus, CanGatherFungus);
         }
 
         public override void OnActionReceived(ActionBuffers actions)

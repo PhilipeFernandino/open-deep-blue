@@ -80,7 +80,7 @@ namespace Core.Level
             RaiseDebug();
         }
 
-        [System.Diagnostics.Conditional(conditionString: "DEBUG")]
+        [System.Diagnostics.Conditional(conditionString: "DEBUG"), System.Diagnostics.Conditional(conditionString: "UNITY_EDITOR")]
         private void RaiseDebug()
         {
             if (!_debug)

@@ -208,10 +208,9 @@ MonoBehaviour:
   _assertAwake: 0
   _activateOnSpawn: 0
   _deactivateOnDispose: 0
-  _agent: {fileID: 5215540218590712350}
   _healthComponent: {fileID: 8278313021440315252}
-  _debugChannel: {fileID: 0}
-  _debug: 0
+  _debugChannel: {fileID: 11400000, guid: 146dd8ffb242bf440bbd948bf92cba61, type: 2}
+  _debug: 1
 --- !u!114 &1260734249214769599
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -224,13 +223,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5639009993080fe4bb4c5688e0843f36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SacietyLoss: 1
-  MaxSaciety: 50
-  AttackDistance: 1
-  AttackDamage: 5
-  AggroDistance: 1
-  DigDamage: 5
-  MovementSpeed: 5
+  _antDefinition: {fileID: 11400000, guid: 33cc17c0c05c4b54b85bbd428e3c71ee, type: 2}
   Health: 0
   CumulativeReward: 0
   MovingDirection: {x: 0, y: 0}

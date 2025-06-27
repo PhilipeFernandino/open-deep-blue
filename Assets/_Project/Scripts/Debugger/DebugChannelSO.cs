@@ -9,7 +9,7 @@ namespace Core.Debugger
     {
         public event Action<string, object> OnEventRaised;
 
-        [System.Diagnostics.Conditional(conditionString: "DEBUG")]
+        [System.Diagnostics.Conditional(conditionString: "DEBUG"), System.Diagnostics.Conditional(conditionString: "UNITY_EDITOR"), System.Diagnostics.Conditional(conditionString: "UNITY_EDITOR")]
         public void RaiseEvent(string moduleId, object data)
         {
             OnEventRaised?.Invoke(moduleId, data);

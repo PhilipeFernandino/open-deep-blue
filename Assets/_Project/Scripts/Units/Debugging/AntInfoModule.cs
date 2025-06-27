@@ -10,10 +10,16 @@ namespace Core.Debugger
         public Vector2 Position;
         public Item CarryingItem;
         public Tile FacingTile;
+
         public float Saciety;
         public float MaxSaciety;
+
         public float Health;
         public float MaxHealth;
+
+        public float Energy;
+        public float MaxEnergy;
+
         public float CumulativeReward;
 
         public bool CanEat;
@@ -31,6 +37,11 @@ namespace Core.Debugger
 
         public override void UpdateData(object data)
         {
+            string bothAndPercentage(float value1, float value2)
+            {
+                return $"{value1,5:0.00}/{value2,-5:0.00} - {(value1 / value2 * 100f):0.00}%";
+            }
+
             if (data is AntDebugData antData)
             {
                 _stringBuilder.Clear();
@@ -38,8 +49,9 @@ namespace Core.Debugger
                 _stringBuilder.AppendLine($"Position: {antData.Position}");
                 _stringBuilder.AppendLine($"Carrying Item: {antData.CarryingItem}");
                 _stringBuilder.AppendLine($"Facing Tile: {antData.FacingTile}");
-                _stringBuilder.AppendLine($"Saciety: {antData.Saciety:0.##}/{antData.MaxSaciety}");
-                _stringBuilder.AppendLine($"Saciety: {antData.Health:0.##}/{antData.MaxHealth}");
+                _stringBuilder.AppendLine($"Saciety: {bothAndPercentage(antData.Saciety, antData.MaxSaciety)}");
+                _stringBuilder.AppendLine($"Health: {bothAndPercentage(antData.Health, antData.MaxHealth)}");
+                _stringBuilder.AppendLine($"Energy: {bothAndPercentage(antData.Energy, antData.MaxEnergy)}");
 
                 if (antData.CanEat)
                     _stringBuilder.AppendLine("CanEat");

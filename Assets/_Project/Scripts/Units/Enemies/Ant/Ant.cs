@@ -35,6 +35,7 @@ namespace Core.Units
         private BoxCollider2D _boxCollider;
 
         private AntTilemapCollision _tilemapCollision;
+        private ColonyEconomySettings _economySettings;
 
         internal AntBlackboard Blackboard { get; private set; }
 
@@ -77,7 +78,7 @@ namespace Core.Units
         {
             if (IsCarrying(Item.Fungus))
             {
-                Blackboard.Saciety += 15f;
+                Blackboard.Saciety += _economySettings.FungusFeedAntsAmount;
                 GiveItem(Item.None);
                 new AntEvent(AntEventType.Eat, this).Invoke(this);
             }
@@ -90,7 +91,11 @@ namespace Core.Units
 
         public void TryDig(float scale)
         {
+            if (!Blackboard.HasEnergy(Blackboard.DigEnergyCost))
+                return;
+
             GridService.DamageTileAt(InteractPosition, scale * DigDamage);
+            Blackboard.Energy -= Blackboard.DigEnergyCost;
             new AntEvent(AntEventType.Dig, this).Invoke(this);
         }
 
@@ -105,7 +110,7 @@ namespace Core.Units
             RaiseDebug();
         }
 
-        [System.Diagnostics.Conditional(conditionString: "DEBUG")]
+        [System.Diagnostics.Conditional(conditionString: "DEBUG"), System.Diagnostics.Conditional(conditionString: "UNITY_EDITOR")]
         private void RaiseDebug()
         {
             if (_debug)
@@ -118,6 +123,8 @@ namespace Core.Units
                         Health = Health,
                         MaxHealth = MaxHealth,
                         MaxSaciety = Blackboard.MaxSaciety,
+                        Energy = Blackboard.Energy,
+                        MaxEnergy = Blackboard.MaxEnergy,
                         Position = Position,
                         Saciety = Blackboard.Saciety,
                         CumulativeReward = Blackboard.CumulativeReward,
@@ -140,12 +147,22 @@ namespace Core.Units
 
             Blackboard.Saciety -= Blackboard.SacietyLoss * Time.fixedDeltaTime;
 
+            float energyDifference = Blackboard.EnergyLoss;
+
             if (IsCarrying(Item.Leaf))
             {
-                ChemicalGrid.Drop(Position, Chemical.FoodPheromone, 22.5f * Time.fixedDeltaTime);
+                ChemicalGrid.Drop(Position, Chemical.FoodPheromone, Blackboard.DropFoodPheromone * Time.fixedDeltaTime);
+                energyDifference -= Blackboard.CarryLeafCost;
             }
 
-            ChemicalGrid.Drop(Position, Chemical.PresencePheromone, 10f * Time.fixedDeltaTime);
+            if (Blackboard.SacietyPercentage > Blackboard.EnergyRegenerationThreshold)
+            {
+                energyDifference += Blackboard.EnergyRegenerationRate;
+            }
+
+            Blackboard.Energy += energyDifference * Time.fixedDeltaTime;
+
+            ChemicalGrid.Drop(Position, Chemical.PresencePheromone, Blackboard.DropPresencePheromone * Time.fixedDeltaTime);
 
             _fsm.FixedUpdate();
         }
@@ -159,10 +176,17 @@ namespace Core.Units
             _agent = GetComponent<AntAgent>();
 
             Blackboard = GetComponent<AntBlackboard>();
+            Blackboard.SacietyZeroed += SacietyZeroedEventHandler;
 
             OnStarting += AntOnStarting;
 
             Debug.LogWarning($"Ant OnInit", this);
+        }
+
+        private void SacietyZeroedEventHandler()
+        {
+            new AntEvent(AntEventType.Death, this).Invoke(this);
+            gameObject.SetActive(false);
         }
 
         private void AntOnStarting(Actor sender)
@@ -181,6 +205,7 @@ namespace Core.Units
             PathService = ServiceLocatorUtilities.GetServiceAssert<IPathService>();
             ChemicalGrid = ServiceLocatorUtilities.GetServiceAssert<IChemicalGridService>();
             InteractionService = ServiceLocatorUtilities.GetServiceAssert<IInteractionService>();
+            _economySettings = ScriptableSettings.GetOrFind<ColonyEconomySettings>();
 
             TransferState(AntState.Moving, null, null);
         }

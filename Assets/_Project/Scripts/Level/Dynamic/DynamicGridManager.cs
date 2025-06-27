@@ -76,7 +76,7 @@ namespace Core.Level.Dynamic
             Debug();
         }
 
-        [System.Diagnostics.Conditional(conditionString: "DEBUG")]
+        [System.Diagnostics.Conditional(conditionString: "DEBUG"), System.Diagnostics.Conditional(conditionString: "UNITY_EDITOR")]
         private void Debug()
         {
             if (!_debug)
