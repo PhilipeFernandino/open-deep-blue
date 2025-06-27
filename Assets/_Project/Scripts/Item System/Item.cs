@@ -5,6 +5,5 @@
         None,
         Leaf,
         Fungus,
-        Last,
     }
 }

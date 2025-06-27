@@ -15,7 +15,7 @@ namespace Core.Train
         [Header("Ant Spawning")]
         [SerializeField] private Ant _antPrefab;
         [SerializeField] private int _initialAntCount;
-        [SerializeField] private int _poolCapacity = 50;
+        [SerializeField] private int _poolCapacity = 25;
 
         [Header("Dependencies")]
         [SerializeField] private CurriculumManager _curriculumManager;

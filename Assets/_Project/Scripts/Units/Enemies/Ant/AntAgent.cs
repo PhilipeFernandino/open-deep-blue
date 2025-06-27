@@ -86,15 +86,30 @@ namespace Core.Units
         public override void CollectObservations(VectorSensor sensor)
         {
             if (!_ant.IsStarted)
+            {
+                sensor.AddObservation(new float[17]);
                 return;
+            }
 
             Debug.Log("CollectObservations", this);
 
             sensor.AddObservation(_blackboard.MovingDirection.normalized);
-            sensor.AddOneHotObservation((int)_blackboard.CarryingItem, (int)Item.Last + 1);
+            sensor.AddOneHotObservation((int)_blackboard.CarryingItem, (int)Item.Fungus + 1);
 
             (int tileObservationSize, int tileOneHotIndex) = ObserveFacingTile();
+
             sensor.AddOneHotObservation(tileOneHotIndex, tileObservationSize);
+
+            sensor.AddObservation(Mathf.Clamp01(_blackboard.SacietyPercentage));
+            sensor.AddObservation(Mathf.Clamp01(_blackboard.EnergyPercentage));
+
+            sensor.AddObservation(CanEat ? 1.0f : 0.0f);
+            sensor.AddObservation(CanDig ? 1.0f : 0.0f);
+            sensor.AddObservation(CanFeedFungus ? 1.0f : 0.0f);
+            sensor.AddObservation(CanFeedQueen ? 1.0f : 0.0f);
+            sensor.AddObservation(CanGatherLeaf ? 1.0f : 0.0f);
+            sensor.AddObservation(CanGatherFungus ? 1.0f : 0.0f);
+
         }
 
         private (int tileObservationSize, int tileOneHotIndex) ObserveFacingTile()

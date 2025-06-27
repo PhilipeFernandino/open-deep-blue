@@ -143,11 +143,9 @@ namespace Core.Units
             if (!IsStarted)
                 return;
 
-            Debug.Log($"Ant fixed update {gameObject.name}", this);
-
             Blackboard.Saciety -= Blackboard.SacietyLoss * Time.fixedDeltaTime;
 
-            float energyDifference = Blackboard.EnergyLoss;
+            float energyDifference = -Blackboard.EnergyLoss;
 
             if (IsCarrying(Item.Leaf))
             {
@@ -179,8 +177,6 @@ namespace Core.Units
             Blackboard.SacietyZeroed += SacietyZeroedEventHandler;
 
             OnStarting += AntOnStarting;
-
-            Debug.LogWarning($"Ant OnInit", this);
         }
 
         private void SacietyZeroedEventHandler()
@@ -191,8 +187,6 @@ namespace Core.Units
 
         private void AntOnStarting(Actor sender)
         {
-            Debug.Log($"Ant started {gameObject.name}", this);
-
             _movementController.Setup(MovementSpeed);
 
             _fsm = new(new()
