@@ -232,6 +232,7 @@ MonoBehaviour:
   DigDamage: 5
   MovementSpeed: 5
   Health: 0
+  CumulativeReward: 0
   MovingDirection: {x: 0, y: 0}
 --- !u!114 &6051039102395647708
 MonoBehaviour:
@@ -529,7 +530,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _chunkSize: 9
-  _tilesToObserve: 650015057905
+  _tilesToObserve: 6500150579050100
   sensorName: TileGridSensor
 --- !u!1 &6920064295541619248
 GameObject:
@@ -576,7 +577,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _chunkSize: 9
-  _chemicalsToObserve: 00000000030000000400000005000000
+  _chemicalsToObserve: 000000000300000004000000050000000200000006000000
   sensorName: ChemicalGridSensor
 --- !u!1001 &8909867542022313629
 PrefabInstance:

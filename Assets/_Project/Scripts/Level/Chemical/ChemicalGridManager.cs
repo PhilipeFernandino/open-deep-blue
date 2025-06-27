@@ -5,6 +5,7 @@ using Core.Map;
 using Core.Util;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
@@ -133,10 +134,11 @@ namespace Core.Level
 
         private void Update()
         {
-            Debug();
+            RaiseDebug();
         }
 
-        private void Debug()
+        [System.Diagnostics.Conditional(conditionString: "DEBUG")]
+        private void RaiseDebug()
         {
             if (!_debug)
                 return;

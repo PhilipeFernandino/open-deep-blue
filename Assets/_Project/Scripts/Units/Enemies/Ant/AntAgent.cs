@@ -3,34 +3,34 @@ using Core.Level;
 using Core.Map;
 using Core.Train;
 using Core.Util;
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
-using Unity.Sentis;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace Core.Units
 {
+    [RequireComponent(typeof(Ant))]
     public class AntAgent : Agent
     {
         [SerializeField] private AntInputHandler _inputHandler;
         [SerializeField] private Transform _startingArea;
         [SerializeField] private List<Tile> _interactableTileTypes;
 
-        private Ant _ant;
-        private IChemicalGridService _chemicalGrid;
         private DecisionRequester _decisionRequester;
         private AntBlackboard _blackboard;
+        private Ant _ant;
 
-        public bool CanEat => _ant.IsCarrying(Item.Fungus);
+        public bool CanEat => _blackboard.IsCarrying(Item.Fungus);
+        public bool CanFeedFungus => _blackboard.IsCarrying(Item.Leaf) && _ant.IsFacing(Tile.Fungus);
+        public bool CanFeedQueen => _blackboard.IsCarrying(Item.Fungus) && _ant.IsFacing(Tile.QueenAnt);
+        public bool CanGatherLeaf => _blackboard.IsCarrying(Item.None) && _ant.IsFacing(Tile.GreenGrass);
+        public bool CanGatherFungus => _blackboard.IsCarrying(Item.None) && _ant.IsFacing(Tile.Fungus);
+
         public bool CanDig => _ant.IsFacing(Tile.BlueStone);
-        public bool CanFeedFungus => _ant.IsCarrying(Item.Leaf) && _ant.IsFacing(Tile.Fungus);
-        public bool CanFeedQueen => _ant.IsCarrying(Item.Fungus) && _ant.IsFacing(Tile.QueenAnt);
-        public bool CanGatherLeaf => _ant.IsCarrying(Item.None) && _ant.IsFacing(Tile.GreenGrass);
-        public bool CanGatherFungus => _ant.IsCarrying(Item.None) && _ant.IsFacing(Tile.Fungus);
 
         public event Func<Vector2> SpawnPointRequested;
 
@@ -45,12 +45,13 @@ namespace Core.Units
             GatherFungus,
         }
 
-        public void Setup(Ant ant)
+        protected override void Awake()
         {
-            _ant = ant;
-            _blackboard = _ant.Blackboard;
-            _chemicalGrid = _ant.ChemicalGrid;
+            base.Awake();
+
+            _blackboard = GetComponent<AntBlackboard>();
             _decisionRequester = GetComponent<DecisionRequester>();
+            _ant = GetComponent<Ant>();
 
             var model = GetComponent<Unity.MLAgents.Policies.BehaviorParameters>().Model;
             if (model != null)
@@ -61,21 +62,34 @@ namespace Core.Units
             {
                 Debug.LogWarning($"{GetType()} - No model assigned");
             }
+
+            Debug.LogWarning($"Ant agent awake", this);
+        }
+
+        protected void Start()
+        {
+            Debug.LogWarning($"Ant agent start", this);
+
+            new AntEvent(AntEventType.Setup, _ant).Invoke(_ant);
         }
 
         public override void OnEpisodeBegin()
         {
-            new AntEvent(AntEventType.EpisodeBegin, _ant).Invoke(_ant);
+            Debug.Log("OnEpisodeBegin", this);
 
-            _ant.Blackboard.CarryingItem = Item.None;
-            _ant.Blackboard.MovingDirection = Vector2.zero;
+            _blackboard.CarryingItem = Item.None;
+            _blackboard.MovingDirection = Vector2.zero;
 
             _ant.MovementController.Teleport(SpawnPointRequested.Invoke());
         }
 
-
         public override void CollectObservations(VectorSensor sensor)
         {
+            if (!_ant.IsStarted)
+                return;
+
+            Debug.Log("CollectObservations", this);
+
             sensor.AddObservation(_blackboard.MovingDirection.normalized);
             sensor.AddOneHotObservation((int)_blackboard.CarryingItem, (int)Item.Last + 1);
 
@@ -106,6 +120,9 @@ namespace Core.Units
 
         public override void WriteDiscreteActionMask(IDiscreteActionMask actionMasker)
         {
+            if (!_ant.IsStarted)
+                return;
+
             actionMasker.SetActionEnabled(branch: 0, actionIndex: (int)AntAction.None, isEnabled: true);
 
             actionMasker.SetActionEnabled(branch: 0, actionIndex: (int)AntAction.Eat, isEnabled: CanEat);
@@ -118,10 +135,13 @@ namespace Core.Units
 
         public override void OnActionReceived(ActionBuffers actions)
         {
+            if (!_ant.IsStarted)
+                return;
+
             float moveX = actions.ContinuousActions[0];
             float moveY = actions.ContinuousActions[1];
 
-            _ant.Blackboard.MovingDirection = new Vector2(moveX, moveY);
+            _blackboard.MovingDirection = new Vector2(moveX, moveY);
 
             var chosenAction = (AntAction)actions.DiscreteActions[0];
 
@@ -147,6 +167,9 @@ namespace Core.Units
 
         public override void Heuristic(in ActionBuffers actionsOut)
         {
+            if (!_ant.IsStarted)
+                return;
+
             var continuousActions = actionsOut.ContinuousActions;
             continuousActions[0] = _inputHandler.MoveInput.x;
             continuousActions[1] = _inputHandler.MoveInput.y;
@@ -191,12 +214,9 @@ namespace Core.Units
 
         private void FixedUpdate()
         {
-            if (_ant.Blackboard.CarryingItem == Item.Leaf)
-            {
-                _ant.ChemicalGrid.Drop(_ant.Position, Chemical.FoodPheromone, 22.5f * Time.fixedDeltaTime);
-            }
+            if (!_ant.IsStarted)
+                return;
 
-            _ant.ChemicalGrid.Drop(_ant.Position, Chemical.PresencePheromone, 10f * Time.fixedDeltaTime);
             _blackboard.CumulativeReward = GetCumulativeReward();
         }
     }

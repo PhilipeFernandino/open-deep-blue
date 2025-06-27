@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e57555b06086b234dbb5f35d71442a96, type: 3}
+  m_Name: ColonyEconomySettings
+  m_EditorClassIdentifier: 
+  _preload: 1
+  _type: 2
+  <FungusFeedAntsAmount>k__BackingField: 40
+  <LeafFeedFungusAmount>k__BackingField: 40
+  <QueenDefinition>k__BackingField: {fileID: 11400000, guid: 67515e816674ad3489388e33ba20b63e, type: 2}
+  <FungusDefinition>k__BackingField: {fileID: 11400000, guid: c604a6081062df04184f371aaae11ba7, type: 2}
+  <FoodDefinition>k__BackingField: {fileID: 11400000, guid: fdad56bd8cefd0d4bb4add05e951a629, type: 2}
+  <AntDefinition>k__BackingField: {fileID: 11400000, guid: 33cc17c0c05c4b54b85bbd428e3c71ee, type: 2}

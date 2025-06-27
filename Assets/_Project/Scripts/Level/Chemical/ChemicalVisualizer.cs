@@ -17,10 +17,8 @@ namespace Core.Level
         [SerializeField] private RawImage _displayImage;
 
         [Header("Visualization Settings")]
-        [Tooltip("The chemical type to display in the overlay.")]
         [SerializeField] private Chemical _chemicalToView;
 
-        [Tooltip("A color gradient to map chemical strength. Black/transparent is zero, a solid color is max.")]
         [SerializeField] private Gradient _colorGradient;
         [SerializeField] private Vector2 _gridWorldOrigin;
 
@@ -60,9 +58,9 @@ namespace Core.Level
                 _gradientColors[i] = _colorGradient.Evaluate((float)i / (GradientResolution - 1));
             }
 
-            _displayRectTransform.anchorMin = new Vector2(0, 0);
-            _displayRectTransform.anchorMax = new Vector2(0, 0);
-            _displayRectTransform.pivot = new Vector2(0, 0);
+            _displayRectTransform.anchorMin = Vector2.zero;
+            _displayRectTransform.anchorMax = Vector2.zero;
+            _displayRectTransform.pivot = Vector2.zero;
         }
 
         private void LateUpdate()
@@ -92,7 +90,7 @@ namespace Core.Level
 
         private void AlignVisualizerToGrid()
         {
-            Vector2 gridWorldOrigin = _gridWorldOrigin; // You'll need to expose this
+            Vector2 gridWorldOrigin = _gridWorldOrigin;
             int dimensions = _chemicalService.Dimensions;
 
             Vector2 bottomLeftWorld = gridWorldOrigin;
@@ -117,9 +115,6 @@ namespace Core.Level
     }
 
 
-    /// <summary>
-    /// A Burst-compiled job to convert chemical float values into Color32 pixels in parallel.
-    /// </summary>
     [BurstCompile]
     public struct ColorizationJob : IJobParallelFor
     {

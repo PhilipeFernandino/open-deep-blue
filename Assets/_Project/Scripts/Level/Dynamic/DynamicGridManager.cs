@@ -76,6 +76,7 @@ namespace Core.Level.Dynamic
             Debug();
         }
 
+        [System.Diagnostics.Conditional(conditionString: "DEBUG")]
         private void Debug()
         {
             if (!_debug)

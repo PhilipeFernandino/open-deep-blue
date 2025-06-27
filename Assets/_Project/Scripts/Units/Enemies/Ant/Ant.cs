@@ -12,22 +12,24 @@ using Core.Train;
 using Core.Util;
 using System;
 using System.Collections.Generic;
+using Unity.MLAgents;
 using UnityEngine;
 
 namespace Core.Units
 {
+    [RequireComponent(typeof(Agent))]
     [RequireComponent(typeof(Movement2D))]
     [RequireComponent(typeof(BoxCollider2D))]
     [RequireComponent(typeof(AntTilemapCollision))]
     public class Ant : Actor, IFSMAgent<AntState>
     {
-        [SerializeField] private AntAgent _agent;
         [SerializeField] private HealthComponent _healthComponent;
 
         [Header("Debugging")]
         [SerializeField] private DebugChannelSO _debugChannel;
         [SerializeField] private bool _debug;
 
+        private AntAgent _agent;
         private FSM<AntState> _fsm;
         private Movement2D _movementController;
         private BoxCollider2D _boxCollider;
@@ -56,7 +58,7 @@ namespace Core.Units
 
         public Item Carrying => Blackboard.CarryingItem;
 
-        public Vector2 Position => transform.position.XY();
+        public Vector2 Position => MovementController.Position;
 
         public Vector2 InteractPosition => Position + _movementController.FacingDirection * 1f;
 
@@ -94,8 +96,18 @@ namespace Core.Units
 
         private void Update()
         {
-            _fsm.Update();
+            if (!IsStarted)
+            {
+                return;
+            }
 
+            _fsm.Update();
+            RaiseDebug();
+        }
+
+        [System.Diagnostics.Conditional(conditionString: "DEBUG")]
+        private void RaiseDebug()
+        {
             if (_debug)
             {
                 _debugChannel.RaiseEvent("ant",
@@ -121,7 +133,20 @@ namespace Core.Units
 
         private void FixedUpdate()
         {
+            if (!IsStarted)
+                return;
+
+            Debug.Log($"Ant fixed update {gameObject.name}", this);
+
             Blackboard.Saciety -= Blackboard.SacietyLoss * Time.fixedDeltaTime;
+
+            if (IsCarrying(Item.Leaf))
+            {
+                ChemicalGrid.Drop(Position, Chemical.FoodPheromone, 22.5f * Time.fixedDeltaTime);
+            }
+
+            ChemicalGrid.Drop(Position, Chemical.PresencePheromone, 10f * Time.fixedDeltaTime);
+
             _fsm.FixedUpdate();
         }
 
@@ -131,14 +156,19 @@ namespace Core.Units
             _boxCollider = GetComponent<BoxCollider2D>();
             _healthComponent.Attacked += Attacked_EventHandler;
             _tilemapCollision = GetComponent<AntTilemapCollision>();
+            _agent = GetComponent<AntAgent>();
 
             Blackboard = GetComponent<AntBlackboard>();
 
             OnStarting += AntOnStarting;
+
+            Debug.LogWarning($"Ant OnInit", this);
         }
 
         private void AntOnStarting(Actor sender)
         {
+            Debug.Log($"Ant started {gameObject.name}", this);
+
             _movementController.Setup(MovementSpeed);
 
             _fsm = new(new()
@@ -151,8 +181,6 @@ namespace Core.Units
             PathService = ServiceLocatorUtilities.GetServiceAssert<IPathService>();
             ChemicalGrid = ServiceLocatorUtilities.GetServiceAssert<IChemicalGridService>();
             InteractionService = ServiceLocatorUtilities.GetServiceAssert<IInteractionService>();
-
-            _agent.Setup(this);
 
             TransferState(AntState.Moving, null, null);
         }

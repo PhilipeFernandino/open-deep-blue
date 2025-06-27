@@ -80,6 +80,7 @@ namespace Core.Level
             RaiseDebug();
         }
 
+        [System.Diagnostics.Conditional(conditionString: "DEBUG")]
         private void RaiseDebug()
         {
             if (!_debug)
@@ -135,7 +136,6 @@ namespace Core.Level
 
         public void DamageTileAt(int x, int y, float damage)
         {
-            Debug.Log($"Damage tile: {damage} at {x}, {y}", this);
             if (TryGetTileAt(x, y, out var tile))
             {
                 var tileDef = _tilesSettings.GetDefinition(tile.TileType);

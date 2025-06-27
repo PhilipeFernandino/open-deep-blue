@@ -12,7 +12,7 @@ namespace Core.Map
 
 
 
-    [ProjectSettings("Game Settings/Map")]
+    [ProjectSettings("Core/Map")]
     public class TilesSettings : ScriptableSettings
     {
         [field: SerializeField] public TileBaseMappingSO TileToTileBase { get; private set; }

@@ -15,7 +15,7 @@ namespace Core.HoldableSystem
         [field: SerializeField] public SerializableInterface<IHoldable> Holdable { get; private set; }
     }
 
-    [ProjectSettings("Game Settings")]
+    [ProjectSettings("Core")]
     public class HoldableDatabase : ScriptableSettings
     {
         [SerializeField] private List<HoldableItem> _holdables = new();

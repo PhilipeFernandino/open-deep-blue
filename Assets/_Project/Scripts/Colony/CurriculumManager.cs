@@ -4,7 +4,6 @@ using Coimbra.Services.Events;
 using Core.Colony.Lessons;
 using Core.Debugger;
 using Core.Level;
-using Core.Map;
 using Core.Train;
 using Core.Util;
 using NaughtyAttributes;
@@ -23,7 +22,7 @@ namespace Core.Colony
     }
 
     [Serializable]
-    public class LessonConfigMap { public Lesson Lesson; public LessonConfigSO Config; }
+    public class LessonConfigMap { public Lesson Lesson; [Expandable] public LessonConfigSO Config; }
 
     public class CurriculumManager : Actor, ICurriculumService
     {
@@ -37,6 +36,7 @@ namespace Core.Colony
         private int _currentLessonIndex = -1;
 
         public event Action EnvironmentResetted;
+        public event Action EnvironmentSetup;
 
         public int CurrentLessonIndex => _currentLessonIndex;
         public Lesson CurrentLesson => (Lesson)_currentLessonIndex;
@@ -84,6 +84,8 @@ namespace Core.Colony
             ColonyEvent.AddListener(ColonyEventHandler);
 
             Academy.Instance.OnEnvironmentReset += OnAcademyEnvironmentReset;
+
+            EnvironmentSetup?.Invoke();
         }
 
         protected override void OnDestroyed()
@@ -118,6 +120,12 @@ namespace Core.Colony
 
         private void Update()
         {
+            RaiseDebug();
+        }
+
+        [System.Diagnostics.Conditional(conditionString: "DEBUG")]
+        private void RaiseDebug()
+        {
             if (!_debug)
                 return;
 
@@ -132,11 +140,9 @@ namespace Core.Colony
 
         private void AntEventHandler(ref EventContext context, in AntEvent e)
         {
-            Debug.Log($"AntEventHandler", this);
-
             switch (e.AntEventType)
             {
-                case AntEventType.EpisodeBegin:
+                case AntEventType.Setup:
                     e.Ant.Agent.SpawnPointRequested += AgentSpawnPointRequestedEventHandler;
                     break;
             }

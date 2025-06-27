@@ -1,6 +1,8 @@
-﻿using Coimbra.Services;
+﻿using Coimbra;
+using Coimbra.Services;
 using Core.Debugger;
 using Core.Map;
+using Core.Train;
 using Core.Util;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +18,8 @@ namespace Core.Level.Dynamic
         private readonly FungusDefinition _fungusDef;
 
         private readonly List<Vector2Int> _keysToUpdate = new();
+
+        private float _gatherCost;
 
         public object GetData(Vector2Int vector)
         {
@@ -40,10 +44,10 @@ namespace Core.Level.Dynamic
 
         public bool TryTakeFungusFood(Vector2Int position)
         {
-            if (_dataMap.TryGetValue(position, out FungusData data) && data.CurrentFoodStore >= 5f)
+            if (_dataMap.TryGetValue(position, out FungusData data) && data.CurrentFoodStore >= _gatherCost)
             {
                 var modifiedData = data;
-                modifiedData.CurrentFoodStore -= 5f;
+                modifiedData.CurrentFoodStore -= _gatherCost;
                 _dataMap[position] = modifiedData;
                 return true;
             }
@@ -68,6 +72,7 @@ namespace Core.Level.Dynamic
 
             _gridService = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
             _chemicalService = ServiceLocatorUtilities.GetServiceAssert<IChemicalGridService>();
+            _gatherCost = ScriptableSettings.GetOrFind<ColonyEconomySettings>().FungusFeedAntsAmount;
 
             _fungusDef = (FungusDefinition)fungusDef;
 

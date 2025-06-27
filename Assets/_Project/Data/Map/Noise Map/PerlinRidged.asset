@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d10ebb47b5923d747aabdfa7ae6ef202, type: 3}
+  m_Name: PerlinRidged
+  m_EditorClassIdentifier: 
+  _invert: 0
+  _noiseType: 3
+  _frequency: 0.0655
+  _seed: 0
+  _colorization: 1
+  _stepValue: 0.446
+  _colorGradient:
+    serializedVersion: 2
+    key0: {r: 0.113229245, g: 0.113229245, b: 0.113229245, a: 1}
+    key1: {r: 1, g: 1, b: 1, a: 1}
+    key2: {r: 1, g: 1, b: 1, a: 1}
+    key3: {r: 1, g: 1, b: 1, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 1, g: 1, b: 1, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 65535
+    ctime3: 34310
+    ctime4: 55319
+    ctime5: 65535
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 65535
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_ColorSpace: 0
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 2
+  _cellularDistanceFunction: 0
+  _cellularReturnType: 0
+  _cellularJitter: 1
+  _fractalType: 0
+  _fractalOctaves: 1
+  _fractalWeightedStrength: 0.798
+  _fractalLacunarity: 3.18
+  _fractalGain: 1
+  _fractalPingPongStrength: 2
+  _applyDomainWarp: 0
+  _domainWarpType: 0
+  _domainWarpAmplitude: 50
+  _domainWarpFrequency: 0.1
+  _domainWarpFractalType: 1
+  _domainWarpFractalOctaves: 2
+  _domainWarpFractalLacunarity: 2
+  _domainWarpFractalGain: 0.5

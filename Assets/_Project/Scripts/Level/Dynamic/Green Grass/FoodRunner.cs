@@ -1,6 +1,8 @@
-﻿using Coimbra.Services;
+﻿using Coimbra;
+using Coimbra.Services;
 using Core.Debugger;
 using Core.Map;
+using Core.Train;
 using Core.Util;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +18,8 @@ namespace Core.Level.Dynamic
         private readonly FoodDefinition _foodDef;
 
         private readonly List<Vector2Int> _keysToUpdate = new();
+
+        private float _eatCost;
 
         public object GetData(Vector2Int vector)
         {
@@ -37,7 +41,7 @@ namespace Core.Level.Dynamic
             if (_dataMap.TryGetValue(position, out FoodData data))
             {
                 var modifiedData = data;
-                modifiedData.CurrentFoodStore -= 1f;
+                modifiedData.CurrentFoodStore -= _eatCost;
                 _dataMap[position] = modifiedData;
                 if (data.CurrentFoodStore <= 0)
                 {
@@ -54,6 +58,8 @@ namespace Core.Level.Dynamic
 
             _gridService = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
             _chemicalService = ServiceLocatorUtilities.GetServiceAssert<IChemicalGridService>();
+
+            _eatCost = ScriptableSettings.GetOrFind<ColonyEconomySettings>().LeafFeedFungusAmount;
 
             _foodDef = (FoodDefinition)foodDef;
 

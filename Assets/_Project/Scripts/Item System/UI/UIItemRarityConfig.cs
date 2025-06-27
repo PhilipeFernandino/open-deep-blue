@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Core.ItemSystem
 {
-    [ProjectSettings("Game Settings")]
+    [ProjectSettings("Core")]
     public class UIItemRarityConfig : ScriptableSettings
     {
         [SerializeField] private List<ItemRarityColorWrapper> _itemRarityColor;

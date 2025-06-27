@@ -1,4 +1,5 @@
-﻿using Core.Level;
+﻿using Coimbra;
+using Core.Level;
 using Core.Level.Dynamic;
 using Core.Train;
 using Core.Units;
@@ -15,6 +16,7 @@ namespace Core.Interaction
         public override void Execute(MonoBehaviour interactor, Vector2 worldPosition)
         {
             var fungusService = ServiceLocatorUtilities.GetServiceAssert<IFungusService>();
+            var colonyEconomySettings = ScriptableSettings.GetOrFind<ColonyEconomySettings>();
 
 
             if (interactor is Ant ant)
@@ -23,7 +25,7 @@ namespace Core.Interaction
                 {
                     ModifyFungusData modification = (ref FungusData fungusData) =>
                     {
-                        fungusData.CurrentSaciation += 10f;
+                        fungusData.CurrentSaciation += colonyEconomySettings.LeafFeedFungusAmount;
                     };
 
                     bool success = fungusService.TryApplyModification(worldPosition.RoundToInt(), modification);

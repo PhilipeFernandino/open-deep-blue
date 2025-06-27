@@ -1,4 +1,5 @@
-﻿using Core.Level;
+﻿using Coimbra;
+using Core.Level;
 using Core.Level.Dynamic;
 using Core.Train;
 using Core.Units;
@@ -13,12 +14,13 @@ namespace Core.Interaction
         public override void Execute(MonoBehaviour interactor, Vector2 worldPosition)
         {
             var queenService = ServiceLocatorUtilities.GetServiceAssert<IQueenService>();
+            var colonyEconomySettings = ScriptableSettings.GetOrFind<ColonyEconomySettings>();
 
             if (interactor is Ant ant)
             {
                 if (ant.Carrying == ItemSystem.Item.Fungus)
                 {
-                    bool success = queenService.TryFeedTheQueen(worldPosition.RoundToInt(), 5f);
+                    bool success = queenService.TryFeedTheQueen(worldPosition.RoundToInt(), colonyEconomySettings.FungusFeedAntsAmount);
 
                     if (success)
                     {

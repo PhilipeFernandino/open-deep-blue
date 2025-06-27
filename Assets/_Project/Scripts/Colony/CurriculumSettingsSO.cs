@@ -1,5 +1,6 @@
 ﻿using Coimbra;
 using Core.Colony;
+using NaughtyAttributes;
 using System.Collections.Generic;
 using UnityEngine;
 

@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d07fa02e85f517b479c60ee2a3f6c125, type: 3}
+  m_Name: Sword  Item Data
+  m_EditorClassIdentifier: 
+  <Name>k__BackingField: Sword
+  <Description>k__BackingField: A shovel
+  <Rarity>k__BackingField: 1
+  <Sprite>k__BackingField: {fileID: 21300000, guid: 11f26ae8d61d3db4cb6a987ecdcbdaa0, type: 3}
+  <MaxStack>k__BackingField: 5
+  <CanSell>k__BackingField: 1
+  <SellPrice>k__BackingField: 150
+  <HoldableItem>k__BackingField: {fileID: 0}
