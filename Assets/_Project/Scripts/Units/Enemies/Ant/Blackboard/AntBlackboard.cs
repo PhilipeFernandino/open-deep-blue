@@ -43,7 +43,11 @@ namespace Core.Units
         {
             set
             {
-                _saciety = Mathf.Clamp(value, 0, MaxSaciety);
+                _saciety = Mathf.Clamp(value, 0f, MaxSaciety);
+                if (_saciety == 0)
+                {
+                    SacietyZeroed?.Invoke();
+                }
             }
 
             get => _saciety;
@@ -53,7 +57,11 @@ namespace Core.Units
         {
             set
             {
-                _energy = Mathf.Clamp(value, 0, MaxEnergy);
+                _energy = Mathf.Clamp(value, 0f, MaxEnergy);
+                if (_energy == 0)
+                {
+                    EnergyZeroed?.Invoke();
+                }
             }
 
             get => _energy;
@@ -76,12 +84,16 @@ namespace Core.Units
 
         public bool IsCarrying(Item item) => CarryingItem == item;
         public void GiveItem(Item item) => CarryingItem = item;
-
-        private void Awake()
+        public void ResetState()
         {
             Saciety = _antDefinition.MaxSaciety;
             Energy = _antDefinition.MaxEnergy;
             _carryingItem = Item.None;
+        }
+
+        private void Awake()
+        {
+            ResetState();
         }
 
     }

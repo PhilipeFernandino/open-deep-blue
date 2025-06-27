@@ -12,10 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4919c38bfc50a764e848172cba6584e8, type: 3}
   m_Name: Ant Definition
   m_EditorClassIdentifier: 
-  MaxSaciety: 100
   AttackDistance: 1
   AttackDamage: 5
   AggroDistance: 1
   DigDamage: 5
   MovementSpeed: 2.5
+  MaxSaciety: 100
   SacietyLoss: 0.2
+  EnergyLoss: 0.1
+  MaxEnergy: 100
+  EnergyRegenerationThreshold: 0.3
+  EnergyRegenerationRate: 0.6
+  DropFoodPheromone: 22.5
+  DropPresencePheromone: 10
+  DropThreatPheromone: 25
+  DigEnergyCost: 10
+  GatherLeafCost: 5
+  CarryLeafCost: 1

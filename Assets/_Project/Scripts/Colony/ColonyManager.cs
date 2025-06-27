@@ -25,6 +25,7 @@ namespace Core.Train
 
         private IObjectPool<Ant> _antPool;
 
+        public void EndGroupEpisode() => _agentGroup.EndGroupEpisode();
         public void AddGroupReward(float value) => _agentGroup.AddGroupReward(value);
         public void RegisterAnt(AntAgent agent)
         {
@@ -43,8 +44,14 @@ namespace Core.Train
 
             _antPool = new ObjectPool<Ant>(
                 createFunc: () => Instantiate(_antPrefab),
-                actionOnGet: (ant) => ant.gameObject.SetActive(true),
-                actionOnRelease: (ant) => ant.gameObject.SetActive(false),
+                actionOnGet: (ant) =>
+                {
+                    ant.gameObject.SetActive(true);
+                },
+                actionOnRelease: (ant) =>
+                {
+                    ant.gameObject.SetActive(false);
+                },
                 actionOnDestroy: (ant) => ant.gameObject.Dispose(true),
                 collectionCheck: false,
                 defaultCapacity: _initialAntCount,
@@ -85,6 +92,7 @@ namespace Core.Train
                 case AntEventType.Death:
                     UnregisterAnt(e.Ant.Agent);
                     DespawnAnt(e.Ant);
+                    SpawnAnt();
                     break;
             }
         }
@@ -103,6 +111,7 @@ namespace Core.Train
     [DynamicService]
     public interface IColonyService : IService
     {
+        public void EndGroupEpisode();
         public void AddGroupReward(float value);
         public void RegisterAnt(AntAgent agent);
         public void UnregisterAnt(AntAgent agent);

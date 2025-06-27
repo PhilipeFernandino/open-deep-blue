@@ -32,8 +32,10 @@ namespace Core.Colony
         private CurriculumSettingsSO _settings;
 
         private IGridService _gridService;
+        private IColonyService _colonyService;
 
         private int _currentLessonIndex = -1;
+        private int _roundStepCounter = 0;
 
         public event Action EnvironmentResetted;
         public event Action EnvironmentSetup;
@@ -59,6 +61,7 @@ namespace Core.Colony
 
         private void CurriculumManagerOnStarting(Actor sender)
         {
+            _colonyService = ServiceLocator.Get<IColonyService>();
             _settings = ScriptableSettings.GetOrFind<CurriculumSettingsSO>();
             _gridService = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
 
@@ -118,6 +121,28 @@ namespace Core.Colony
             CurrentLessonHandler.OnEnter();
         }
 
+        private void FixedUpdate()
+        {
+            if (!IsStarted)
+                return;
+
+            _roundStepCounter++;
+
+            int currentLessonMaxSteps = 500_000;
+
+            if (currentLessonMaxSteps > 0 && _roundStepCounter >= currentLessonMaxSteps)
+            {
+                ResetRound();
+            }
+        }
+
+        private void ResetRound()
+        {
+            EnvironmentResetted?.Invoke();
+            _roundStepCounter = 0;
+            _colonyService.EndGroupEpisode();
+        }
+
         private void Update()
         {
             RaiseDebug();
@@ -168,7 +193,6 @@ namespace Core.Colony
         private Vector2 AgentSpawnPointRequestedEventHandler()
         {
             var pos = CurrentLessonHandler.GetSpawnPoint();
-            Debug.Log($"Ant requested spawn point: {pos}");
             return pos;
         }
 

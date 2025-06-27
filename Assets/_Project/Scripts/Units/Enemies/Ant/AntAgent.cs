@@ -62,20 +62,16 @@ namespace Core.Units
             {
                 Debug.LogWarning($"{GetType()} - No model assigned");
             }
-
-            Debug.LogWarning($"Ant agent awake", this);
         }
 
         protected void Start()
         {
-            Debug.LogWarning($"Ant agent start", this);
-
             new AntEvent(AntEventType.Setup, _ant).Invoke(_ant);
         }
 
         public override void OnEpisodeBegin()
         {
-            Debug.Log("OnEpisodeBegin", this);
+            _ant.ResetState();
 
             _blackboard.CarryingItem = Item.None;
             _blackboard.MovingDirection = Vector2.zero;
@@ -90,8 +86,6 @@ namespace Core.Units
                 sensor.AddObservation(new float[17]);
                 return;
             }
-
-            Debug.Log("CollectObservations", this);
 
             sensor.AddObservation(_blackboard.MovingDirection.normalized);
             sensor.AddOneHotObservation((int)_blackboard.CarryingItem, (int)Item.Fungus + 1);

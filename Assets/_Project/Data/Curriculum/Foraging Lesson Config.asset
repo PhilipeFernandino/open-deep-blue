@@ -18,4 +18,6 @@ MonoBehaviour:
     Score: 0.5
   - EventType: 10
     Score: -0.2
+  _shouldRestart: 
   _tilemap: {fileID: 11400000, guid: 25cdf6d7115278843afd858bb55d2f85, type: 2}
+  _maxStepsPerRound: 1000000

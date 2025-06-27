@@ -165,6 +165,11 @@ namespace Core.Units
             _fsm.FixedUpdate();
         }
 
+        public void ResetState()
+        {
+            Blackboard.ResetState();
+        }
+
         protected override void OnInitialize()
         {
             _movementController = GetComponent<Movement2D>();
@@ -182,7 +187,6 @@ namespace Core.Units
         private void SacietyZeroedEventHandler()
         {
             new AntEvent(AntEventType.Death, this).Invoke(this);
-            gameObject.SetActive(false);
         }
 
         private void AntOnStarting(Actor sender)
