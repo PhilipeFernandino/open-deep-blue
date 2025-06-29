@@ -29,12 +29,12 @@ namespace Core.Debugger
 
                 foreach (var antEventReward in curriculumDebugData.LessonConfig.AntEvents)
                 {
-                    _stringBuilder.AppendLine($"{antEventReward.EventType}: {antEventReward.Score}");
+                    _stringBuilder.AppendLine($"{antEventReward.EventType}: {antEventReward.Reward}");
                 }
 
                 foreach (var colonyEventReward in curriculumDebugData.LessonConfig.ColonyEvents)
                 {
-                    _stringBuilder.AppendLine($"{colonyEventReward.EventType}: {colonyEventReward.Score}");
+                    _stringBuilder.AppendLine($"{colonyEventReward.EventType}: {colonyEventReward.Reward}");
                 }
 
                 DisplayText = _stringBuilder.ToString();

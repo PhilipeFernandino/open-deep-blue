@@ -31,9 +31,9 @@ public class ChemicalGridSensor : ISensor
         _name = name;
 
         _observationSpec = ObservationSpec.Visual(
+            _chemicalsToObserve.Count,
             _chunkSize,
-            _chunkSize,
-            _chemicalsToObserve.Count
+            _chunkSize
         );
     }
 
@@ -75,7 +75,7 @@ public class ChemicalGridSensor : ISensor
                     int worldY = antY + (y - halfChunk);
                     float value = _chemicalService.Get(worldX, worldY, chemicalType) / 255f;
 
-                    writer[y, x, c] = value;
+                    writer[c, y, x] = value;
                 }
             }
         }

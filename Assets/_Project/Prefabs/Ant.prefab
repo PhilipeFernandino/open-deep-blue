@@ -112,13 +112,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1699614262673482102}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.408, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: 0.11, y: -0.01, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 313926926429564360}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
 --- !u!114 &1684633251558755133
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -142,7 +142,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4096
   m_ObservationStacks: 1
-  m_AlternatingRayOrder: 1
+  m_AlternatingRayOrder: 0
   m_UseBatchedRaycasts: 0
   rayHitColor: {r: 1, g: 0, b: 0, a: 1}
   rayMissColor: {r: 1, g: 1, b: 1, a: 1}
@@ -386,7 +386,7 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 20000
+  MaxStep: 0
   _inputHandler: {fileID: 8654062749191247066}
   _startingArea: {fileID: 0}
   _interactableTileTypes: 790515050100
@@ -522,8 +522,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c08fff42960c0b14ea5eda50d701fcc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _chunkSize: 9
-  _tilesToObserve: 6500150579050100
+  _chunkSize: 21
+  _tilesToObserve: 650015057905
   sensorName: TileGridSensor
 --- !u!1 &6920064295541619248
 GameObject:
@@ -569,8 +569,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c1742013ef3c2745ad8e5dfa3a7296b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _chunkSize: 9
-  _chemicalsToObserve: 000000000300000004000000050000000200000006000000
+  _chunkSize: 15
+  _chemicalsToObserve: 00000000030000000400000005000000
   sensorName: ChemicalGridSensor
 --- !u!1001 &8909867542022313629
 PrefabInstance:

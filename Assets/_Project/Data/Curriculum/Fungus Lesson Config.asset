@@ -18,10 +18,9 @@ MonoBehaviour:
   _antEvents:
   - EventType: 4
     Score: 0.5
-  - EventType: 10
-    Score: -0.2
   - EventType: 6
     Score: 0.1
   _shouldRestart: 
+  _penalizeStep: 1
   _tilemap: {fileID: 11400000, guid: dfbd67b2be7ca7446b6ce7e76ac6d48c, type: 2}
   _maxStepsPerRound: 2000000

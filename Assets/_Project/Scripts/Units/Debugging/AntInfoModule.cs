@@ -49,6 +49,7 @@ namespace Core.Debugger
                 _stringBuilder.AppendLine($"Position: {antData.Position}");
                 _stringBuilder.AppendLine($"Carrying Item: {antData.CarryingItem}");
                 _stringBuilder.AppendLine($"Facing Tile: {antData.FacingTile}");
+                _stringBuilder.AppendLine($"Cummulative Reward: {antData.CumulativeReward}");
                 _stringBuilder.AppendLine($"Saciety: {bothAndPercentage(antData.Saciety, antData.MaxSaciety)}");
                 _stringBuilder.AppendLine($"Health: {bothAndPercentage(antData.Health, antData.MaxHealth)}");
                 _stringBuilder.AppendLine($"Energy: {bothAndPercentage(antData.Energy, antData.MaxEnergy)}");

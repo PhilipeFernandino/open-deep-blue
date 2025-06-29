@@ -33,10 +33,10 @@ namespace Core.Units
         private FSM<AntState> _fsm;
         private Movement2D _movementController;
         private BoxCollider2D _boxCollider;
+        private bool _isDead;
 
         private AntTilemapCollision _tilemapCollision;
         private ColonyEconomySettings _economySettings;
-
         internal AntBlackboard Blackboard { get; private set; }
 
         internal AntAgent Agent => _agent;
@@ -101,7 +101,7 @@ namespace Core.Units
 
         private void Update()
         {
-            if (!IsStarted)
+            if (!IsStarted || _isDead)
             {
                 return;
             }
@@ -110,7 +110,7 @@ namespace Core.Units
             RaiseDebug();
         }
 
-        [System.Diagnostics.Conditional(conditionString: "DEBUG"), System.Diagnostics.Conditional(conditionString: "UNITY_EDITOR")]
+        [System.Diagnostics.Conditional(conditionString: "RAISE_DEBUG"), System.Diagnostics.Conditional(conditionString: "UNITY_EDITOR")]
         private void RaiseDebug()
         {
             if (_debug)
@@ -140,7 +140,7 @@ namespace Core.Units
 
         private void FixedUpdate()
         {
-            if (!IsStarted)
+            if (!IsStarted || _isDead)
                 return;
 
             Blackboard.Saciety -= Blackboard.SacietyLoss * Time.fixedDeltaTime;
@@ -167,6 +167,7 @@ namespace Core.Units
 
         public void ResetState()
         {
+            _isDead = false;
             Blackboard.ResetState();
         }
 
@@ -187,6 +188,7 @@ namespace Core.Units
         private void SacietyZeroedEventHandler()
         {
             new AntEvent(AntEventType.Death, this).Invoke(this);
+            _isDead = true;
         }
 
         private void AntOnStarting(Actor sender)

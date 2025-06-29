@@ -3,6 +3,8 @@ using Coimbra.Services;
 using Coimbra.Services.Events;
 using Core.Colony;
 using Core.Units;
+using Cysharp.Threading.Tasks;
+using System;
 using System.Collections.Generic;
 using Unity.MLAgents;
 using UnityEngine;
@@ -27,15 +29,19 @@ namespace Core.Train
 
         public void EndGroupEpisode() => _agentGroup.EndGroupEpisode();
         public void AddGroupReward(float value) => _agentGroup.AddGroupReward(value);
-        public void RegisterAnt(AntAgent agent)
+
+        private void RegisterAnt(AntAgent agent)
         {
             _agentGroup.RegisterAgent(agent);
             _ants.Add(agent);
+            Debug.Log($"Register ant: {agent.gameObject.name}", this);
         }
-        public void UnregisterAnt(AntAgent agent)
+
+        private void UnregisterAnt(AntAgent agent)
         {
             _agentGroup.UnregisterAgent(agent);
             _ants.Remove(agent);
+            Debug.Log($"Unregister ant: {agent.gameObject.name}", this);
         }
 
         protected override void OnInitialize()
@@ -43,17 +49,33 @@ namespace Core.Train
             ServiceLocator.Set<IColonyService>(this);
 
             _antPool = new ObjectPool<Ant>(
-                createFunc: () => Instantiate(_antPrefab),
+                createFunc: () =>
+                {
+                    var ant = Instantiate(_antPrefab);
+                    ant.Initialize();
+                    ant.Agent.SpawnPointRequested += AgentSpawnPointRequested;
+                    return ant;
+                },
                 actionOnGet: (ant) =>
                 {
                     ant.gameObject.SetActive(true);
+                    ant.gameObject.name = $"Ant {ant.gameObject.GetInstanceID()}";
+
+                    ant.ResetState();
+
+                    RegisterAnt(ant.Agent);
                 },
                 actionOnRelease: (ant) =>
                 {
                     ant.gameObject.SetActive(false);
+                    ant.Agent.EndEpisode();
+                    UnregisterAnt(ant.Agent);
                 },
-                actionOnDestroy: (ant) => ant.gameObject.Dispose(true),
-                collectionCheck: false,
+                actionOnDestroy: (ant) =>
+                {
+                    ant.gameObject.Dispose(true);
+                    ant.Agent.SpawnPointRequested -= AgentSpawnPointRequested;
+                },
                 defaultCapacity: _initialAntCount,
                 maxSize: _poolCapacity
             );
@@ -63,15 +85,25 @@ namespace Core.Train
             _curriculumManager.EnvironmentSetup += EnvironmentSetupEventHandler;
         }
 
+        private Vector2 AgentSpawnPointRequested()
+        {
+            var pos = _curriculumManager.CurrentLessonHandler.GetSpawnPoint();
+            return pos;
+        }
+
         public void SpawnAnt()
         {
-            Ant ant = _antPool.Get();
-            ant.Initialize();
+            _antPool.Get();
         }
 
         public void DespawnAnt(Ant ant)
         {
             _antPool.Release(ant);
+        }
+
+        public void EndAgentEpisode(Agent agent)
+        {
+            agent.EndEpisode();
         }
 
         private void EnvironmentSetupEventHandler()
@@ -86,16 +118,18 @@ namespace Core.Train
         {
             switch (e.AntEventType)
             {
-                case AntEventType.Setup:
-                    RegisterAnt(e.Ant.Agent);
-                    break;
                 case AntEventType.Death:
-                    UnregisterAnt(e.Ant.Agent);
-                    DespawnAnt(e.Ant);
-                    SpawnAnt();
+                    HandleDeath(e).Forget();
                     break;
             }
         }
+
+        private async UniTask HandleDeath(AntEvent e)
+        {
+            await UniTask.DelayFrame(1);
+            DespawnAnt(e.Ant);
+        }
+
 
         private void ColonyEventHandler(ref EventContext context, in ColonyEvent e)
         {
@@ -113,7 +147,6 @@ namespace Core.Train
     {
         public void EndGroupEpisode();
         public void AddGroupReward(float value);
-        public void RegisterAnt(AntAgent agent);
-        public void UnregisterAnt(AntAgent agent);
+        public void EndAgentEpisode(Agent agent);
     }
 }

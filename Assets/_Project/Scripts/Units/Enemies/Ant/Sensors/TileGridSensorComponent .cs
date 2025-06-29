@@ -28,6 +28,6 @@ public class TileGridSensorComponent : SensorComponent
                 _tilesToObserve,
                 sensorName
             )
-    };
+        };
     }
 }

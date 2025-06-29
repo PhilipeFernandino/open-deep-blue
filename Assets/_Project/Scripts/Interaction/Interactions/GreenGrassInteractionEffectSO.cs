@@ -14,7 +14,9 @@ namespace Core.Interaction
         {
             var foodService = ServiceLocatorUtilities.GetServiceAssert<IFoodService>();
 
-            if (interactor is Ant ant && foodService.TryEat(worldPosition.RoundToInt()))
+            if (interactor is Ant ant
+                && foodService.TryEat(worldPosition.RoundToInt())
+                && ant.IsCarrying(ItemSystem.Item.None))
             {
                 ant.GiveItem(ItemSystem.Item.Leaf);
                 new AntEvent(AntEventType.GatherLeaf, ant).Invoke(this);

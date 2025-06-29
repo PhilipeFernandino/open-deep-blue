@@ -47,7 +47,7 @@
         {
             if (e.AntEventType == AntEventType.Eat)
             {
-                e.Ant.Agent.EndEpisode();
+                EndAgentEpisodeNextFrame(e.Ant.Agent);
             }
         }
 

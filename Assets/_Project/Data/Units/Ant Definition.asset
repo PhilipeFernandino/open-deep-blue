@@ -18,7 +18,7 @@ MonoBehaviour:
   DigDamage: 5
   MovementSpeed: 2.5
   MaxSaciety: 100
-  SacietyLoss: 0.2
+  SacietyLoss: 2
   EnergyLoss: 0.1
   MaxEnergy: 100
   EnergyRegenerationThreshold: 0.3

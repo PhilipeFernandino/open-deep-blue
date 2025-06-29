@@ -14,6 +14,7 @@
         EpisodeEnd,
         Death,
         Setup,
-        EpisodeBegin
+        EpisodeBegin,
+        Reset,
     }
 }

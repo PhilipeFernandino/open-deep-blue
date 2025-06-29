@@ -17,8 +17,10 @@ namespace Core.Colony
     public enum Lesson
     {
         Foraging101 = 0,
-        Fungus = 1,
-        Queen = 2,
+        Foraging102 = 51,
+        Foraging103 = 52,
+        Fungus = 151,
+        Queen = 251
     }
 
     [Serializable]
@@ -35,7 +37,9 @@ namespace Core.Colony
         private IColonyService _colonyService;
 
         private int _currentLessonIndex = -1;
-        private int _roundStepCounter = 0;
+
+        private int _groupStepCounter = 0;
+        private int _environmentStepCounter = 0;
 
         public event Action EnvironmentResetted;
         public event Action EnvironmentSetup;
@@ -43,7 +47,7 @@ namespace Core.Colony
         public int CurrentLessonIndex => _currentLessonIndex;
         public Lesson CurrentLesson => (Lesson)_currentLessonIndex;
 
-        private LessonHandler CurrentLessonHandler => _lessonHandlers[CurrentLesson];
+        public LessonHandler CurrentLessonHandler => _lessonHandlers[CurrentLesson];
 
         private Dictionary<Lesson, LessonHandler> _lessonHandlers;
 
@@ -54,6 +58,8 @@ namespace Core.Colony
 
         protected override void OnInitialize()
         {
+            Debug.Log("CurriculumManager OnInitialize", this);
+
             ServiceLocator.Set<ICurriculumService>(this);
 
             OnStarting += CurriculumManagerOnStarting;
@@ -61,6 +67,8 @@ namespace Core.Colony
 
         private void CurriculumManagerOnStarting(Actor sender)
         {
+            Debug.Log("CurriculumManagerOnStarting", this);
+
             _colonyService = ServiceLocator.Get<IColonyService>();
             _settings = ScriptableSettings.GetOrFind<CurriculumSettingsSO>();
             _gridService = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
@@ -69,7 +77,15 @@ namespace Core.Colony
             {
                 {
                     Lesson.Foraging101,
-                    new Foraging101LessonHandler(_gridService, _settings.GetConfig(Lesson.Foraging101))
+                    new ForagingLessonHandler(_gridService, _settings.GetConfig(Lesson.Foraging101))
+                },
+                {
+                    Lesson.Foraging102,
+                    new ForagingLessonHandler(_gridService, _settings.GetConfig(Lesson.Foraging102))
+                },
+                {
+                    Lesson.Foraging103,
+                    new ForagingLessonHandler(_gridService, _settings.GetConfig(Lesson.Foraging103))
                 },
                 {
                     Lesson.Fungus,
@@ -126,21 +142,35 @@ namespace Core.Colony
             if (!IsStarted)
                 return;
 
-            _roundStepCounter++;
+            _groupStepCounter++;
+            _environmentStepCounter++;
 
-            int currentLessonMaxSteps = 500_000;
+            int currentLessonMaxSteps = GetCurrentConfig().MaxStepsPerGroupEpisde;
+            int maxStepPerEnvironmentReset = GetCurrentConfig().MaxStepPerEnvironmentReset;
 
-            if (currentLessonMaxSteps > 0 && _roundStepCounter >= currentLessonMaxSteps)
+            if (currentLessonMaxSteps > 0 && _groupStepCounter >= currentLessonMaxSteps)
             {
                 ResetRound();
             }
+
+            if (maxStepPerEnvironmentReset > 0 && _environmentStepCounter >= maxStepPerEnvironmentReset)
+            {
+                ResetEnvironment();
+            }
+        }
+
+        private void ResetEnvironment()
+        {
+            EnvironmentResetted?.Invoke();
+            _environmentStepCounter = 0;
+            SetupLesson(CurrentLessonIndex);
         }
 
         private void ResetRound()
         {
-            EnvironmentResetted?.Invoke();
-            _roundStepCounter = 0;
+            _groupStepCounter = 0;
             _colonyService.EndGroupEpisode();
+            ResetEnvironment();
         }
 
         private void Update()
@@ -148,7 +178,7 @@ namespace Core.Colony
             RaiseDebug();
         }
 
-        [System.Diagnostics.Conditional(conditionString: "DEBUG"), System.Diagnostics.Conditional(conditionString: "UNITY_EDITOR")]
+        [System.Diagnostics.Conditional(conditionString: "RAISE_DEBUG"), System.Diagnostics.Conditional(conditionString: "UNITY_EDITOR")]
         private void RaiseDebug()
         {
             if (!_debug)
@@ -165,13 +195,6 @@ namespace Core.Colony
 
         private void AntEventHandler(ref EventContext context, in AntEvent e)
         {
-            switch (e.AntEventType)
-            {
-                case AntEventType.Setup:
-                    e.Ant.Agent.SpawnPointRequested += AgentSpawnPointRequestedEventHandler;
-                    break;
-            }
-
             if (_currentLessonIndex == -1)
             {
                 return;
@@ -188,19 +211,6 @@ namespace Core.Colony
             }
 
             CurrentLessonHandler.HandleColonyEvent(e);
-        }
-
-        private Vector2 AgentSpawnPointRequestedEventHandler()
-        {
-            var pos = CurrentLessonHandler.GetSpawnPoint();
-            return pos;
-        }
-
-        [Button]
-        private void NextLesson()
-        {
-            _currentLessonIndex = (_currentLessonIndex + 1) % 3;
-            SetupLesson(_currentLessonIndex);
         }
     }
 

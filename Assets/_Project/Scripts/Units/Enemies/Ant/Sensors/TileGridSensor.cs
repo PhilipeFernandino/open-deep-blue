@@ -1,6 +1,7 @@
 using Core.Level;
 using Core.Map;
 using System.Collections.Generic;
+using System.Text;
 using Unity.MLAgents.Sensors;
 using UnityEngine;
 
@@ -35,9 +36,9 @@ public class TileGridSensor : ISensor
         _name = name;
 
         _observationSpec = ObservationSpec.Visual(
+            _tilesToObserve.Count + 1,
             _chunkSize,
-            _chunkSize,
-            _tilesToObserve.Count + 1
+            _chunkSize
         );
     }
 
@@ -60,7 +61,6 @@ public class TileGridSensor : ISensor
                 writer[i] = 0f;
             }
 
-            Debug.LogWarning($"{GetType()} - {nameof(_gridService)} is null");
             return GetObservationSize();
         }
 
@@ -80,7 +80,8 @@ public class TileGridSensor : ISensor
 
                     var tile = _gridService.Get(worldX, worldY);
                     float value = (tile.TileType == tileType) ? 1.0f : 0.0f;
-                    writer[y, x, t] = value;
+                    writer[t, y, x] = value;
+
                 }
             }
         }
@@ -95,8 +96,7 @@ public class TileGridSensor : ISensor
                 int worldY = antY + (y - halfChunk);
 
                 float value = _obstacleService.HasObstacle(worldX, worldY) ? 1.0f : 0.0f;
-                writer[y, x, obstacleChannel] = value;
-
+                writer[obstacleChannel, y, x] = value;
             }
         }
 

@@ -1,9 +1,8 @@
-﻿using Core.ItemSystem;
+﻿using Core.Colony;
+using Core.ItemSystem;
 using Core.Level;
 using Core.Map;
-using Core.Train;
 using Core.Util;
-using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using Unity.MLAgents;
@@ -23,6 +22,7 @@ namespace Core.Units
         private DecisionRequester _decisionRequester;
         private AntBlackboard _blackboard;
         private Ant _ant;
+        private float _existentialPenalty;
 
         public bool CanEat => _blackboard.IsCarrying(Item.Fungus);
         public bool CanFeedFungus => _blackboard.IsCarrying(Item.Leaf) && _ant.IsFacing(Tile.Fungus);
@@ -45,6 +45,15 @@ namespace Core.Units
             GatherFungus,
         }
 
+        public enum MoveDirection
+        {
+            None,
+            Up,
+            Left,
+            Down,
+            Right
+        }
+
         protected override void Awake()
         {
             base.Awake();
@@ -64,10 +73,6 @@ namespace Core.Units
             }
         }
 
-        protected void Start()
-        {
-            new AntEvent(AntEventType.Setup, _ant).Invoke(_ant);
-        }
 
         public override void OnEpisodeBegin()
         {
@@ -81,6 +86,8 @@ namespace Core.Units
 
         public override void CollectObservations(VectorSensor sensor)
         {
+            _existentialPenalty = ServiceLocatorUtilities.GetServiceAssert<ICurriculumService>().GetCurrentConfig().AgentExistentialPenalty;
+
             if (!_ant.IsStarted)
             {
                 sensor.AddObservation(new float[17]);
@@ -147,10 +154,26 @@ namespace Core.Units
             if (!_ant.IsStarted)
                 return;
 
-            float moveX = actions.ContinuousActions[0];
-            float moveY = actions.ContinuousActions[1];
+            var moveAction = (MoveDirection)actions.DiscreteActions[1];
 
-            _blackboard.MovingDirection = new Vector2(moveX, moveY);
+            Vector2 targetDirection = Vector2.zero;
+            switch (moveAction)
+            {
+                case MoveDirection.Up:
+                    targetDirection = Vector2.up;
+                    break;
+                case MoveDirection.Right:
+                    targetDirection = Vector2.right;
+                    break;
+                case MoveDirection.Down:
+                    targetDirection = Vector2.down;
+                    break;
+                case MoveDirection.Left:
+                    targetDirection = Vector2.left;
+                    break;
+            }
+
+            _blackboard.MovingDirection = targetDirection;
 
             var chosenAction = (AntAction)actions.DiscreteActions[0];
 
@@ -179,11 +202,29 @@ namespace Core.Units
             if (!_ant.IsStarted)
                 return;
 
-            var continuousActions = actionsOut.ContinuousActions;
-            continuousActions[0] = _inputHandler.MoveInput.x;
-            continuousActions[1] = _inputHandler.MoveInput.y;
-
             var discreteActions = actionsOut.DiscreteActions;
+
+            Vector2 moveInput = _inputHandler.MoveInput;
+            MoveDirection moveAction = MoveDirection.None;
+
+            if (moveInput.y > 0.5f)
+            {
+                moveAction = MoveDirection.Up;
+            }
+            else if (moveInput.y < -0.5f)
+            {
+                moveAction = MoveDirection.Down;
+            }
+            else if (moveInput.x > 0.5f)
+            {
+                moveAction = MoveDirection.Right;
+            }
+            else if (moveInput.x < -0.5f)
+            {
+                moveAction = MoveDirection.Left;
+            }
+
+            discreteActions[1] = (int)moveAction;
 
             AntAction chosenAction = AntAction.None;
 
@@ -225,8 +266,8 @@ namespace Core.Units
         {
             if (!_ant.IsStarted)
                 return;
-
             _blackboard.CumulativeReward = GetCumulativeReward();
+            AddReward(_existentialPenalty);
         }
     }
 }
