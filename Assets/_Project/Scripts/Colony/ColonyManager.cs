@@ -2,10 +2,13 @@
 using Coimbra.Services;
 using Coimbra.Services.Events;
 using Core.Colony;
+using Core.Debugger;
 using Core.Units;
 using Cysharp.Threading.Tasks;
+using Google.Protobuf.WellKnownTypes;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.MLAgents;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -22,31 +25,57 @@ namespace Core.Train
         [Header("Dependencies")]
         [SerializeField] private CurriculumManager _curriculumManager;
 
+        [Header("Debug")]
+        [SerializeField] private bool _debug;
+        [SerializeField] private DebugChannelSO _debugChannel;
+
         private SimpleMultiAgentGroup _agentGroup = new();
-        private HashSet<AntAgent> _ants = new();
+        private HashSet<Ant> _ants = new();
 
         private IObjectPool<Ant> _antPool;
 
-        public void EndGroupEpisode() => _agentGroup.EndGroupEpisode();
-        public void AddGroupReward(float value) => _agentGroup.AddGroupReward(value);
+        private float _groupReward = 0;
+        private float _addedGroupReward = 0;
 
-        private void RegisterAnt(AntAgent agent)
+        public void EndGroupEpisode()
         {
-            _agentGroup.RegisterAgent(agent);
-            _ants.Add(agent);
-            Debug.Log($"Register ant: {agent.gameObject.name}", this);
+            Debug.Log($"End group episode with group reward: {_groupReward}", this);
+
+            _groupReward = 0;
+
+            foreach (var ant in _ants.ToList())
+            {
+                DespawnAnt(ant);
+            }
+
+            _agentGroup.EndGroupEpisode();
         }
 
-        private void UnregisterAnt(AntAgent agent)
+        public void AddGroupReward(float value)
         {
-            _agentGroup.UnregisterAgent(agent);
-            _ants.Remove(agent);
-            Debug.Log($"Unregister ant: {agent.gameObject.name}", this);
+            _groupReward += value;
+            _addedGroupReward = value;
+            _agentGroup.AddGroupReward(value);
+        }
+
+        private void RegisterAnt(Ant ant)
+        {
+            _agentGroup.RegisterAgent(ant.Agent);
+            _ants.Add(ant);
+            Debug.Log($"Register ant: {ant.gameObject.name}", this);
+        }
+
+        private void UnregisterAnt(Ant ant)
+        {
+            _agentGroup.UnregisterAgent(ant.Agent);
+            _ants.Remove(ant);
+            Debug.Log($"Unregister ant: {ant.gameObject.name}", this);
         }
 
         protected override void OnInitialize()
         {
             ServiceLocator.Set<IColonyService>(this);
+            Debug.Log($"On Init");
 
             _antPool = new ObjectPool<Ant>(
                 createFunc: () =>
@@ -63,13 +92,13 @@ namespace Core.Train
 
                     ant.ResetState();
 
-                    RegisterAnt(ant.Agent);
+                    RegisterAnt(ant);
                 },
                 actionOnRelease: (ant) =>
                 {
                     ant.gameObject.SetActive(false);
                     ant.Agent.EndEpisode();
-                    UnregisterAnt(ant.Agent);
+                    UnregisterAnt(ant);
                 },
                 actionOnDestroy: (ant) =>
                 {
@@ -82,7 +111,27 @@ namespace Core.Train
 
             AntEvent.AddListener(AntEventHandler);
             ColonyEvent.AddListener(ColonyEventHandler);
-            _curriculumManager.EnvironmentSetup += EnvironmentSetupEventHandler;
+            _curriculumManager.EnvironmentResetted += EnvironmentResettedEventHandler;
+        }
+
+        private void Update()
+        {
+            RaiseDebug();
+        }
+
+        [System.Diagnostics.Conditional(conditionString: "RAISE_DEBUG"), System.Diagnostics.Conditional(conditionString: "UNITY_EDITOR")]
+        private void RaiseDebug()
+        {
+            if (!_debug)
+                return;
+
+            _debugChannel.RaiseEvent("colony", new ColonyDebugData()
+            {
+                GroupCumulativeReward = _groupReward,
+                AddedGroupReward = _addedGroupReward,
+                AntCount = _ants.Count,
+            });
+
         }
 
         private Vector2 AgentSpawnPointRequested()
@@ -106,8 +155,15 @@ namespace Core.Train
             agent.EndEpisode();
         }
 
-        private void EnvironmentSetupEventHandler()
+        private void EnvironmentResettedEventHandler()
         {
+            Debug.Log($"Spawning {_initialAntCount} ants");
+
+            foreach (var ant in _ants.ToList())
+            {
+                DespawnAnt(ant);
+            }
+
             for (int i = 0; i < _initialAntCount; i++)
             {
                 SpawnAnt();
@@ -128,8 +184,22 @@ namespace Core.Train
         {
             await UniTask.DelayFrame(1);
             DespawnAnt(e.Ant);
+            if (_ants.Count <= 0)
+            {
+                ColonyFailure().Forget();
+            }
         }
 
+        private async UniTask ColonyFailure()
+        {
+            //new ColonyEvent(ColonyEventType.ColonyDeath).Invoke(this);
+            FindAnyObjectByType<ColonyScorer>().QueenDeath();
+
+            await UniTask.DelayFrame(1);
+            Debug.Log($"Colony failure, ants: {_ants.Count}", this);
+            EndGroupEpisode();
+            _curriculumManager.RestartRound();
+        }
 
         private void ColonyEventHandler(ref EventContext context, in ColonyEvent e)
         {
@@ -137,6 +207,9 @@ namespace Core.Train
             {
                 case ColonyEventType.QueenProcreation:
                     SpawnAnt();
+                    break;
+                case ColonyEventType.QueenDeath:
+                    ColonyFailure().Forget();
                     break;
             }
         }

@@ -28,7 +28,12 @@ namespace Core.Level.Dynamic
 
         private IGridService _gridService;
 
-        protected override void OnSpawn()
+        protected override void OnInitialize()
+        {
+            OnStarting += OnStart;
+        }
+
+        private void OnStart(Actor sender)
         {
             _gridService = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
             _gridService.Initialized += Setup;

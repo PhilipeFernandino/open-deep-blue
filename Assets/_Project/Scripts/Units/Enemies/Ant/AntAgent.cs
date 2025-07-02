@@ -1,8 +1,10 @@
 ﻿using Core.Colony;
 using Core.ItemSystem;
 using Core.Level;
+using Core.Level.Dynamic;
 using Core.Map;
 using Core.Util;
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using Unity.MLAgents;
@@ -19,16 +21,20 @@ namespace Core.Units
         [SerializeField] private Transform _startingArea;
         [SerializeField] private List<Tile> _interactableTileTypes;
 
+        private IQueenService _queenService;
+        private IFungusService _fungusService;
+        private IFoodService _foodService;
+
         private DecisionRequester _decisionRequester;
         private AntBlackboard _blackboard;
         private Ant _ant;
-        private float _existentialPenalty;
+        private float _existentialReward;
 
         public bool CanEat => _blackboard.IsCarrying(Item.Fungus);
-        public bool CanFeedFungus => _blackboard.IsCarrying(Item.Leaf) && _ant.IsFacing(Tile.Fungus);
+        public bool CanFeedFungus => false; // _blackboard.IsCarrying(Item.Leaf) && _ant.IsFacing(Tile.Fungus);
         public bool CanFeedQueen => _blackboard.IsCarrying(Item.Fungus) && _ant.IsFacing(Tile.QueenAnt);
         public bool CanGatherLeaf => _blackboard.IsCarrying(Item.None) && _ant.IsFacing(Tile.GreenGrass);
-        public bool CanGatherFungus => _blackboard.IsCarrying(Item.None) && _ant.IsFacing(Tile.Fungus);
+        public bool CanGatherFungus => _blackboard.IsCarrying(Item.Leaf) && _ant.IsFacing(Tile.Fungus);
 
         public bool CanDig => _ant.IsFacing(Tile.BlueStone);
 
@@ -73,28 +79,33 @@ namespace Core.Units
             }
         }
 
-
         public override void OnEpisodeBegin()
         {
-            _ant.ResetState();
+            _queenService = ServiceLocatorUtilities.GetServiceAssert<IQueenService>();
+            _fungusService = ServiceLocatorUtilities.GetServiceAssert<IFungusService>();
+            _foodService = ServiceLocatorUtilities.GetServiceAssert<IFoodService>();
+            _existentialReward = ServiceLocatorUtilities.GetServiceAssert<ICurriculumService>().GetCurrentConfig().AgentExistentialReward;
 
-            _blackboard.CarryingItem = Item.None;
-            _blackboard.MovingDirection = Vector2.zero;
+            EpisodeBeginTask().Forget();
+        }
 
+        private async UniTask EpisodeBeginTask()
+        {
+            await UniTask.WaitUntil(() => _ant.IsStarted);
+
+            _blackboard.ResetState();
             _ant.MovementController.Teleport(SpawnPointRequested.Invoke());
         }
 
         public override void CollectObservations(VectorSensor sensor)
         {
-            _existentialPenalty = ServiceLocatorUtilities.GetServiceAssert<ICurriculumService>().GetCurrentConfig().AgentExistentialPenalty;
-
             if (!_ant.IsStarted)
             {
-                sensor.AddObservation(new float[17]);
+                sensor.AddObservation(new float[24]);
                 return;
             }
 
-            sensor.AddObservation(_blackboard.MovingDirection.normalized);
+            sensor.AddObservation(_blackboard.FacingDirection.normalized);
             sensor.AddOneHotObservation((int)_blackboard.CarryingItem, (int)Item.Fungus + 1);
 
             (int tileObservationSize, int tileOneHotIndex) = ObserveFacingTile();
@@ -111,6 +122,22 @@ namespace Core.Units
             sensor.AddObservation(CanGatherLeaf ? 1.0f : 0.0f);
             sensor.AddObservation(CanGatherFungus ? 1.0f : 0.0f);
 
+            //var (queenPos, queenData, queenDef) = _queenService.GetAny();
+            //var queenDir = queenPos - _ant.Position;
+            //sensor.AddObservation(queenDir.normalized);
+            //sensor.AddObservation(queenData.CurrentSaciation / queenDef.MaxSaciation);
+
+            //var (fungusPos, _) = _fungusService.GetAny();
+            //var fungusDir = fungusPos - _ant.Position;
+            //sensor.AddObservation(fungusDir.normalized);
+
+            //var (foodPos, _, _) = _foodService.GetAny();
+            //var foodDir = foodPos - _ant.Position;
+            //sensor.AddObservation(foodDir.normalized);
+
+            //_blackboard.QueenDirection = queenDir.normalized;
+            //_blackboard.FungusDirection = fungusDir.normalized;
+            //_blackboard.FoodDirection = foodDir.normalized;
         }
 
         private (int tileObservationSize, int tileOneHotIndex) ObserveFacingTile()
@@ -193,7 +220,6 @@ namespace Core.Units
                 case AntAction.GatherFungus:
                     _ant.TryToInteract();
                     break;
-
             }
         }
 
@@ -267,7 +293,7 @@ namespace Core.Units
             if (!_ant.IsStarted)
                 return;
             _blackboard.CumulativeReward = GetCumulativeReward();
-            AddReward(_existentialPenalty);
+            AddReward(_existentialReward);
         }
     }
 }

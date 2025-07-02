@@ -13,6 +13,10 @@ namespace Core.Units
         [HideInInspector] public float Health;
         [HideInInspector] public float CumulativeReward;
         [HideInInspector] public Vector2 MovingDirection;
+        [HideInInspector] public Vector2 FacingDirection;
+        [HideInInspector] public Vector2 QueenDirection;
+        [HideInInspector] public Vector2 FungusDirection;
+        [HideInInspector] public Vector2 FoodDirection;
 
         public float MaxSaciety => _antDefinition.MaxSaciety;
         public float AttackDistance => _antDefinition.AttackDistance;
@@ -31,6 +35,8 @@ namespace Core.Units
         public float CarryLeafCost => _antDefinition.CarryLeafCost;
         public float EnergyRegenerationThreshold => _antDefinition.EnergyRegenerationThreshold;
         public float EnergyRegenerationRate => _antDefinition.EnergyRegenerationRate;
+
+        public bool IsDead { get; set; } = false;
 
         private float _energy;
         private float _saciety;
@@ -89,6 +95,7 @@ namespace Core.Units
             Saciety = _antDefinition.MaxSaciety;
             Energy = _antDefinition.MaxEnergy;
             _carryingItem = Item.None;
+            IsDead = false;
         }
 
         private void Awake()

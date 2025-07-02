@@ -33,7 +33,6 @@ namespace Core.Units
         private FSM<AntState> _fsm;
         private Movement2D _movementController;
         private BoxCollider2D _boxCollider;
-        private bool _isDead;
 
         private AntTilemapCollision _tilemapCollision;
         private ColonyEconomySettings _economySettings;
@@ -101,7 +100,7 @@ namespace Core.Units
 
         private void Update()
         {
-            if (!IsStarted || _isDead)
+            if (!IsStarted || Blackboard.IsDead)
             {
                 return;
             }
@@ -126,6 +125,7 @@ namespace Core.Units
                         Energy = Blackboard.Energy,
                         MaxEnergy = Blackboard.MaxEnergy,
                         Position = Position,
+                        MovingDirection = MovementController.FacingDirection,
                         Saciety = Blackboard.Saciety,
                         CumulativeReward = Blackboard.CumulativeReward,
                         CanEat = _agent.CanEat,
@@ -133,14 +133,17 @@ namespace Core.Units
                         CanGatherLeaf = _agent.CanGatherLeaf,
                         CanFeedQueen = _agent.CanFeedQueen,
                         CanFeedFungus = _agent.CanFeedFungus,
-                        CanDig = _agent.CanDig
+                        CanDig = _agent.CanDig,
+                        FoodDirection = Blackboard.FoodDirection,
+                        FungusDirection = Blackboard.FungusDirection,
+                        QueenDirection = Blackboard.QueenDirection,
                     });
             }
         }
 
         private void FixedUpdate()
         {
-            if (!IsStarted || _isDead)
+            if (!IsStarted || Blackboard.IsDead)
                 return;
 
             Blackboard.Saciety -= Blackboard.SacietyLoss * Time.fixedDeltaTime;
@@ -167,7 +170,6 @@ namespace Core.Units
 
         public void ResetState()
         {
-            _isDead = false;
             Blackboard.ResetState();
         }
 
@@ -183,12 +185,14 @@ namespace Core.Units
             Blackboard.SacietyZeroed += SacietyZeroedEventHandler;
 
             OnStarting += AntOnStarting;
+
+            Debug.Log($"Ant initialized {gameObject.name}");
         }
 
         private void SacietyZeroedEventHandler()
         {
             new AntEvent(AntEventType.Death, this).Invoke(this);
-            _isDead = true;
+            Blackboard.IsDead = true;
         }
 
         private void AntOnStarting(Actor sender)

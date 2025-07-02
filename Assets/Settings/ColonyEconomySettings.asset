@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _preload: 1
   _type: 2
-  <FungusFeedAntsAmount>k__BackingField: 40
-  <LeafFeedFungusAmount>k__BackingField: 40
+  <FungusFeedAntsAmount>k__BackingField: 100
+  <LeafFeedFungusAmount>k__BackingField: 1
   <QueenDefinition>k__BackingField: {fileID: 11400000, guid: 67515e816674ad3489388e33ba20b63e, type: 2}
   <FungusDefinition>k__BackingField: {fileID: 11400000, guid: c604a6081062df04184f371aaae11ba7, type: 2}
   <FoodDefinition>k__BackingField: {fileID: 11400000, guid: fdad56bd8cefd0d4bb4add05e951a629, type: 2}

@@ -16,7 +16,8 @@ namespace Core.Train
         [SerializeField] private List<AntEventScore> _antEvents = new();
 
         [SerializeField] private List<AntEventType> _shouldRestart = new();
-        [SerializeField] private Reward _penalize;
+        [SerializeField] private Reward _existentialReward;
+        [SerializeField] private float _queenSaciationReward;
 
         [SerializeField] private TilemapAsset _tilemap;
         [SerializeField, FormerlySerializedAs("_maxStepsPerRound")] private int _maxStepsPerGroupEpisde = 5000;
@@ -36,8 +37,9 @@ namespace Core.Train
         public int MaxStepsPerGroupEpisde => _maxStepsPerGroupEpisde;
         public int MaxStepPerEnvironmentReset => _stepsPerEnvironmentReset;
 
-        public float AgentExistentialPenalty => _penalize.AgentReward;
-        public float GroupExistentialPenalty => _penalize.AgentReward;
+        public float AgentExistentialReward => _existentialReward.AgentReward;
+        public float GroupExistentialReward => _existentialReward.GroupReward;
+        public float QueenSaciationReward => _queenSaciationReward;
 
 
         private void OnEnable()

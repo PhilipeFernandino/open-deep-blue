@@ -7,17 +7,11 @@
     using System.Collections.Generic;
     using UnityEngine;
 
+    [CreateAssetMenu(menuName = "Core/Curriculum/Lesson/Queen")]
     public class QueenLessonHandler : LessonHandler
     {
         private List<Vector2Int> _queenAntSpawnPoints;
         private List<Vector2Int> _fungusAntSpawnPoints;
-
-
-        public QueenLessonHandler(IGridService gridService, LessonConfigSO config) : base(gridService, config)
-        {
-            _queenAntSpawnPoints = new();
-            _fungusAntSpawnPoints = new();
-        }
 
         public override void OnEnter()
         {

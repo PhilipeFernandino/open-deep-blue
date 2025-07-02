@@ -1,26 +1,25 @@
-﻿namespace Core.Colony
+﻿using Core.Level;
+using Core.Train;
+using Cysharp.Threading.Tasks;
+using System;
+using System.Collections.Generic;
+using Unity.MLAgents;
+using UnityEngine;
+
+namespace Core.Colony
 {
-    using Core.Level;
-    using Core.Train;
-    using Cysharp.Threading.Tasks;
-    using System;
-    using System.Collections.Generic;
-    using Unity.MLAgents;
-    using UnityEngine;
-
-    public abstract class LessonHandler
+    public abstract class LessonHandler : ScriptableObject
     {
-        protected readonly IGridService GridService;
-        protected readonly LessonConfigSO Config;
-        protected readonly List<Vector2Int> AntSpawnPoints;
+        protected IGridService GridService;
+        protected LessonConfigSO Config;
+        protected List<Vector2Int> AntSpawnPoints = new();
 
-        private IColonyService _colonyService;
+        protected IColonyService _colonyService;
 
-        protected LessonHandler(IGridService gridService, LessonConfigSO config)
+        public void Setup(IGridService gridService, LessonConfigSO config)
         {
             GridService = gridService;
             Config = config;
-            AntSpawnPoints = new List<Vector2Int>();
         }
 
         protected async void EndAgentEpisodeNextFrame(Agent agent)

@@ -15,10 +15,10 @@ MonoBehaviour:
   AttackDistance: 1
   AttackDamage: 5
   AggroDistance: 1
-  DigDamage: 5
+  DigDamage: 2.5
   MovementSpeed: 2.5
   MaxSaciety: 100
-  SacietyLoss: 2
+  SacietyLoss: 0.5
   EnergyLoss: 0.1
   MaxEnergy: 100
   EnergyRegenerationThreshold: 0.3

@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Fungus Definition
   m_EditorClassIdentifier: 
   MaxFoodStore: 1000
-  MaxHealth: 100
-  MaxSaciation: 100
-  SaciationLost: 1
-  LostHealthWhenStarved: 0.5
-  FoodProduction: 6
-  FoodProductionSaciationThreshold: 0.2
+  MaxHealth: 1
+  MaxSaciation: 1
+  SaciationLost: 0
+  LostHealthWhenStarved: 0
+  FoodProduction: 0
+  FoodProductionSaciationThreshold: 0

@@ -188,9 +188,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8720216356864721403}
-  - {fileID: 1506421843292665432}
   - {fileID: 313926926429564360}
-  - {fileID: 9099078725327924762}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1567793414303212607
@@ -227,6 +225,10 @@ MonoBehaviour:
   Health: 0
   CumulativeReward: 0
   MovingDirection: {x: 0, y: 0}
+  FacingDirection: {x: 0, y: 0}
+  QueenDirection: {x: 0, y: 0}
+  FungusDirection: {x: 0, y: 0}
+  FoodDirection: {x: 0, y: 0}
 --- !u!114 &6051039102395647708
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -353,18 +355,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 17
+    VectorObservationSize: 24
     NumStackedVectorObservations: 5
     m_ActionSpec:
-      m_NumContinuousActions: 2
-      BranchSizes: 07000000
-    VectorActionSize: 
+      m_NumContinuousActions: 0
+      BranchSizes: 0700000005000000
+    VectorActionSize: 0700000005000000
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
     hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 0}
+  m_Model: {fileID: 5022602860645237092, guid: ca10074364fc8664cabfbd46d1d26352, type: 3}
   m_InferenceDevice: 0
-  m_BehaviorType: 0
+  m_BehaviorType: 1
   m_BehaviorName: Ant
   TeamId: 0
   m_UseChildSensors: 1
@@ -389,7 +391,7 @@ MonoBehaviour:
   MaxStep: 0
   _inputHandler: {fileID: 8654062749191247066}
   _startingArea: {fileID: 0}
-  _interactableTileTypes: 790515050100
+  _interactableTileTypes: 790515056500
 --- !u!114 &8654062749191247066
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -417,7 +419,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a5c9d521e5ef4759a8246a07d52221e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DecisionPeriod: 5
+  DecisionPeriod: 1
   DecisionStep: 0
   TakeActionsBetweenDecisions: 1
 --- !u!114 &684635260048381296
@@ -478,100 +480,6 @@ Transform:
   - {fileID: 1544373875054835027}
   m_Father: {fileID: 9019613529773615207}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &5585351869111518182
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 9099078725327924762}
-  - component: {fileID: 5372400292477384000}
-  m_Layer: 8
-  m_Name: Tile Grid Sensor
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &9099078725327924762
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5585351869111518182}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 9019613529773615207}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5372400292477384000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5585351869111518182}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c08fff42960c0b14ea5eda50d701fcc4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _chunkSize: 21
-  _tilesToObserve: 650015057905
-  sensorName: TileGridSensor
---- !u!1 &6920064295541619248
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1506421843292665432}
-  - component: {fileID: 5473769527220064662}
-  m_Layer: 8
-  m_Name: Chemical Grid Sensor
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1506421843292665432
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6920064295541619248}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 9019613529773615207}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5473769527220064662
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6920064295541619248}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c1742013ef3c2745ad8e5dfa3a7296b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _chunkSize: 15
-  _chemicalsToObserve: 00000000030000000400000005000000
-  sensorName: ChemicalGridSensor
 --- !u!1001 &8909867542022313629
 PrefabInstance:
   m_ObjectHideFlags: 0

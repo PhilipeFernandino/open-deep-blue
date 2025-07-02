@@ -9,13 +9,10 @@
     using System.Collections.Generic;
     using UnityEngine;
 
+    [CreateAssetMenu(menuName = "Core/Curriculum/Lesson/Foraging")]
     public class ForagingLessonHandler : LessonHandler
     {
         private List<Vector2Int> _allGrassLocations = new();
-
-        public ForagingLessonHandler(IGridService gridService, LessonConfigSO config) : base(gridService, config)
-        {
-        }
 
         public override void OnEnter()
         {

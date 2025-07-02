@@ -59,6 +59,11 @@ namespace Core.Level
                 _gridService.TileChanged -= HandleTileChanged;
             }
 
+            DisposeNativeArray();
+        }
+
+        private void DisposeNativeArray()
+        {
             if (_obstacleGrid.IsCreated)
             {
                 _obstacleGrid.Dispose();
@@ -67,7 +72,7 @@ namespace Core.Level
 
         private void Setup()
         {
-            OnDestroyed();
+            DisposeNativeArray();
 
             int dimensions = _gridService.Dimensions;
             _obstacleGrid = new NativeArray<bool>(dimensions * dimensions, Allocator.Persistent);

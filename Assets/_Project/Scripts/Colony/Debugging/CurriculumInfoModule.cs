@@ -12,6 +12,7 @@ namespace Core.Debugger
     {
         public Lesson CurrentLesson;
         public LessonConfigSO LessonConfig;
+        public int Step;
     }
 
     [CreateAssetMenu(fileName = "Curriculum Info Module", menuName = "Core/Debugger/Modules/Curriculum Info Module")]
@@ -26,6 +27,7 @@ namespace Core.Debugger
                 _stringBuilder.Clear();
 
                 _stringBuilder.AppendLine($"Current Lesson: {curriculumDebugData.CurrentLesson}");
+                _stringBuilder.AppendLine($"Steps: {curriculumDebugData.Step}");
 
                 foreach (var antEventReward in curriculumDebugData.LessonConfig.AntEvents)
                 {

@@ -7,14 +7,10 @@
     using System.Collections.Generic;
     using UnityEngine;
 
+    [CreateAssetMenu(menuName = "Core/Curriculum/Lesson/Fungus")]
     public class FungusLessonHandler : LessonHandler
     {
         private List<Vector2Int> _fungusAntSpawnPoints;
-
-        public FungusLessonHandler(IGridService gridService, LessonConfigSO config) : base(gridService, config)
-        {
-            _fungusAntSpawnPoints = new();
-        }
 
         public override void OnEnter()
         {

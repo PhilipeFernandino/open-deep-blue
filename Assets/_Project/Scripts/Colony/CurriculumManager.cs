@@ -20,36 +20,43 @@ namespace Core.Colony
         Foraging102 = 51,
         Foraging103 = 52,
         Fungus = 151,
-        Queen = 251
+        Queen = 251,
+        Colony101 = 351,
     }
 
     [Serializable]
     public class LessonConfigMap { public Lesson Lesson; [Expandable] public LessonConfigSO Config; }
 
+    [Serializable]
+    public class LessonHandlerMap { public Lesson Lesson; [Expandable] public LessonHandler LessonHandler; }
+
     public class CurriculumManager : Actor, ICurriculumService
     {
+        [SerializeField] private List<LessonHandlerMap> _lessonHandlerMap;
+        [SerializeField] private Lesson _defaultLesson;
+
+        [Header("Debugging")]
         [SerializeField] private bool _debug;
         [SerializeField] private DebugChannelSO _debugChannel;
 
         private CurriculumSettingsSO _settings;
-
         private IGridService _gridService;
         private IColonyService _colonyService;
-
+        private readonly Dictionary<Lesson, LessonHandler> _lessonHandlers = new();
         private int _currentLessonIndex = -1;
-
         private int _groupStepCounter = 0;
         private int _environmentStepCounter = 0;
 
+
         public event Action EnvironmentResetted;
         public event Action EnvironmentSetup;
+        public event Action MaxStepReached;
 
         public int CurrentLessonIndex => _currentLessonIndex;
         public Lesson CurrentLesson => (Lesson)_currentLessonIndex;
-
         public LessonHandler CurrentLessonHandler => _lessonHandlers[CurrentLesson];
 
-        private Dictionary<Lesson, LessonHandler> _lessonHandlers;
+        private bool _initialized;
 
         public LessonConfigSO GetCurrentConfig()
         {
@@ -63,6 +70,11 @@ namespace Core.Colony
             ServiceLocator.Set<ICurriculumService>(this);
 
             OnStarting += CurriculumManagerOnStarting;
+
+            foreach (var lessonMap in _lessonHandlerMap)
+            {
+                _lessonHandlers.Add(lessonMap.Lesson, lessonMap.LessonHandler);
+            }
         }
 
         private void CurriculumManagerOnStarting(Actor sender)
@@ -73,36 +85,12 @@ namespace Core.Colony
             _settings = ScriptableSettings.GetOrFind<CurriculumSettingsSO>();
             _gridService = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
 
-            _lessonHandlers = new Dictionary<Lesson, LessonHandler>
-            {
-                {
-                    Lesson.Foraging101,
-                    new ForagingLessonHandler(_gridService, _settings.GetConfig(Lesson.Foraging101))
-                },
-                {
-                    Lesson.Foraging102,
-                    new ForagingLessonHandler(_gridService, _settings.GetConfig(Lesson.Foraging102))
-                },
-                {
-                    Lesson.Foraging103,
-                    new ForagingLessonHandler(_gridService, _settings.GetConfig(Lesson.Foraging103))
-                },
-                {
-                    Lesson.Fungus,
-                    new FungusLessonHandler(_gridService, _settings.GetConfig(Lesson.Fungus))
-                },
-                {
-                    Lesson.Queen,
-                    new QueenLessonHandler(_gridService, _settings.GetConfig(Lesson.Queen))
-                },
-            };
-
-            SetupLesson(0);
-
             AntEvent.AddListener(AntEventHandler);
             ColonyEvent.AddListener(ColonyEventHandler);
 
             Academy.Instance.OnEnvironmentReset += OnAcademyEnvironmentReset;
+
+            SetupLesson((int)_defaultLesson);
 
             EnvironmentSetup?.Invoke();
         }
@@ -118,28 +106,22 @@ namespace Core.Colony
         private void OnAcademyEnvironmentReset()
         {
             Debug.Log("OnAcademyEnvironmentReset", this);
-
-            int newLessonIndex = (int)Academy.Instance.EnvironmentParameters.GetWithDefault("lesson_index", 0.0f);
-
-            if (newLessonIndex == _currentLessonIndex)
-            {
-                return;
-            }
-
-            SetupLesson(newLessonIndex);
-            EnvironmentResetted?.Invoke();
+            int newLessonIndex = (int)Academy.Instance.EnvironmentParameters.GetWithDefault("lesson_index", (float)_defaultLesson);
+            _currentLessonIndex = newLessonIndex;
+            ResetEnvironment();
         }
 
         private void SetupLesson(int lesson)
         {
             Debug.Log($"Setup lesson {lesson}", this);
             _currentLessonIndex = lesson;
+            CurrentLessonHandler.Setup(_gridService, GetCurrentConfig());
             CurrentLessonHandler.OnEnter();
         }
 
         private void FixedUpdate()
         {
-            if (!IsStarted)
+            if (!IsStarted || _currentLessonIndex == -1)
                 return;
 
             _groupStepCounter++;
@@ -150,27 +132,27 @@ namespace Core.Colony
 
             if (currentLessonMaxSteps > 0 && _groupStepCounter >= currentLessonMaxSteps)
             {
-                ResetRound();
+                RestartRound();
             }
 
             if (maxStepPerEnvironmentReset > 0 && _environmentStepCounter >= maxStepPerEnvironmentReset)
             {
-                ResetEnvironment();
+                _environmentStepCounter = 0;
+                SetupLesson(CurrentLessonIndex);
             }
+        }
+
+        public void RestartRound()
+        {
+            _groupStepCounter = 0;
+            ResetEnvironment();
         }
 
         private void ResetEnvironment()
         {
-            EnvironmentResetted?.Invoke();
             _environmentStepCounter = 0;
             SetupLesson(CurrentLessonIndex);
-        }
-
-        private void ResetRound()
-        {
-            _groupStepCounter = 0;
-            _colonyService.EndGroupEpisode();
-            ResetEnvironment();
+            EnvironmentResetted?.Invoke();
         }
 
         private void Update()
@@ -188,7 +170,8 @@ namespace Core.Colony
                 new CurriculumDebugData()
                 {
                     CurrentLesson = CurrentLesson,
-                    LessonConfig = GetCurrentConfig()
+                    LessonConfig = GetCurrentConfig(),
+                    Step = _groupStepCounter,
                 }
              );
         }
@@ -217,9 +200,10 @@ namespace Core.Colony
     [DynamicService]
     public interface ICurriculumService : IService
     {
-        public LessonConfigSO GetCurrentConfig();
-
+        public event Action MaxStepReached;
+        public event Action EnvironmentSetup;
         public event Action EnvironmentResetted;
+        public LessonConfigSO GetCurrentConfig();
         public int CurrentLessonIndex { get; }
     }
 }

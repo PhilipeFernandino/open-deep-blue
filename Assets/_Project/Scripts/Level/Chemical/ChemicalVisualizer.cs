@@ -40,6 +40,8 @@ namespace Core.Level
 
         private void InitializeVisualizer()
         {
+            OnDestroyed();
+
             _mainCamera = Camera.main;
             _displayRectTransform = _displayImage.GetComponent<RectTransform>();
 

@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5d0d8fc4cf48b94b83dbac6e747cf51, type: 3}
   m_Name: Queen Definition
   m_EditorClassIdentifier: 
-  MaxHealth: 100
-  MaxSaciation: 100
-  SaciationLost: 2
-  LostHealthWhenStarved: 0.5
-  PregnancyRate: 1
+  MaxHealth: 1
+  MaxSaciation: 200
+  SaciationLost: 0.5
+  LostHealthWhenStarved: 1
+  PregnancyRate: 0
   PregnancySaciationThreshold: 0.3
   BroodPerLaying: 1

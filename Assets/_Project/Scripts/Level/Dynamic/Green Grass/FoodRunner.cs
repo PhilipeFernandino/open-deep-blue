@@ -31,6 +31,15 @@ namespace Core.Level.Dynamic
             };
         }
 
+        public (Vector2Int position, FoodData foodData, FoodDefinition foodDefinition) GetAny()
+        {
+            foreach (var pair in _dataMap)
+                return (pair.Key, pair.Value, _foodDef);
+
+            return default;
+        }
+
+
         public bool TryGetData(Vector2Int position, out FoodData data)
         {
             return _dataMap.TryGetValue(position, out data);
@@ -115,6 +124,7 @@ namespace Core.Level.Dynamic
     [DynamicService]
     public interface IFoodService : IService
     {
+        public (Vector2Int position, FoodData foodData, FoodDefinition foodDefinition) GetAny();
         public bool TryEat(Vector2Int position);
         bool TryGetData(Vector2Int position, out FoodData data);
     }

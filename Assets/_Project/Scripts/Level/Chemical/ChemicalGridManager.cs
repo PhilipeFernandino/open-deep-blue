@@ -22,7 +22,7 @@ namespace Core.Level
         [SerializeField] private List<TileChemicalEmission> _tileEmissions = new();
 
         [Header("Chemical Propagation")]
-        [Range(1, 32)][SerializeField] private int _propagationPasses = 8;
+        [Range(0, 32)][SerializeField] private int _propagationPasses = 8;
 
         [Header("Debugging")]
         [SerializeField] private bool _debug = true;
@@ -215,6 +215,9 @@ namespace Core.Level
 
         private void RunPropagateAndDecayJob(NativeArray<float> map, ChemicalDefinition def)
         {
+            if (_propagationPasses <= 0)
+                return;
+
             _readBuffer.CopyFrom(map);
             var obstacleGrid = _obstacleService.GetObstacleGrid();
 

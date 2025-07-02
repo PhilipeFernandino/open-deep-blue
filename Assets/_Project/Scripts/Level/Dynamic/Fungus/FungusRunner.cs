@@ -37,6 +37,15 @@ namespace Core.Level.Dynamic
             };
         }
 
+        public (Vector2Int position, FungusData data) GetAny()
+        {
+            foreach (var pair in _dataMap)
+                return (pair.Key, pair.Value);
+
+            return default;
+        }
+
+
         public bool TryGetData(Vector2Int position, out FungusData data)
         {
             return _dataMap.TryGetValue(position, out data);
@@ -132,6 +141,7 @@ namespace Core.Level.Dynamic
     [DynamicService]
     public interface IFungusService : IService
     {
+        public (Vector2Int position, FungusData data) GetAny();
         bool TryApplyModification(Vector2Int position, ModifyFungusData modification);
         public bool TryTakeFungusFood(Vector2Int position);
         bool TryGetData(Vector2Int position, out FungusData data);

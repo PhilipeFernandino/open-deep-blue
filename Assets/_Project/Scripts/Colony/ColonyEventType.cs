@@ -8,5 +8,6 @@ namespace Core.Train
         QueenDeath,
         FungusDeath,
         FungusProducing,
+        ColonyDeath
     }
 }

@@ -2,6 +2,7 @@
 using Core.Debugger;
 using Core.Map;
 using Core.Util;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,6 +17,14 @@ namespace Core.Level.Dynamic
         private readonly QueenDefinition _queenDef;
 
         private readonly List<Vector2Int> _keysToUpdate = new();
+
+        public (Vector2Int position, QueenData data, QueenDefinition queenDefinition) GetAny()
+        {
+            foreach (var pair in _dataMap)
+                return (pair.Key, pair.Value, _queenDef);
+
+            return default;
+        }
 
         public object GetData(Vector2Int vector)
         {
@@ -103,6 +112,7 @@ namespace Core.Level.Dynamic
     [DynamicService]
     public interface IQueenService : IService
     {
+        public (Vector2Int position, QueenData data, QueenDefinition queenDefinition) GetAny();
         public bool TryFeedTheQueen(Vector2Int position, float foodAmount);
     }
 }

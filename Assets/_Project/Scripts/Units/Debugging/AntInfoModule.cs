@@ -28,6 +28,12 @@ namespace Core.Debugger
         public bool CanFeedQueen;
         public bool CanGatherLeaf;
         public bool CanGatherFungus;
+
+        public Vector2 QueenDirection;
+        public Vector2 FungusDirection;
+        public Vector2 FoodDirection;
+
+        public Vector2 MovingDirection;
     }
 
     [CreateAssetMenu(fileName = "Ant Info Module", menuName = "Core/Debugger/Modules/Ant Info Module")]
@@ -49,10 +55,15 @@ namespace Core.Debugger
                 _stringBuilder.AppendLine($"Position: {antData.Position}");
                 _stringBuilder.AppendLine($"Carrying Item: {antData.CarryingItem}");
                 _stringBuilder.AppendLine($"Facing Tile: {antData.FacingTile}");
-                _stringBuilder.AppendLine($"Cummulative Reward: {antData.CumulativeReward}");
+                _stringBuilder.AppendLine($"Cumulative Reward: {antData.CumulativeReward}");
                 _stringBuilder.AppendLine($"Saciety: {bothAndPercentage(antData.Saciety, antData.MaxSaciety)}");
                 _stringBuilder.AppendLine($"Health: {bothAndPercentage(antData.Health, antData.MaxHealth)}");
                 _stringBuilder.AppendLine($"Energy: {bothAndPercentage(antData.Energy, antData.MaxEnergy)}");
+                _stringBuilder.AppendLine($"Moving Direction: {antData.MovingDirection}");
+                _stringBuilder.AppendLine($"Queen Direction: {antData.QueenDirection}");
+                _stringBuilder.AppendLine($"Food Direction: {antData.FoodDirection}");
+                _stringBuilder.AppendLine($"Fungus Direction: {antData.FungusDirection}");
+
 
                 if (antData.CanEat)
                     _stringBuilder.AppendLine("CanEat");
