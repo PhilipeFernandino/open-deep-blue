@@ -19,10 +19,13 @@ MonoBehaviour:
       AgentReward: 1
       GroupReward: 0.5
   _shouldRestart: 
-  _penalizeStep: 1
+  _existentialReward:
+    AgentReward: 0
+    GroupReward: 0
+  _queenSaciationReward: 0
   _tilemap: {fileID: 11400000, guid: 3dba87ab94aacae4cb0aa2853da1beb3, type: 2}
   _maxStepsPerGroupEpisde: 0
   _stepsPerEnvironmentReset: 20000
   _distributionTiles:
   - Tile: 101
-    Distribution: 0.7
+    Distribution: 0.187

@@ -122,22 +122,22 @@ namespace Core.Units
             sensor.AddObservation(CanGatherLeaf ? 1.0f : 0.0f);
             sensor.AddObservation(CanGatherFungus ? 1.0f : 0.0f);
 
-            //var (queenPos, queenData, queenDef) = _queenService.GetAny();
-            //var queenDir = queenPos - _ant.Position;
-            //sensor.AddObservation(queenDir.normalized);
-            //sensor.AddObservation(queenData.CurrentSaciation / queenDef.MaxSaciation);
+            var (queenPos, queenData, queenDef) = _queenService.GetAny();
+            var queenDir = queenPos - _ant.Position;
+            sensor.AddObservation(queenDir.normalized);
+            sensor.AddObservation(queenData.CurrentSaciation / queenDef.MaxSaciation);
 
-            //var (fungusPos, _) = _fungusService.GetAny();
-            //var fungusDir = fungusPos - _ant.Position;
-            //sensor.AddObservation(fungusDir.normalized);
+            var (fungusPos, _) = _fungusService.GetAny();
+            var fungusDir = fungusPos - _ant.Position;
+            sensor.AddObservation(fungusDir.normalized);
 
-            //var (foodPos, _, _) = _foodService.GetAny();
-            //var foodDir = foodPos - _ant.Position;
-            //sensor.AddObservation(foodDir.normalized);
+            var (foodPos, _, _) = _foodService.GetAny();
+            var foodDir = foodPos - _ant.Position;
+            sensor.AddObservation(foodDir.normalized);
 
-            //_blackboard.QueenDirection = queenDir.normalized;
-            //_blackboard.FungusDirection = fungusDir.normalized;
-            //_blackboard.FoodDirection = foodDir.normalized;
+            _blackboard.QueenDirection = queenDir.normalized;
+            _blackboard.FungusDirection = fungusDir.normalized;
+            _blackboard.FoodDirection = foodDir.normalized;
         }
 
         private (int tileObservationSize, int tileOneHotIndex) ObserveFacingTile()

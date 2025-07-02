@@ -15,7 +15,7 @@ MonoBehaviour:
   AttackDistance: 1
   AttackDamage: 5
   AggroDistance: 1
-  DigDamage: 2.5
+  DigDamage: 10
   MovementSpeed: 2.5
   MaxSaciety: 100
   SacietyLoss: 0.5
@@ -23,9 +23,9 @@ MonoBehaviour:
   MaxEnergy: 100
   EnergyRegenerationThreshold: 0.3
   EnergyRegenerationRate: 0.6
-  DropFoodPheromone: 22.5
-  DropPresencePheromone: 10
+  DropFoodPheromone: 50
+  DropPresencePheromone: 30
   DropThreatPheromone: 25
-  DigEnergyCost: 10
+  DigEnergyCost: 1
   GatherLeafCost: 5
   CarryLeafCost: 1
