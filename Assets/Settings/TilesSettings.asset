@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4773c75a3d48f6149bdd5e8f334154e9, type: 3}
+  m_Name: TilesSettings
+  m_EditorClassIdentifier: 
+  _preload: 1
+  _type: 2
+  <TileToTileBase>k__BackingField: {fileID: 11400000, guid: c7a419f6da0231d4c93357e193bbf2c8, type: 2}
+  <TileToFloorTileBase>k__BackingField:
+  - <TileType>k__BackingField: 1
+    <TileBase>k__BackingField: {fileID: 11400000, guid: 8f0de23d773965942bf4c621fce7bb34, type: 2}
+  - <TileType>k__BackingField: 5
+    <TileBase>k__BackingField: {fileID: 11400000, guid: 7483c31de184fd743a72ce963f9d8314, type: 2}
+  - <TileType>k__BackingField: 6
+    <TileBase>k__BackingField: {fileID: 11400000, guid: bb84114cdd6dccd4cb05682dc92a8577, type: 2}
+  <TileDefinitions>k__BackingField:
+  - TileType: 0
+    TileProperties: 64
+    MaxHitPoints: 0
+  - TileType: 1
+    TileProperties: 7
+    MaxHitPoints: 50
+  - TileType: 2
+    TileProperties: 7
+    MaxHitPoints: 50
+  - TileType: 3
+    TileProperties: 7
+    MaxHitPoints: 50
+  - TileType: 4
+    TileProperties: 7
+    MaxHitPoints: 50
+  - TileType: 5
+    TileProperties: 7
+    MaxHitPoints: 50
+  - TileType: 6
+    TileProperties: 7
+    MaxHitPoints: 50
+  - TileType: 1001
+    TileProperties: 39
+    MaxHitPoints: 100
+  - TileType: 2001
+    TileProperties: 0
+    MaxHitPoints: 0
+  - TileType: 2002
+    TileProperties: 0
+    MaxHitPoints: 0
+  - TileType: 1211
+    TileProperties: 96
+    MaxHitPoints: 0
+  - TileType: 101
+    TileProperties: 112
+    MaxHitPoints: 15
+  - TileType: 1301
+    TileProperties: 114
+    MaxHitPoints: 150
+  - TileType: 1401
+    TileProperties: 114
+    MaxHitPoints: 500
+  <InteractableTiles>k__BackingField: []

@@ -1,3 +1,67 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:8e18b1c820e9c09e16bbd1f1b7842e9fb3b0158a0921b0964e0b8fa12c6e2c01
-size 378
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 3
+  tags:
+  - Tilemap
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - Player
+  - Water
+  - UI
+  - Player Hitbox
+  - 
+  - Enemy
+  - Enemy Hitbox
+  - 
+  - 
+  - Physical
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Background
+    uniqueID: 3990249425
+    locked: 0
+  - name: Tilemap
+    uniqueID: 3664374509
+    locked: 0
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Equipment
+    uniqueID: 906048743
+    locked: 0
+  - name: Foreground
+    uniqueID: 2689193507
+    locked: 0
+  - name: Top
+    uniqueID: 2706677195
+    locked: 0
+  - name: Light Overlay
+    uniqueID: 2845765619
+    locked: 0
+  - name: UI
+    uniqueID: 4178525561
+    locked: 0
+  m_RenderingLayers:
+  - Default
