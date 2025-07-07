@@ -1,7 +1,6 @@
 ﻿using Coimbra.Services.Events;
-using System;
 
-namespace Core.Train
+namespace Core.RL
 {
     public readonly partial struct ColonyEvent : IEvent
     {

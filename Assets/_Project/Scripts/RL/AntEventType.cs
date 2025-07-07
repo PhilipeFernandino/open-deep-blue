@@ -1,4 +1,4 @@
-﻿namespace Core.Train
+﻿namespace Core.RL
 {
     public enum AntEventType
     {

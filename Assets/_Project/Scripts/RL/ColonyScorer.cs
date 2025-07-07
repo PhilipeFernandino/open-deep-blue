@@ -1,11 +1,12 @@
 ﻿using Coimbra;
 using Coimbra.Services.Events;
-using Core.Colony;
 using Core.Level.Dynamic;
+using Core.Units;
+using Core.Units.RL;
 using Core.Util;
 using UnityEngine;
 
-namespace Core.Train
+namespace Core.RL
 {
 
     public class ColonyScorer : Actor
@@ -84,7 +85,7 @@ namespace Core.Train
             if (reward.AgentReward != 0)
             {
                 Debug.Log($"Assigning agent reward: {reward.AgentReward} for ant: {e.Ant.gameObject.name}", this);
-                e.Ant.Agent.AddReward(reward.AgentReward);
+                e.Ant.GetComponent<AntAgent>().AddReward(reward.AgentReward);
             }
         }
 

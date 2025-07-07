@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Core.Train
+namespace Core.RL
 {
     [Serializable]
     public struct AntEventScore

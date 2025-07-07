@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Core.Train
+﻿namespace Core.RL
 {
     public enum ColonyEventType
     {

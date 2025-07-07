@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace Core.Train
+namespace Core.RL
 {
     [Serializable]
     public class DistributionTile { public Tile Tile; [Range(0f, 1f)] public float Distribution; }

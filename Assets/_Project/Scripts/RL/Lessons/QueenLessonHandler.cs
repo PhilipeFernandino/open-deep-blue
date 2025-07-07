@@ -1,15 +1,15 @@
-﻿namespace Core.Colony.Lessons
-{
-    using Core.Level;
-    using Core.Map;
-    using Core.Train;
-    using Extensions;
-    using System.Collections.Generic;
-    using UnityEngine;
+﻿using Core.Level;
+using Core.Map;
+using Extensions;
+using System.Collections.Generic;
+using UnityEngine;
 
-    [CreateAssetMenu(menuName = "Core/Curriculum/Lesson/Fungus")]
-    public class FungusLessonHandler : LessonHandler
+namespace Core.RL
+{
+    [CreateAssetMenu(menuName = "Core/Reinforcement Learning/Curriculum/Lesson/Queen")]
+    public class QueenLessonHandler : LessonHandler
     {
+        private List<Vector2Int> _queenAntSpawnPoints;
         private List<Vector2Int> _fungusAntSpawnPoints;
 
         public override void OnEnter()
@@ -25,14 +25,18 @@
             );
 
             mapMetadata.ListPositions(Tile.CopperOre, AntSpawnPoints);
+            mapMetadata.ListPositions(Tile.QueenAnt, _queenAntSpawnPoints);
             mapMetadata.ListPositions(Tile.Fungus, _fungusAntSpawnPoints);
 
-            mapMetadata.RemoveAll(Tile.CopperOre);
+            mapMetadata.RemoveAll(Tile.QueenAnt);
             mapMetadata.RemoveAll(Tile.Fungus);
+            mapMetadata.RemoveAll(Tile.CopperOre);
 
             var randomFungusLocation = _fungusAntSpawnPoints.RandomElement();
+            var randomQueenLocation = _queenAntSpawnPoints.RandomElement();
 
             mapMetadata.SetTile(randomFungusLocation.x, randomFungusLocation.y, Tile.Fungus);
+            mapMetadata.SetTile(randomQueenLocation.x, randomQueenLocation.y, Tile.QueenAnt);
 
             new MapMetadataGeneratedEvent(mapMetadata).Invoke(this);
         }
@@ -41,12 +45,8 @@
 
         public override void HandleAntEvent(in AntEvent e)
         {
-            if (e.AntEventType == AntEventType.Eat)
-            {
-                EndAgentEpisodeNextFrame(e.Ant.Agent);
-            }
-        }
 
+        }
         public override void HandleColonyEvent(in ColonyEvent e)
         {
 
@@ -56,5 +56,6 @@
         {
             return AntSpawnPoints.RandomElement();
         }
+
     }
 }

@@ -4,7 +4,7 @@ using Core.Unit;
 using NaughtyAttributes;
 using UnityEngine;
 
-namespace Core.Train
+namespace Core.RL
 {
     [ProjectSettings("Core")]
     public class ColonyEconomySettings : ScriptableSettings

@@ -1,10 +1,9 @@
 ﻿using Coimbra;
 using Coimbra.Services;
 using Coimbra.Services.Events;
-using Core.Colony.Lessons;
 using Core.Debugger;
+using Core.Debugger.RL;
 using Core.Level;
-using Core.Train;
 using Core.Util;
 using NaughtyAttributes;
 using System;
@@ -12,7 +11,7 @@ using System.Collections.Generic;
 using Unity.MLAgents;
 using UnityEngine;
 
-namespace Core.Colony
+namespace Core.RL
 {
     public enum Lesson
     {

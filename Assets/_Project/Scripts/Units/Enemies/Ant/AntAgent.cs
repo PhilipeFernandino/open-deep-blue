@@ -1,8 +1,8 @@
-﻿using Core.Colony;
-using Core.ItemSystem;
+﻿using Core.ItemSystem;
 using Core.Level;
 using Core.Level.Dynamic;
 using Core.Map;
+using Core.RL;
 using Core.Util;
 using Cysharp.Threading.Tasks;
 using System;
@@ -12,7 +12,7 @@ using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
 using UnityEngine;
 
-namespace Core.Units
+namespace Core.Units.RL
 {
     [RequireComponent(typeof(Ant))]
     public class AntAgent : Agent

@@ -1,10 +1,8 @@
 ﻿using Coimbra;
-using Core.Colony;
-using NaughtyAttributes;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Core.Train
+namespace Core.RL
 {
     [ProjectSettings("Core")]
     public class CurriculumSettingsSO : ScriptableSettings

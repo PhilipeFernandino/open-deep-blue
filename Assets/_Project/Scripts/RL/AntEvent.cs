@@ -1,7 +1,7 @@
 ﻿using Coimbra.Services.Events;
 using Core.Units;
 
-namespace Core.Train
+namespace Core.RL
 {
     public readonly partial struct AntEvent : IEvent
     {

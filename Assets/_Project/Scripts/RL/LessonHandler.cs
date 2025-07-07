@@ -1,12 +1,10 @@
 ﻿using Core.Level;
-using Core.Train;
 using Cysharp.Threading.Tasks;
-using System;
 using System.Collections.Generic;
 using Unity.MLAgents;
 using UnityEngine;
 
-namespace Core.Colony
+namespace Core.RL
 {
     public abstract class LessonHandler : ScriptableObject
     {

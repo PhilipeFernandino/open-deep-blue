@@ -1,15 +1,14 @@
-﻿namespace Core.Colony.Lessons
-{
-    using Core.Level;
-    using Core.Map;
-    using Core.Train;
-    using Cysharp.Threading.Tasks;
-    using Extensions;
-    using System;
-    using System.Collections.Generic;
-    using UnityEngine;
+﻿using Core.Level;
+using Core.Map;
+using Core.Units;
+using Core.Units.RL;
+using Extensions;
+using System.Collections.Generic;
+using UnityEngine;
 
-    [CreateAssetMenu(menuName = "Core/Curriculum/Lesson/Foraging")]
+namespace Core.RL
+{
+    [CreateAssetMenu(menuName = "Core/Reinforcement Learning/Curriculum/Lesson/Foraging")]
     public class ForagingLessonHandler : LessonHandler
     {
         private List<Vector2Int> _allGrassLocations = new();
@@ -79,7 +78,7 @@
         {
             if (e.AntEventType == AntEventType.GatherLeaf)
             {
-                EndAgentEpisodeNextFrame(e.Ant.Agent);
+                EndAgentEpisodeNextFrame(e.Ant.GetComponent<AntAgent>());
             }
         }
 

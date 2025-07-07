@@ -1,6 +1,5 @@
 ﻿using Coimbra;
 using Core.Debugger;
-using Core.EventBus;
 using Core.FSM;
 using Core.HealthSystem;
 using Core.Interaction;
@@ -8,16 +7,13 @@ using Core.ItemSystem;
 using Core.Level;
 using Core.Map;
 using Core.Player;
-using Core.Train;
+using Core.RL;
 using Core.Util;
-using System;
 using System.Collections.Generic;
-using Unity.MLAgents;
 using UnityEngine;
 
 namespace Core.Units
 {
-    [RequireComponent(typeof(Agent))]
     [RequireComponent(typeof(Movement2D))]
     [RequireComponent(typeof(BoxCollider2D))]
     [RequireComponent(typeof(AntTilemapCollision))]
@@ -29,16 +25,15 @@ namespace Core.Units
         [SerializeField] private DebugChannelSO _debugChannel;
         [SerializeField] private bool _debug;
 
-        private AntAgent _agent;
         private FSM<AntState> _fsm;
         private Movement2D _movementController;
         private BoxCollider2D _boxCollider;
 
         private AntTilemapCollision _tilemapCollision;
         private ColonyEconomySettings _economySettings;
+
         internal AntBlackboard Blackboard { get; private set; }
 
-        internal AntAgent Agent => _agent;
         internal AntTilemapCollision TilemapCollision => _tilemapCollision;
         internal Movement2D MovementController => _movementController;
         internal BoxCollider2D BoxCollider => _boxCollider;
@@ -50,6 +45,13 @@ namespace Core.Units
         internal float DigDamage => Blackboard.DigDamage;
         internal float AggroDistance => Blackboard.AggroDistance;
         internal float MovementSpeed => Blackboard.MovementSpeed;
+
+        public bool CanDig => IsFacing(Tile.BlueStone);
+        internal bool CanEat => IsCarrying(Item.Fungus);
+        internal bool CanFeedFungus => IsCarrying(Item.Leaf) && IsFacing(Tile.Fungus);
+        internal bool CanFeedQueen => IsCarrying(Item.Fungus) && IsFacing(Tile.QueenAnt);
+        internal bool CanGatherLeaf => IsCarrying(Item.None) && IsFacing(Tile.GreenGrass);
+        internal bool CanGatherFungus => IsCarrying(Item.Leaf) && IsFacing(Tile.Fungus);
 
         internal IPathService PathService { get; private set; }
         internal IGridService GridService { get; private set; }
@@ -65,7 +67,6 @@ namespace Core.Units
         Dictionary<AntState, IFSMState<AntState>> IFSMAgent<AntState>.States => _fsm.States;
 
 
-        public void GiveReward(float value) => _agent.AddReward(value);
         public bool IsCarrying(Item item) => Carrying == item;
         public bool IsFacing(Tile tile) => IsFacing() == tile;
         public Tile IsFacing() => GridService.Get(InteractPosition).TileType;
@@ -127,13 +128,12 @@ namespace Core.Units
                         Position = Position,
                         MovingDirection = MovementController.FacingDirection,
                         Saciety = Blackboard.Saciety,
-                        CumulativeReward = Blackboard.CumulativeReward,
-                        CanEat = _agent.CanEat,
-                        CanGatherFungus = _agent.CanGatherFungus,
-                        CanGatherLeaf = _agent.CanGatherLeaf,
-                        CanFeedQueen = _agent.CanFeedQueen,
-                        CanFeedFungus = _agent.CanFeedFungus,
-                        CanDig = _agent.CanDig,
+                        CanEat = CanEat,
+                        CanGatherFungus = CanGatherFungus,
+                        CanGatherLeaf = CanGatherLeaf,
+                        CanFeedQueen = CanFeedQueen,
+                        CanFeedFungus = CanFeedFungus,
+                        CanDig = CanDig,
                         FoodDirection = Blackboard.FoodDirection,
                         FungusDirection = Blackboard.FungusDirection,
                         QueenDirection = Blackboard.QueenDirection,
@@ -179,7 +179,6 @@ namespace Core.Units
             _boxCollider = GetComponent<BoxCollider2D>();
             _healthComponent.Attacked += Attacked_EventHandler;
             _tilemapCollision = GetComponent<AntTilemapCollision>();
-            _agent = GetComponent<AntAgent>();
 
             Blackboard = GetComponent<AntBlackboard>();
             Blackboard.SacietyZeroed += SacietyZeroedEventHandler;

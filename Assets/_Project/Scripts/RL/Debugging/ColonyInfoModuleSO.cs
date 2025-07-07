@@ -1,10 +1,7 @@
-﻿using Core.Level;
-using Core.Map;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 using UnityEngine;
 
-namespace Core.Debugger
+namespace Core.Debugger.RL
 {
     public struct ColonyDebugData
     {

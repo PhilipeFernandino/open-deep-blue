@@ -1,24 +1,27 @@
 ﻿using System;
 using UnityEngine;
 
-public class AntTilemapCollision : MonoBehaviour
+namespace Core.Units
 {
-    public event Action Collided;
-    public event Action CollisionStaid;
-
-    private void OnCollisionEnter2D(Collision2D collision)
+    public class AntTilemapCollision : MonoBehaviour
     {
-        if (collision.gameObject.CompareTag("Tilemap"))
+        public event Action Collided;
+        public event Action CollisionStaid;
+
+        private void OnCollisionEnter2D(Collision2D collision)
         {
-            Collided?.Invoke();
+            if (collision.gameObject.CompareTag("Tilemap"))
+            {
+                Collided?.Invoke();
+            }
         }
-    }
 
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Tilemap"))
+        private void OnCollisionStay2D(Collision2D collision)
         {
-            CollisionStaid?.Invoke();
+            if (collision.gameObject.CompareTag("Tilemap"))
+            {
+                CollisionStaid?.Invoke();
+            }
         }
     }
 }

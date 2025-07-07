@@ -1,12 +1,8 @@
-﻿using Core.Colony;
-using Core.Level;
-using Core.Map;
-using Core.Train;
-using System.Collections.Generic;
+﻿using Core.RL;
 using System.Text;
 using UnityEngine;
 
-namespace Core.Debugger
+namespace Core.Debugger.RL
 {
     public struct CurriculumDebugData
     {

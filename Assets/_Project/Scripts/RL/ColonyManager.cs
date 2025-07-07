@@ -1,19 +1,18 @@
 ﻿using Coimbra;
 using Coimbra.Services;
 using Coimbra.Services.Events;
-using Core.Colony;
 using Core.Debugger;
+using Core.Debugger.RL;
 using Core.Units;
+using Core.Units.RL;
 using Cysharp.Threading.Tasks;
-using Google.Protobuf.WellKnownTypes;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.MLAgents;
 using UnityEngine;
 using UnityEngine.Pool;
 
-namespace Core.Train
+namespace Core.RL
 {
     public class ColonyManager : Actor, IColonyService
     {
@@ -60,14 +59,14 @@ namespace Core.Train
 
         private void RegisterAnt(Ant ant)
         {
-            _agentGroup.RegisterAgent(ant.Agent);
+            _agentGroup.RegisterAgent(ant.GetComponent<AntAgent>());
             _ants.Add(ant);
             Debug.Log($"Register ant: {ant.gameObject.name}", this);
         }
 
         private void UnregisterAnt(Ant ant)
         {
-            _agentGroup.UnregisterAgent(ant.Agent);
+            _agentGroup.UnregisterAgent(ant.GetComponent<AntAgent>());
             _ants.Remove(ant);
             Debug.Log($"Unregister ant: {ant.gameObject.name}", this);
         }
@@ -82,7 +81,7 @@ namespace Core.Train
                 {
                     var ant = Instantiate(_antPrefab);
                     ant.Initialize();
-                    ant.Agent.SpawnPointRequested += AgentSpawnPointRequested;
+                    ant.GetComponent<AntAgent>().SpawnPointRequested += AgentSpawnPointRequested;
                     return ant;
                 },
                 actionOnGet: (ant) =>
@@ -97,13 +96,13 @@ namespace Core.Train
                 actionOnRelease: (ant) =>
                 {
                     ant.gameObject.SetActive(false);
-                    ant.Agent.EndEpisode();
+                    ant.GetComponent<AntAgent>().EndEpisode();
                     UnregisterAnt(ant);
                 },
                 actionOnDestroy: (ant) =>
                 {
                     ant.gameObject.Dispose(true);
-                    ant.Agent.SpawnPointRequested -= AgentSpawnPointRequested;
+                    ant.GetComponent<AntAgent>().SpawnPointRequested -= AgentSpawnPointRequested;
                 },
                 defaultCapacity: _initialAntCount,
                 maxSize: _poolCapacity
