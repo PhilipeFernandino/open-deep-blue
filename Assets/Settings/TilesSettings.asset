@@ -65,4 +65,3 @@ MonoBehaviour:
   - TileType: 1401
     TileProperties: 114
     MaxHitPoints: 500
-  <InteractableTiles>k__BackingField: []

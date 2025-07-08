@@ -9,19 +9,13 @@ using UnityEngine;
 
 namespace Core.Interaction
 {
-    [Serializable]
-    public class TileInteractionEffect { public Tile Tile; public List<InteractionEffectSO> InteractionEffects; }
-
 
     public class InteractionManager : Actor, IInteractionService
     {
-        [SerializeField] private List<TileInteractionEffect> _tileInteractionEffects;
-
-        private Dictionary<Tile, List<InteractionEffectSO>> _effectsDict;
+        [SerializeField] private TileInteractionMappingSO _tileInteractionMap;
 
         private IGridService _grid;
         private TilesSettings _tilesSettings;
-
 
         public bool CanInteract(Vector2 worldPosition)
         {
@@ -45,23 +39,16 @@ namespace Core.Interaction
         {
             Debug.Log($"Interacting with {tile} at {worldPosition}");
 
-            if (_effectsDict.TryGetValue(tile, out var effects))
+            if (_tileInteractionMap.TryGetValue(tile, out var effect))
             {
-                foreach (var effect in effects)
-                {
-                    effect.Execute(interactor, worldPosition);
-                }
+                effect.Execute(interactor, worldPosition);
 
             }
         }
 
         protected override void OnInitialize()
         {
-            _effectsDict = new();
-            foreach (var effect in _tileInteractionEffects)
-            {
-                _effectsDict.Add(effect.Tile, effect.InteractionEffects);
-            }
+
 
             ServiceLocator.Set<IInteractionService>(this);
         }

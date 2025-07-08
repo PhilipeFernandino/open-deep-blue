@@ -31,7 +31,15 @@ namespace Core.Map
             var tilesDict = new Dictionary<TileBase, Tile>();
             foreach (var tile in _tileBaseMapping.TileBaseTiles)
             {
-                tilesDict.Add(tile.TileBase, tile.Tile);
+                if (!tilesDict.ContainsKey(tile.TileBase))
+                {
+                    tilesDict.Add(tile.TileBase, tile.Tile);
+
+                }
+                else
+                {
+                    Debug.LogError($"Key is already in dictionary: {tile.TileBase}", this);
+                }
             }
 
             var tiles = new Tile[_dimensions, _dimensions];

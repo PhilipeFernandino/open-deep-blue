@@ -18,7 +18,6 @@ namespace Core.Map
         [field: SerializeField] public TileBaseMappingSO TileToTileBase { get; private set; }
         [field: SerializeField] public TileToTileBase[] TileToFloorTileBase { get; private set; }
         [field: SerializeField] public TileDefinition[] TileDefinitions { get; private set; }
-        [field: SerializeField] public InteractableTile[] InteractableTiles { get; private set; }
 
 
         private TileDefinition[] _tileDefinitionLookup;
@@ -63,17 +62,6 @@ namespace Core.Map
             foreach (var def in TileToFloorTileBase)
             {
                 _tileToFloorTileBaseLookup[(int)def.TileType] = def.TileBase;
-            }
-        }
-
-        private void SetInteractableTiles()
-        {
-            int maxTileType = Enum.GetValues(typeof(Tile)).Cast<ushort>().Max();
-            _interactableTilesLookup = new IInteractable[maxTileType + 1];
-
-            foreach (var def in InteractableTiles)
-            {
-                _interactableTilesLookup[(int)def.TileType] = def.Interactable;
             }
         }
 

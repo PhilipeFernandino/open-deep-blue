@@ -7,6 +7,6 @@ namespace Core.Map
 
     public class TileBaseMappingSO : ScriptableObject
     {
-        [field: SerializeField] public List<TileBaseMapping> TileBaseTiles { get; private set; }
+        [field: SerializeField] public List<TileBaseMapping> TileBaseTiles { get; private set; } = new();
     }
 }
