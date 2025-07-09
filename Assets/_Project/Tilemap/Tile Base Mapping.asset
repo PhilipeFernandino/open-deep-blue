@@ -49,3 +49,9 @@ MonoBehaviour:
     <TileBase>k__BackingField: {fileID: 11400000, guid: 4a2f98c4f954bb2428fd8d56dab555e2, type: 2}
   - <Tile>k__BackingField: 2002
     <TileBase>k__BackingField: {fileID: 11400000, guid: 0740d841b11f6b846855f9a8c8f6144d, type: 2}
+  - <Tile>k__BackingField: 1212
+    <TileBase>k__BackingField: {fileID: 11400000, guid: e4e09f0e85aca2b41aebf40f73ca7da5, type: 2}
+  - <Tile>k__BackingField: 1102
+    <TileBase>k__BackingField: {fileID: 11400000, guid: 9c76ea9279aa9ee4bbc02cfe19ea7e53, type: 2}
+  - <Tile>k__BackingField: 1101
+    <TileBase>k__BackingField: {fileID: 11400000, guid: 92041adf7fd95a342a7da54cc797a27c, type: 2}

@@ -65,3 +65,12 @@ MonoBehaviour:
   - TileType: 1401
     TileProperties: 114
     MaxHitPoints: 500
+  - TileType: 1212
+    TileProperties: 96
+    MaxHitPoints: 500
+  - TileType: 1102
+    TileProperties: 0
+    MaxHitPoints: 500
+  - TileType: 1101
+    TileProperties: 0
+    MaxHitPoints: 500

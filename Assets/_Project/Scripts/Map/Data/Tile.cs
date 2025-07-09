@@ -21,12 +21,17 @@
         Torch = 501,
 
         // Interactive --
-        // Chests
         Chest = 1001,
         Bed = 1002,
+        Lamp = 1003, // also a light source
+
+        // Furniture
+        Table = 1101,
+        Chair = 1102,
 
         // 
         BurrowHole = 1211,
+        Stair = 1212,
 
         Fungus = 1301,
 
