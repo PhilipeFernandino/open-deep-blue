@@ -71,7 +71,7 @@ namespace Core.Units
         public bool IsFacing(Tile tile) => IsFacing() == tile;
         public Tile IsFacing() => GridService.Get(InteractPosition).TileType;
         public bool CanInteract() => InteractionService.CanInteract(InteractPosition);
-        public void TryToInteract() => InteractionService.Interact(InteractPosition, this);
+        public void TryToInteract() => InteractionService.TryInteract(InteractPosition, this);
         public void GiveItem(Item item) => Blackboard.CarryingItem = item;
 
         public void TryEat()

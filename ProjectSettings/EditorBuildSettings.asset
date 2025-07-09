@@ -17,5 +17,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Project/Scenes/Training.unity
     guid: e91c9c24029bc7e42b044773f14e2ee0
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: cb9c810f645393d4098791e9dd689daf, type: 3}
   m_UseUCBPForAssetBundles: 0

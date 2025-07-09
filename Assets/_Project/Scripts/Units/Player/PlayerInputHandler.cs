@@ -1,3 +1,4 @@
+using Core.Interaction;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -24,9 +25,10 @@ namespace Core.Player
 
         public void InteractInput(InputAction.CallbackContext context)
         {
+            Debug.Log($"Interact input: {context}", this);
             if (context.performed)
             {
-                _player.InteractInput();
+                _player.GetComponent<PlayerInteraction>().TryInteract();
             }
         }
 

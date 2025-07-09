@@ -27,12 +27,15 @@ namespace Core.Interaction
             return _grid.TryGetTileAt(worldPosition, out tile) && _tilesSettings.GetDefinition(tile.TileType).TileProperties.HasFlag(TileProperties.IsInteractable);
         }
 
-        public void Interact(Vector2 worldPosition, MonoBehaviour interactor)
+        public bool TryInteract(Vector2 worldPosition, MonoBehaviour interactor)
         {
             if (CanInteract(worldPosition, out TileInstance tile))
             {
                 ProcessInteraction(tile.TileType, worldPosition, interactor);
+                return true;
             }
+
+            return false;
         }
 
         private void ProcessInteraction(Tile tile, Vector2 worldPosition, MonoBehaviour interactor)
@@ -48,12 +51,12 @@ namespace Core.Interaction
 
         protected override void OnInitialize()
         {
-
-
             ServiceLocator.Set<IInteractionService>(this);
+
+            OnStarting += InteractionManager_OnStarting;
         }
 
-        protected override void OnSpawn()
+        private void InteractionManager_OnStarting(Actor sender)
         {
             _grid = ServiceLocatorUtilities.GetServiceAssert<IGridService>();
             _tilesSettings = ScriptableSettings.GetOrFind<TilesSettings>();
@@ -65,7 +68,7 @@ namespace Core.Interaction
     {
         public bool CanInteract(Vector2 worldPosition);
         public bool CanInteract(Vector2 worldPosition, out TileInstance tile);
-        public void Interact(Vector2 worldPosition, MonoBehaviour interactor);
+        public bool TryInteract(Vector2 worldPosition, MonoBehaviour interactor);
 
     }
 }

@@ -2,6 +2,7 @@
 using Core.FSM;
 using Core.HealthSystem;
 using Core.HoldableSystem;
+using Core.Interaction;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,7 +14,6 @@ namespace Core.Player
     [RequireComponent(typeof(PlayerAnimator))]
     [RequireComponent(typeof(Movement2D))]
     [RequireComponent(typeof(BoxCollider2D))]
-
     public class Player : Actor, IFSMAgent<PlayerState>
     {
         [SerializeField] private HealthComponent _healthComponent;
@@ -44,7 +44,7 @@ namespace Core.Player
         Dictionary<PlayerState, PlayerFSMState> IFSMAgent<PlayerState>.States => _fsm.States;
 
         public Vector2 MovementDirection => PlayerMovement.LastMovementInput;
-        public Vector2 FacingDirection => PlayerMovement.LastMovementInput;
+        public Vector2 FacingDirection => PlayerMovement.FacingDirection;
         public Vector2 Position => transform.position.XY();
 
         public IPlayerFSMState State => ((IPlayerFSMState)_fsm.State);
@@ -65,8 +65,6 @@ namespace Core.Player
 
         #region Input Handling Delegation
         public void MoveInput(Vector2 direction) => State.MoveInput(direction);
-
-        public void InteractInput() => State.InteractInput();
 
         public void DashInput() => State.DashInput();
 
