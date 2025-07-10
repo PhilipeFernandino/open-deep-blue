@@ -1,3 +1,4 @@
+using Core.Events;
 using Core.Interaction;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -7,38 +8,58 @@ namespace Core.Player
     [RequireComponent(typeof(Player))]
     public class PlayerInputHandler : MonoBehaviour
     {
+        [SerializeField] private Vector2EventChannelSO _moveEventChannel;
+        [SerializeField] private VoidEventChannelSO _useCurrentItemEventChannel;
+        [SerializeField] private VoidEventChannelSO _dashEventChannel;
+        [SerializeField] private VoidEventChannelSO _interactEventChannel;
+
         private Player _player;
+        private PlayerInteraction _playerInteraction;
         private Camera _mainCamera;
 
-        public void MoveInput(InputAction.CallbackContext context)
+        private void Awake()
         {
-            _player.MoveInput(context.ReadValue<Vector2>());
+            _player = GetComponent<Player>();
+            _playerInteraction = GetComponent<PlayerInteraction>();
+            _mainCamera = Camera.main;
         }
 
-        public void UseCurrentItemInput(InputAction.CallbackContext context)
+        private void OnEnable()
         {
-            if (context.performed)
-            {
-                _player.UseEquipmentInput(To2DWorldPosition(Mouse.current.position.ReadValue()));
-            }
+            _moveEventChannel.OnEventRaised += OnMove;
+            _dashEventChannel.OnEventRaised += OnDash;
+            _interactEventChannel.OnEventRaised += OnInteract;
+            _useCurrentItemEventChannel.OnEventRaised += OnUseCurrentItem;
         }
 
-        public void InteractInput(InputAction.CallbackContext context)
+        private void OnDisable()
         {
-            Debug.Log($"Interact input: {context}", this);
-            if (context.performed)
-            {
-                _player.GetComponent<PlayerInteraction>().TryInteract();
-            }
+            _moveEventChannel.OnEventRaised -= OnMove;
+            _dashEventChannel.OnEventRaised -= OnDash;
+            _interactEventChannel.OnEventRaised -= OnInteract;
+            _useCurrentItemEventChannel.OnEventRaised -= OnUseCurrentItem;
         }
 
-        public void DashInput(InputAction.CallbackContext context)
+        private void OnUseCurrentItem()
         {
-            if (context.performed)
-            {
-                _player.DashInput();
-            }
+            _player.UseEquipmentInput(To2DWorldPosition(Mouse.current.position.ReadValue()));
         }
+
+        private void OnMove(Vector2 direction)
+        {
+            _player.MoveInput(direction);
+        }
+
+        private void OnDash()
+        {
+            _player.DashInput();
+        }
+
+        private void OnInteract()
+        {
+            _playerInteraction.TryInteract();
+        }
+
 
         private Vector2 To2DWorldPosition(Vector2 mousePosition)
         {
@@ -46,12 +67,6 @@ namespace Core.Player
             worldPosition.z = 10f;
             worldPosition = _mainCamera.ScreenToWorldPoint(worldPosition);
             return worldPosition.XY();
-        }
-
-        private void Awake()
-        {
-            _player = GetComponent<Player>();
-            _mainCamera = Camera.main;
         }
     }
 }

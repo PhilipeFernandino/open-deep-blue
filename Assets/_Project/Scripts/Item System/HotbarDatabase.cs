@@ -23,7 +23,7 @@ namespace Core.ItemSystem
         {
             int dbItem = _items.FindIndex((i) => i == item);
             _items[dbItem] = null;
-            Updated(new(null, dbItem));
+            Updated?.Invoke(new(null, dbItem));
         }
 
         private void Awake()

@@ -1,9 +1,7 @@
-﻿using Coimbra;
-using Coimbra.Services;
+﻿using Coimbra.Services;
 using Core.Scene.UI;
 using Cysharp.Threading.Tasks;
 using System;
-using System.Security.Cryptography;
 using UnityEngine.SceneManagement;
 
 namespace Core.Scene
@@ -17,10 +15,15 @@ namespace Core.Scene
 
         public async UniTask AsyncLoadWithLoader(GameScene scene, LoaderSceneParameters parameters = default)
         {
+            if (parameters == null)
+            {
+                parameters = new();
+            }
+
             var currentScene = SceneManager.GetActiveScene();
 
-            await SceneManager.LoadSceneAsync((int)GameScene.Load).ToUniTask();
-            var loadScene = SceneManager.GetSceneByBuildIndex((int)GameScene.Load);
+            await SceneManager.LoadSceneAsync((int)GameScene.Loader).ToUniTask();
+            var loadScene = SceneManager.GetSceneByBuildIndex((int)GameScene.Loader);
             SceneManager.SetActiveScene(loadScene);
 
             UILoadSceneManager.Instance.Set(parameters);
@@ -59,9 +62,11 @@ namespace Core.Scene
 
     public enum GameScene
     {
-        Menu,
-        Load,
-        Game,
+        Initialization,
+        MainMenu,
+        Loader,
+        Cave,
+        BurrowHole
     }
 
     public record LoaderSceneParameters

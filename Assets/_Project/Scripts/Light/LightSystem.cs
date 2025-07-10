@@ -1,6 +1,6 @@
 ﻿using Coimbra;
 using Coimbra.Services;
-using Core.EventBus;
+using Core.Events;
 using Core.Level;
 using Core.Util;
 using NaughtyAttributes;
@@ -14,8 +14,8 @@ namespace Core.Light
     public class LightSystem : Actor, ILightService
     {
         [SerializeField] private Material _lightOverlayMaterial;
-        [SerializeField] private PositionEventBus _positionEventBus;
-        [SerializeField] private ObjectAddedEventBus _objectAddedEventBus;
+        [SerializeField] private Vector2EventChannelSO _positionEventBus;
+        [SerializeField] private ObjectAddedEventChannelSO _objectAddedEventBus;
 
         [SerializeField] private MeshRenderer _meshRendererPrefab;
 
@@ -174,7 +174,7 @@ namespace Core.Light
             _chunkController.TileChunksUpdated += TileChunksUpdated_EventHandler;
             _chunkController.OriginSetted += OriginSetted_EventHandler;
 
-            _positionEventBus.PositionChanged += _chunkController.UpdatePosition;
+            _positionEventBus.OnEventRaised += _chunkController.UpdatePosition;
             _objectAddedEventBus.ObjectAdded += LightAdded_EventHandler;
             _objectAddedEventBus.ObjectRemoved += LightRemoved_EventHandler;
         }
@@ -257,18 +257,6 @@ namespace Core.Light
             AddLightSource(new(new(x, y), (uint)intensity));
         }
 
-        [Button]
-        public void AddLightAtPos()
-        {
-            AddLightSource(new(Vector2Int.RoundToInt(_positionEventBus.Position), (uint)intensity));
-        }
-
-        [Button]
-        public void TriggerPositionBus()
-        {
-            _positionEventBus.Position = new Vector2Int(x, y);
-            _positionEventBus.Trigger();
-        }
         #endregion
     }
 

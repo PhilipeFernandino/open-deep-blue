@@ -16,6 +16,23 @@ namespace Core.Map
             Tiles[x, y] = tile;
         }
 
+        public (bool found, Vector2Int position) FirstTile(Tile tile)
+        {
+            for (int i = 0; i < Dimensions; i++)
+            {
+                for (int j = 0; j < Dimensions; j++)
+                {
+                    Tile compareTile = Tiles[i, j];
+                    if (compareTile == tile)
+                    {
+                        return (true, new(i, j));
+                    }
+                }
+            }
+
+            return (false, default);
+        }
+
         public void ListPositions(Tile tile, List<Vector2Int> listPositions)
         {
             listPositions.Clear();

@@ -2,15 +2,14 @@
 using Coimbra.Services;
 using Coimbra.Services.Events;
 using Core.Debugger;
-using Core.EventBus;
+using Core.Events;
 using Core.Map;
-using NaughtyAttributes;
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
-using UnityEngine.UIElements;
 using static Core.Util.Range;
 using Tile = Core.Map.Tile;
 
@@ -28,7 +27,7 @@ namespace Core.Level
         [Header("Chunk Control")]
         [SerializeField] private int _chunkSize;
         [SerializeField] private int _loadNearChunks;
-        [SerializeField] private PositionEventBus _positionEventBus;
+        [SerializeField] private Vector2EventChannelSO _positionEventBus;
 
         [Header("Debugging")]
         [SerializeField] private DebugChannelSO _debugChannel;
@@ -45,10 +44,10 @@ namespace Core.Level
 
         private MapMetadata _mapMetadata;
 
+        public MapMetadata MapMetadata => _mapMetadata;
         public int ChunkSize => _chunkSize;
-        public int LoadedDimensions => _chunkSize * (_loadNearChunks * 2 + 1);
+        public int LoadedDimensions => _useChunkLoad ? _chunkSize * (_loadNearChunks * 2 + 1) : Dimensions;
         public int Dimensions => _mapMetadata.Dimensions;
-
 
         public event Action Initialized;
         public event Action<int, int, TileInstance, TileDefinition> TileChanged;
@@ -196,6 +195,13 @@ namespace Core.Level
 
         private void MapLoadedEventHandler(ref EventContext context, in MapMetadataGeneratedEvent e)
         {
+            InitializeTask(e).Forget();
+        }
+
+        private async UniTask InitializeTask(MapMetadataGeneratedEvent e)
+        {
+            await UniTask.DelayFrame(1);
+
             InitializeGrid(e.MapMetadata);
 
             _mapMetadata = e.MapMetadata;

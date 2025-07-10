@@ -1,4 +1,4 @@
-using Core.EventBus;
+using Core.Events;
 using Core.Light;
 using UnityEngine;
 
@@ -6,7 +6,7 @@ namespace Core.HoldableSystem
 {
     public class Torch : Equipment
     {
-        [SerializeField] private ObjectAddedEventBus _addLightEventBus;
+        [SerializeField] private ObjectAddedEventChannelSO _addLightEventBus;
 
         public LightSourceAttributesSO Attributes => (LightSourceAttributesSO)_attributes;
 

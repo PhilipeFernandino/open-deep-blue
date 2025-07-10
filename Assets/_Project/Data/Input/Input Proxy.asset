@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20703aa3f7051ba4d9f7fc924b57a432, type: 3}
+  m_Name: Input Proxy
+  m_EditorClassIdentifier: 
+  _moveEventChannel: {fileID: 11400000, guid: 2fad9723d8315a940a752bea73134040, type: 2}
+  _dashEventChannel: {fileID: 11400000, guid: f5e4eaf5cc94e3b4bb8651f9540c5e99, type: 2}
+  _interactEventChannel: {fileID: 11400000, guid: 86fd822e9fedbfe4895ea00b74c98c12, type: 2}
+  _useCurrentItemEventChannel: {fileID: 11400000, guid: 7ff3e09321ca8dd438ec2e2bf825ad1f, type: 2}
+  _hotbarSelectEventChannel: {fileID: 11400000, guid: c1798c703c2c59c499b3db9cee221550, type: 2}
+  _hotbarScrollEventChannel: {fileID: 11400000, guid: 5be689ad789d8094083df4e06fb20c42, type: 2}
+  _toggleInventoryEventChannel: {fileID: 11400000, guid: 85431cb92f1477143a569a0809eb3a67, type: 2}

@@ -24,7 +24,7 @@ namespace Core.UI
 
         public void NewGameAction()
         {
-            _sceneLoader.AsyncLoadWithLoader(Scene.GameScene.Game,
+            _sceneLoader.AsyncLoadWithLoader(Scene.GameScene.Cave,
                 new() { InfoText = "Carregando mapa...", WaitForClick = true, DisableActiveScene = true }).Forget();
         }
     }

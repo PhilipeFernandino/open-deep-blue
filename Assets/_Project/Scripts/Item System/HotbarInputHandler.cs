@@ -1,4 +1,5 @@
-﻿using Core.ItemSystem;
+﻿using Core.Events;
+using Core.ItemSystem;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,32 +7,52 @@ namespace Systems.Item_System
 {
     public class HotbarInputHandler : MonoBehaviour
     {
+        [Header("Component References")]
         [SerializeField] private Hotbar _hotbar;
 
-        public void HotbarNavigation(InputAction.CallbackContext context)
+        [Header("Listen to Event Channels")]
+        [SerializeField] private CallbackContextEventChannelSO _hotbarSelectEventChannel;
+        [SerializeField] private Vector2EventChannelSO _hotbarScrollEventChannel;
+
+        private void OnEnable()
         {
-            if (context.performed && int.TryParse(context.control.name, out int value))
+            if (_hotbarSelectEventChannel != null)
             {
-                if (value == 0)
-                {
-                    _hotbar.SelectedHotbarIndex = 9;
-                }
-                else
-                {
-                    _hotbar.SelectedHotbarIndex = value - 1;
-                }
+                _hotbarSelectEventChannel.OnEventRaised += HandleHotbarSelection;
+            }
+            if (_hotbarScrollEventChannel != null)
+            {
+                _hotbarScrollEventChannel.OnEventRaised += HandleHotbarScroll;
             }
         }
 
-        public void HotbarNavigationWithScroll(InputAction.CallbackContext context)
+        private void OnDisable()
         {
-            float yScroll = context.ReadValue<Vector2>().y;
+            if (_hotbarSelectEventChannel != null)
+            {
+                _hotbarSelectEventChannel.OnEventRaised -= HandleHotbarSelection;
+            }
+            if (_hotbarScrollEventChannel != null)
+            {
+                _hotbarScrollEventChannel.OnEventRaised -= HandleHotbarScroll;
+            }
+        }
 
-            if (yScroll > 0)
+        private void HandleHotbarSelection(InputAction.CallbackContext context)
+        {
+            if (int.TryParse(context.control.name, out int value))
+            {
+                _hotbar.SelectedHotbarIndex = value == 0 ? 9 : value - 1;
+            }
+        }
+
+        private void HandleHotbarScroll(Vector2 scroll)
+        {
+            if (scroll.y > 0)
             {
                 _hotbar.SelectedHotbarIndex -= 1;
             }
-            else if (yScroll < 0)
+            else if (scroll.y < 0)
             {
                 _hotbar.SelectedHotbarIndex += 1;
             }

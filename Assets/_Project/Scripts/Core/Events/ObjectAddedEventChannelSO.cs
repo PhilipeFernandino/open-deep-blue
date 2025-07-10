@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections;
 using UnityEngine;
 
 
-namespace Core.EventBus
+namespace Core.Events
 {
-    [CreateAssetMenu(menuName = "Core/EventBus/ObjectAddedEventBus")]
-    public class ObjectAddedEventBus : ScriptableObject
+    [CreateAssetMenu(menuName = "Core/Events/Object Added Event Channel")]
+    public class ObjectAddedEventChannelSO : ScriptableObject
     {
         public Action<object> ObjectAdded;
         public Action<object> ObjectRemoved;

@@ -17,6 +17,8 @@ namespace Core.Level
         public int LoadedDimensions { get; }
         public int Dimensions { get; }
 
+        public MapMetadata MapMetadata { get; }
+
         public void ClearDrawAt(Vector2 position) { throw new NotImplementedException(); }
         public void DrawInGrid(Vector2 position, Color color) { throw new NotImplementedException(); }
         public void DrawInGrid(Vector2 position, in Vector2Int size, Color color) { throw new NotImplementedException(); }

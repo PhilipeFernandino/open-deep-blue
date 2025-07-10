@@ -1,5 +1,5 @@
 ﻿using Coimbra;
-using Core.EventBus;
+using Core.Events;
 using Core.Map;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -10,7 +10,7 @@ namespace Core.Level
     [System.Serializable]
     public class TileChunkController
     {
-        private PositionEventBus _positionEventBus;
+        private Vector2EventChannelSO _positionEventBus;
 
         private ChunkController _chunkController;
 
@@ -23,7 +23,7 @@ namespace Core.Level
         TileBase[] _emptyTiles;
 
         public TileChunkController(MapMetadata mapMetadata, int chunkSize, int loadNearChunks,
-            PositionEventBus positionEventBus, IGridService gridService, TilesSettings tilesSettings)
+            Vector2EventChannelSO positionEventBus, IGridService gridService, TilesSettings tilesSettings)
         {
             _chunkController = new(chunkSize, loadNearChunks);
 
@@ -36,8 +36,7 @@ namespace Core.Level
             _gridService = gridService;
             _tilesSettings = tilesSettings;
 
-            _positionEventBus.PositionChanged += PositionChanged_EventHandler;
-            PositionChanged_EventHandler(_positionEventBus.Position);
+            _positionEventBus.OnEventRaised += PositionChanged_EventHandler;
         }
 
         public void UpdatePosition(Vector2 vector)

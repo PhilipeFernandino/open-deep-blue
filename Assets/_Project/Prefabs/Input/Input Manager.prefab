@@ -61,9 +61,9 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Core.Player.PlayerInputHandler, Core.Units
-        m_MethodName: MoveInput
+      - m_Target: {fileID: 11400000, guid: 223a82f0fca41914d957221a59bf55a0, type: 2}
+        m_TargetAssemblyTypeName: Core.Player.PlayerInputProxySO, Core
+        m_MethodName: OnMove
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -74,16 +74,28 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 351f2ccd-1f9f-44bf-9bec-d62ac5c5f408
-    m_ActionName: Gameplay/Move[/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: f3f409fd-055c-44e7-97bc-2322b04f3ba3
-    m_ActionName: Gameplay/Interact[/Keyboard/e]
+    m_ActionName: 'Gameplay/Move[/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Systems.Item_System.HotbarInputHandler, Core.ItemSystem
-        m_MethodName: HotbarNavigation
+      - m_Target: {fileID: 11400000, guid: 223a82f0fca41914d957221a59bf55a0, type: 2}
+        m_TargetAssemblyTypeName: Core.Player.PlayerInputProxySO, Core
+        m_MethodName: OnInteract
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: f3f409fd-055c-44e7-97bc-2322b04f3ba3
+    m_ActionName: 'Gameplay/Interact[/Keyboard/e]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 223a82f0fca41914d957221a59bf55a0, type: 2}
+        m_TargetAssemblyTypeName: Core.Player.InputProxySO, Core
+        m_MethodName: OnHotbarSelect
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -94,12 +106,12 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: ddc786c3-afae-4ad9-bd29-aeab77623467
-    m_ActionName: Gameplay/Hotbar Navigation[/Keyboard/1,/Keyboard/2,/Keyboard/3,/Keyboard/4,/Keyboard/5,/Keyboard/6,/Keyboard/7,/Keyboard/8,/Keyboard/9]
+    m_ActionName: 'Gameplay/Hotbar Navigation[/Keyboard/1,/Keyboard/2,/Keyboard/3,/Keyboard/4,/Keyboard/5,/Keyboard/6,/Keyboard/7,/Keyboard/8,/Keyboard/9]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Systems.Item_System.HotbarInputHandler, Core.ItemSystem
-        m_MethodName: HotbarNavigationWithScroll
+      - m_Target: {fileID: 11400000, guid: 223a82f0fca41914d957221a59bf55a0, type: 2}
+        m_TargetAssemblyTypeName: Core.Player.InputProxySO, Core
+        m_MethodName: OnHotbarScroll
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -110,13 +122,13 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 833fb13b-9575-49e3-87dc-93fd47e4e183
-    m_ActionName: Gameplay/Scroll Wheel[/Mouse/scroll]
+    m_ActionName: 'Gameplay/Scroll Wheel[/Mouse/scroll]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Core.UI.UIDynamicCanvas, Core.UI
-        m_MethodName: ToggleSelf
-        m_Mode: 1
+      - m_Target: {fileID: 11400000, guid: 223a82f0fca41914d957221a59bf55a0, type: 2}
+        m_TargetAssemblyTypeName: Core.Player.InputProxySO, Core
+        m_MethodName: OnToggleInventory
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -126,16 +138,16 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 271fdd26-fae8-4760-909f-6608f96ca3d1
-    m_ActionName: Gameplay/Toggle Storage Visibility[/Keyboard/tab]
+    m_ActionName: 'Gameplay/Toggle Storage Visibility[/Keyboard/tab]'
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: 1d628368-ec5e-4a77-9b27-0dbd60cc62a4
-    m_ActionName: Gameplay/Point[/Mouse/position]
+    m_ActionName: 'Gameplay/Point[/Mouse/position]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Core.Player.PlayerInputHandler, Core.Units
-        m_MethodName: UseCurrentItemInput
+      - m_Target: {fileID: 11400000, guid: 223a82f0fca41914d957221a59bf55a0, type: 2}
+        m_TargetAssemblyTypeName: Core.Player.InputProxySO, Core
+        m_MethodName: OnUseCurrentItem
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -146,19 +158,55 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 6c2ab1b8-8984-453a-af3d-a3c78ae1679a
-    m_ActionName: Gameplay/Left Click[/Mouse/leftButton]
+    m_ActionName: 'Gameplay/Left Click[/Mouse/leftButton]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: a5e223fb-9451-4d81-b864-91008304bba5
-    m_ActionName: Gameplay/Right Click[/Mouse/rightButton]
+    m_ActionName: 'Gameplay/Right Click[/Mouse/rightButton]'
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: ca8003bf-8fd6-42a1-a00e-7d31060308ac
-    m_ActionName: Editor/Move Camera[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+    m_ActionName: 'Editor/Move Camera[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 223a82f0fca41914d957221a59bf55a0, type: 2}
+        m_TargetAssemblyTypeName: Core.Player.PlayerInputProxySO, Core
+        m_MethodName: OnDash
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: db51b46e-a2e3-44ae-a699-36e4aeb5c53c
+    m_ActionName: 'Gameplay/Dash[/Keyboard/space]'
   - m_PersistentCalls:
       m_Calls: []
-    m_ActionId: db51b46e-a2e3-44ae-a699-36e4aeb5c53c
-    m_ActionName: Gameplay/Dash[/Keyboard/space]
+    m_ActionId: fb3cd40f-71b3-47d5-a935-25463b30cd54
+    m_ActionName: 'Menus/Click[/Mouse/leftButton]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 6fc0187d-8ce5-4d77-b58b-8fa84739d462
+    m_ActionName: 'Menus/Point[/Mouse/position]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: b9d228de-63e5-4937-a83a-51d408da34a2
+    m_ActionName: 'Debug/Toggle Debugger[/Keyboard/f3]'
   m_NeverAutoSwitchControlSchemes: 1
   m_DefaultControlScheme: Keyboard&Mouse
   m_DefaultActionMap: Gameplay
@@ -196,11 +244,11 @@ MonoBehaviour:
   m_MoveRepeatRate: 0.1
   m_XRTrackingOrigin: {fileID: 0}
   m_ActionsAsset: {fileID: -944628639613478452, guid: cb9c810f645393d4098791e9dd689daf, type: 3}
-  m_PointAction: {fileID: -3231311811785216436, guid: cb9c810f645393d4098791e9dd689daf, type: 3}
+  m_PointAction: {fileID: -7665342375507058346, guid: cb9c810f645393d4098791e9dd689daf, type: 3}
   m_MoveAction: {fileID: -1680190386980627800, guid: cb9c810f645393d4098791e9dd689daf, type: 3}
   m_SubmitAction: {fileID: 0}
   m_CancelAction: {fileID: 0}
-  m_LeftClickAction: {fileID: 1120369429361536294, guid: cb9c810f645393d4098791e9dd689daf, type: 3}
+  m_LeftClickAction: {fileID: -3950581224535143314, guid: cb9c810f645393d4098791e9dd689daf, type: 3}
   m_MiddleClickAction: {fileID: 0}
   m_RightClickAction: {fileID: -7300918310632362978, guid: cb9c810f645393d4098791e9dd689daf, type: 3}
   m_ScrollWheelAction: {fileID: 1023698521489264926, guid: cb9c810f645393d4098791e9dd689daf, type: 3}
@@ -209,3 +257,4 @@ MonoBehaviour:
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
+  m_ScrollDeltaPerTick: 6
