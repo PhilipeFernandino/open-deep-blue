@@ -32,8 +32,8 @@ Para executar o projeto em seu ambiente de desenvolvimento, siga os passos abaix
 
 3.  **Execução:**
     - Dentro do editor da Unity, navegue até a pasta `Assets/_Project/Scenes`.
-    - Abra a cena principal do jogo (ex: `MainScene.unity`).
-    - Pressione o botão "Play" na barra de ferramentas superior para iniciar o jogo.
+    - Abra a cena principal do jogo: `MainMenu.unity`.
+    - Pressione o botão "Play" na barra de ferramentas superior para iniciar.
 
 ## Status do Repositório
 
