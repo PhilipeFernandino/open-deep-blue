@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**Deep Blue** é um protótipo de jogo 2D do gênero _adventure sandbox_, com um mundo gerado proceduralmente e um foco na criação de um ecossistema dinâmico. O principal eixo de pesquisa do projeto foi a aplicação de Aprendizado por Reforço Multiagente (MARL) para simular o comportamento cooperativo de uma colônia de formigas autônoma.
+**Deep Blue** é um jogo 2D do gênero _adventure sandbox_, com um mundo gerado proceduralmente e um foco na criação de um ecossistema dinâmico. Os focos de pesquisa do projeto foram a aplicação de Aprendizado por Reforço Multiagente (MARL) para simular o comportamento cooperativo de uma colônia de formigas autônoma e Geração Procedural de Conteúdo (PCG) para geração dos mapas.
 
 <p align="center">
     <img src=docs/pre-alpha-card-image.png>
